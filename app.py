@@ -5,8 +5,7 @@ import requests
 
 app = Flask(__name__)
 
-# Tumhari API key internet (Render) se aayegi, phone me save nahi karni padegi
-SAMBANOVA_API_KEY = os.environ.get("SAMBANOVA_API_KEY", "955530bb-161f-41f7-b3a7-e61ccb7ad625")
+SAMBANOVA_API_KEY = os.environ.get("SAMBANOVA_API_KEY")
 SAMBANOVA_URL = "https://api.sambanova.ai/v1/chat/completions"
 
 SYSTEM_PROMPT = """
@@ -50,16 +49,16 @@ HTML_UI = """
             <label>Topic</label> <textarea id="topic" placeholder="e.g., Kaise zero budget me SaaS banayein..."></textarea>
             <button onclick="forgeHooks()">Forge Hooks 🚀</button>
         </div>
-        <div id="loading">🔨 Hook Forge kar raha hai... Thoda sabr rakho...</div>
+        <div id="loading">🔨 Hook Forge kar raha hai... Thoda sabr rakho bhai...</div>
         <div id="results">
             <div class="card">
-                <h3>🪝 Hook A (Score: <span id="scoreA" class="score"></span>)</h3>
+                <h3>🪝 Hook Option A (Score: <span id="scoreA" class="score"></span>)</h3>
                 <div class="hook-box" id="textA"></div>
                 <p style="color:#a1a1aa; font-size:14px;"><b>Psychology:</b> <span id="psychA"></span></p>
                 <p style="color:#a1a1aa; font-size:14px;"><b>Fix for 10/10:</b> <span id="fixA"></span></p>
             </div>
             <div class="card">
-                <h3>🪝 Hook B (Score: <span id="scoreB" class="score"></span>)</h3>
+                <h3>🪝 Hook Option B (Score: <span id="scoreB" class="score"></span>)</h3>
                 <div class="hook-box" id="textB"></div>
                 <p style="color:#a1a1aa; font-size:14px;"><b>Psychology:</b> <span id="psychB"></span></p>
                 <p style="color:#a1a1aa; font-size:14px;"><b>Fix for 10/10:</b> <span id="fixB"></span></p>
@@ -97,7 +96,7 @@ HTML_UI = """
 
                 document.getElementById('dna').innerText = data.dna_comparison;
                 document.getElementById('results').style.display = 'block';
-            } catch(e) { alert("Error aaya bhai!"); document.getElementById('loading').style.display = 'none'; }
+            } catch(e) { alert("Connection error! API connect nahi hui."); document.getElementById('loading').style.display = 'none'; }
         }
     </script>
 </body>
@@ -105,17 +104,19 @@ HTML_UI = """
 """
 
 @app.route('/')
-def home(): return render_template_string(HTML_UI)
+def home(): 
+    return render_template_string(HTML_UI)
 
 @app.route('/forge', methods=['POST'])
 def forge():
     data = request.json
-    prompt = f"Topic: {data.get('topic')}\nNiche: {data.get('niche')}\nAudience: {data.get('audience')}\nTone: {data.get('tone')}"
-    payload = {"model": "Meta-Llama-3-8B-Instruct", "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}], "response_format": {"type": "json_object"}}
+    prompt = f"Topic: {data.get('topic')}\\nNiche: {data.get('niche')}\\nAudience: {data.get('audience')}\\nTone: {data.get('tone')}"
+    payload = {"model": "Meta-Llama-3-8B-Instruct", "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}], "response_format": {"type": "json_object"}, "temperature": 0.7}
     try:
         r = requests.post(SAMBANOVA_URL, json=payload, headers={"Authorization": f"Bearer {SAMBANOVA_API_KEY}"})
         return jsonify(json.loads(r.json()['choices'][0]['message']['content']))
-    except Exception as e: return jsonify({"error": str(e)})
+    except Exception as e: 
+        return jsonify({"error": str(e)})
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
