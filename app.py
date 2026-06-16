@@ -6,7 +6,7 @@ import requests
 app = Flask(__name__)
 
 SAMBANOVA_API_KEY = os.environ.get("SAMBANOVA_API_KEY")
-SAMBANOVA_URL = "https://api.sambanova.ai/v1/chat/completions"
+SAMBANOVA_URL = "[https://api.sambanova.ai/v1/chat/completions](https://api.sambanova.ai/v1/chat/completions)"
 
 SYSTEM_PROMPT = """
 You are Hook Forge, an elite social media psychologist and copywriter. Your job is to generate hooks and analyze them.
@@ -34,8 +34,9 @@ HTML_UI = """
         button { width: 100%; background: #f97316; color: white; border: none; padding: 14px; border-radius: 6px; font-weight: bold; font-size: 16px; cursor: pointer; }
         .hook-box { border-left: 4px solid #f97316; padding-left: 15px; background: #202023; padding: 10px; margin-bottom: 10px;}
         .score { background: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
-        #results, #loading { display: none; }
+        #results, #loading, #errorBox { display: none; }
         #loading { color: #f97316; text-align: center; margin: 20px; font-weight: bold; }
+        #errorBox { background: #7f1d1d; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ef4444; word-wrap: break-word; }
     </style>
 </head>
 <body>
@@ -50,6 +51,9 @@ HTML_UI = """
             <button onclick="forgeHooks()">Forge Hooks 🚀</button>
         </div>
         <div id="loading">🔨 Hook Forge kar raha hai... Thoda sabr rakho bhai...</div>
+        
+        <div id="errorBox"></div>
+
         <div id="results">
             <div class="card">
                 <h3>🪝 Hook Option A (Score: <span id="scoreA" class="score"></span>)</h3>
@@ -73,6 +77,7 @@ HTML_UI = """
         async function forgeHooks() {
             document.getElementById('loading').style.display = 'block';
             document.getElementById('results').style.display = 'none';
+            document.getElementById('errorBox').style.display = 'none';
             try {
                 const res = await fetch('/forge', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -84,6 +89,13 @@ HTML_UI = """
                 const data = await res.json();
                 document.getElementById('loading').style.display = 'none';
                 
+                // Agar parde ke peeche error aaya hai, toh screen par laal box me dikhao
+                if (data.error) {
+                    document.getElementById('errorBox').style.display = 'block';
+                    document.getElementById('errorBox').innerText = "Backend Error: " + data.error;
+                    return;
+                }
+
                 document.getElementById('textA').innerText = data.hook_a.text;
                 document.getElementById('scoreA').innerText = data.hook_a.score;
                 document.getElementById('psychA').innerText = data.hook_a.psychology;
@@ -96,7 +108,11 @@ HTML_UI = """
 
                 document.getElementById('dna').innerText = data.dna_comparison;
                 document.getElementById('results').style.display = 'block';
-            } catch(e) { alert("Connection error! API connect nahi hui."); document.getElementById('loading').style.display = 'none'; }
+            } catch(e) { 
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('errorBox').style.display = 'block';
+                document.getElementById('errorBox').innerText = "Frontend Code Error: " + e.message;
+            }
         }
     </script>
 </body>
@@ -111,12 +127,35 @@ def home():
 def forge():
     data = request.json
     prompt = f"Topic: {data.get('topic')}\\nNiche: {data.get('niche')}\\nAudience: {data.get('audience')}\\nTone: {data.get('tone')}"
-    payload = {"model": "Meta-Llama-3-8B-Instruct", "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}], "response_format": {"type": "json_object"}, "temperature": 0.7}
+    
+    payload = {
+        "model": "Meta-Llama-3-8B-Instruct", 
+        "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}], 
+        "temperature": 0.7
+    }
+    
+    headers = {"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"}
+    
     try:
-        r = requests.post(SAMBANOVA_URL, json=payload, headers={"Authorization": f"Bearer {SAMBANOVA_API_KEY}"})
-        return jsonify(json.loads(r.json()['choices'][0]['message']['content']))
+        r = requests.post(SAMBANOVA_URL, json=payload, headers=headers)
+        res_data = r.json()
+        
+        # Agar SambaNova ne koi error bheja hai
+        if "error" in res_data:
+            return jsonify({"error": str(res_data["error"])})
+            
+        ai_text = res_data['choices'][0]['message']['content']
+        
+        # Markdown backticks (```json) ko hatane ki trick
+        if ai_text.startswith("```json"):
+            ai_text = ai_text.replace("```json", "", 1).strip()
+            if ai_text.endswith("```"):
+                ai_text = ai_text[:-3].strip()
+                
+        return jsonify(json.loads(ai_text))
+        
     except Exception as e: 
-        return jsonify({"error": str(e)})
+        return jsonify({"error": str(e) + " | API Status: " + str(r.status_code) + " | Reply: " + getattr(r, 'text', 'No answer')})
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
