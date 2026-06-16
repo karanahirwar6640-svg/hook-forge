@@ -6,7 +6,7 @@ import requests
 app = Flask(__name__)
 
 SAMBANOVA_API_KEY = os.environ.get("SAMBANOVA_API_KEY")
-SAMBANOVA_URL = "[https://api.sambanova.ai/v1/chat/completions](https://api.sambanova.ai/v1/chat/completions)"
+SAMBANOVA_URL = "https://api.sambanova.ai/v1/chat/completions"
 
 SYSTEM_PROMPT = """
 You are Hook Forge, an elite social media psychologist and copywriter. Your job is to generate hooks and analyze them.
@@ -36,7 +36,7 @@ HTML_UI = """
         .score { background: #22c55e; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
         #results, #loading, #errorBox { display: none; }
         #loading { color: #f97316; text-align: center; margin: 20px; font-weight: bold; }
-        #errorBox { background: #7f1d1d; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ef4444; word-wrap: break-word; }
+        #errorBox { background: #7f1d1d; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ef4444; word-wrap: break-word; font-family: monospace; }
     </style>
 </head>
 <body>
@@ -50,7 +50,7 @@ HTML_UI = """
             <label>Topic</label> <textarea id="topic" placeholder="e.g., Kaise zero budget me SaaS banayein..."></textarea>
             <button onclick="forgeHooks()">Forge Hooks 🚀</button>
         </div>
-        <div id="loading">🔨 Hook Forge kar raha hai... Thoda sabr rakho bhai...</div>
+        <div id="loading">🔨 Hook Forge kar raha hai... Thoda sabr rakho...</div>
         
         <div id="errorBox"></div>
 
@@ -89,10 +89,9 @@ HTML_UI = """
                 const data = await res.json();
                 document.getElementById('loading').style.display = 'none';
                 
-                // Agar parde ke peeche error aaya hai, toh screen par laal box me dikhao
                 if (data.error) {
                     document.getElementById('errorBox').style.display = 'block';
-                    document.getElementById('errorBox').innerText = "Backend Error: " + data.error;
+                    document.getElementById('errorBox').innerText = data.error;
                     return;
                 }
 
@@ -111,7 +110,7 @@ HTML_UI = """
             } catch(e) { 
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('errorBox').style.display = 'block';
-                document.getElementById('errorBox').innerText = "Frontend Code Error: " + e.message;
+                document.getElementById('errorBox').innerText = "Frontend Connection Error: " + e.message;
             }
         }
     </script>
@@ -128,6 +127,7 @@ def forge():
     data = request.json
     prompt = f"Topic: {data.get('topic')}\\nNiche: {data.get('niche')}\\nAudience: {data.get('audience')}\\nTone: {data.get('tone')}"
     
+    # SambaNova ka sabse latest standard model use kar rahe hain jo sabke liye active hai
     payload = {
         "model": "Meta-Llama-3-8B-Instruct", 
         "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}], 
@@ -137,16 +137,16 @@ def forge():
     headers = {"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"}
     
     try:
-        r = requests.post(SAMBANOVA_URL, json=payload, headers=headers)
-        res_data = r.json()
+        # Timeout joda taaki request anant kaal tak na latki rahe
+        r = requests.post(SAMBANOVA_URL, json=payload, headers=headers, timeout=15)
         
-        # Agar SambaNova ne koi error bheja hai
-        if "error" in res_data:
-            return jsonify({"error": str(res_data["error"])})
+        # Agar SambaNova khud koi error bhejta hai (Jaise Bad API key)
+        if r.status_code != 200:
+            return jsonify({"error": f"SambaNova API Error! Status Code: {r.status_code} | Message: {r.text}"})
             
+        res_data = r.json()
         ai_text = res_data['choices'][0]['message']['content']
         
-        # Markdown backticks (```json) ko hatane ki trick
         if ai_text.startswith("```json"):
             ai_text = ai_text.replace("```json", "", 1).strip()
             if ai_text.endswith("```"):
@@ -154,8 +154,10 @@ def forge():
                 
         return jsonify(json.loads(ai_text))
         
+    except requests.exceptions.Timeout:
+        return jsonify({"error": "SambaNova API ne bohot time lagaya, request timeout ho gayi!"})
     except Exception as e: 
-        return jsonify({"error": str(e) + " | API Status: " + str(r.status_code) + " | Reply: " + getattr(r, 'text', 'No answer')})
+        return jsonify({"error": f"Backend Failed: {str(e)}"})
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
