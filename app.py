@@ -39,7 +39,6 @@ HTML_UI = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hook Forge - Premium Dashboard</title>
-    <!-- Tailwind CSS for World-Class UI -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -55,7 +54,6 @@ HTML_UI = """
             }
         }
     </script>
-    <!-- FontAwesome for Premium Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Inter', sans-serif; transition: background-color 0.3s ease, color 0.3s ease; }
@@ -70,7 +68,6 @@ HTML_UI = """
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-darkbg dark:text-[#f4f4f5] h-screen flex flex-col md:flex-row overflow-hidden transition-colors duration-300">
 
-    <!-- SIDEBAR FOR MOBILE & DESKTOP -->
     <div class="w-full md:w-64 bg-white dark:bg-darkcard border-b md:border-b-0 md:border-r border-slate-200 dark:border-darkborder flex flex-col justify-between p-5 z-50 transition-colors duration-300">
         <div>
             <div class="flex items-center justify-between mb-8">
@@ -84,7 +81,6 @@ HTML_UI = """
                     </div>
                 </div>
                 
-                <!-- LIGHT/DARK MODE TOGGLE BUTTON -->
                 <button onclick="toggleTheme()" class="text-slate-400 hover:text-orange-500 dark:text-zinc-500 dark:hover:text-orange-400 transition-colors w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 dark:bg-zinc-800">
                     <i id="theme-icon" class="fa-solid fa-moon"></i>
                 </button>
@@ -115,10 +111,8 @@ HTML_UI = """
         </div>
     </div>
 
-    <!-- MAIN CONTENT AREA -->
     <div class="flex-1 flex flex-col overflow-y-auto p-4 md:p-8">
         
-        <!-- FORGE STUDIO TAB -->
         <div id="forge-tab" class="tab-content space-y-6">
             <div class="border-b border-slate-200 dark:border-zinc-800 pb-4 transition-colors">
                 <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Forge Studio</h2>
@@ -131,7 +125,6 @@ HTML_UI = """
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-                <!-- Inputs Form -->
                 <div class="lg:col-span-1 bg-white dark:bg-darkcard border border-slate-200 dark:border-darkborder rounded-xl p-5 space-y-4 shadow-lg transition-colors">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider mb-2">Niche</label>
@@ -160,7 +153,6 @@ HTML_UI = """
                     </button>
                 </div>
 
-                <!-- Results/Output Display -->
                 <div class="lg:col-span-2 space-y-6">
                     <div id="loading" class="hidden bg-white dark:bg-darkcard border border-slate-200 dark:border-zinc-800 rounded-xl p-12 text-center space-y-4 shadow-sm transition-colors">
                         <div class="inline-block relative w-12 h-12">
@@ -171,7 +163,6 @@ HTML_UI = """
                     </div>
 
                     <div id="results" class="hidden space-y-6">
-                        <!-- Hook A Card -->
                         <div class="bg-white dark:bg-darkcard border border-slate-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm relative overflow-hidden transition-colors">
                             <div class="flex justify-between items-start mb-3">
                                 <span class="bg-orange-100 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 text-xs font-bold px-2.5 py-1 rounded-md border border-orange-200 dark:border-orange-500/20">HOOK OPTION A</span>
@@ -191,7 +182,6 @@ HTML_UI = """
                             </div>
                         </div>
 
-                        <!-- Hook B Card -->
                         <div class="bg-white dark:bg-darkcard border border-slate-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm relative overflow-hidden transition-colors">
                             <div class="flex justify-between items-start mb-3">
                                 <span class="bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold px-2.5 py-1 rounded-md border border-indigo-200 dark:border-indigo-500/20">HOOK OPTION B</span>
@@ -211,7 +201,6 @@ HTML_UI = """
                             </div>
                         </div>
 
-                        <!-- A/B DNA Comparison Card -->
                         <div class="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-950/20 dark:to-indigo-950/20 border border-purple-200 dark:border-purple-500/30 rounded-xl p-5 shadow-sm transition-colors">
                             <div class="flex items-center space-x-2 mb-3 text-purple-700 dark:text-purple-400 font-bold text-sm">
                                 <i class="fa-solid fa-dna text-base"></i>
@@ -224,7 +213,6 @@ HTML_UI = """
             </div>
         </div>
 
-        <!-- TAB PLACEHOLDERS FOR FUTURE PHASES -->
         <div id="persona-tab" class="tab-content hidden space-y-4">
             <div class="border-b border-slate-200 dark:border-zinc-800 pb-4 transition-colors">
                 <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Creator Persona Setup</h2>
@@ -256,4 +244,153 @@ HTML_UI = """
                 <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Trend Hijack Engine</h2>
                 <p class="text-sm text-slate-500 dark:text-zinc-400">Bridge trending global internet topics with your specific industry niche instantly.</p>
             </div>
-            <div class="bg-white dark:bg-darkcard border border-slat
+            <div class="bg-white dark:bg-darkcard border border-slate-200 dark:border-zinc-800 rounded-xl p-6 max-w-xl space-y-4 shadow-sm transition-colors">
+                <p class="text-xs text-orange-600 dark:text-orange-400 font-semibold uppercase tracking-wider"><i class="fa-solid fa-bolt mr-1.5"></i>Viral Bridge Mode</p>
+                <div>
+                    <label class="block text-xs text-slate-500 dark:text-zinc-400 mb-2 font-bold">What is trending right now?</label>
+                    <input type="text" id="trendInput" placeholder="e.g., Apple Vision Pro 2 Launch, IPL Super Over..." class="w-full bg-slate-50 dark:bg-darkbg border border-slate-300 dark:border-zinc-800 rounded-lg px-3 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-orange-500 transition-colors">
+                </div>
+                <button onclick="alert('Bhai, Next Phase me Trend Engine active hoga!')" class="bg-orange-600 font-bold py-2.5 px-4 rounded-lg text-sm text-white hover:bg-orange-500 transition-colors">Generate Trend-Hijack Hook 🚀</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // THEME MANAGEMENT (Light / Dark Mode)
+        function initTheme() {
+            if (localStorage.getItem('theme') === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('theme-icon').className = "fa-solid fa-sun text-orange-500";
+            } else {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').className = "fa-solid fa-moon";
+            }
+        }
+        
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('theme-icon').className = "fa-solid fa-sun text-orange-500";
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('theme-icon').className = "fa-solid fa-moon";
+            }
+        }
+        
+        initTheme();
+
+        // TAB NAVIGATION
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.add('active');
+        }
+
+        // API CALL FUNCTION
+        async function forgeHooks() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('errorBox').style.display = 'none';
+            
+            try {
+                const res = await fetch('/forge', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        topic: document.getElementById('topic').value,
+                        niche: document.getElementById('niche').value,
+                        audience: document.getElementById('audience').value,
+                        tone: document.getElementById('tone').value
+                    })
+                });
+                
+                const data = await res.json();
+                document.getElementById('loading').style.display = 'none';
+                
+                if (data.error) {
+                    document.getElementById('errorBox').style.removeProperty('display');
+                    document.getElementById('errorBox').classList.remove('hidden');
+                    document.getElementById('errorText').innerText = "SambaNova Pipeline Error: " + data.error;
+                    return;
+                }
+
+                document.getElementById('textA').innerText = data.hook_a.text;
+                document.getElementById('scoreA').innerText = data.hook_a.score + "/10";
+                document.getElementById('psychA').innerText = data.hook_a.psychology;
+                document.getElementById('fixA').innerText = data.hook_a.reasoning;
+
+                document.getElementById('textB').innerText = data.hook_b.text;
+                document.getElementById('scoreB').innerText = data.hook_b.score + "/10";
+                document.getElementById('psychB').innerText = data.hook_b.psychology;
+                document.getElementById('fixB').innerText = data.hook_b.reasoning;
+
+                document.getElementById('dna').innerText = data.dna_comparison;
+                
+                document.getElementById('results').style.removeProperty('display');
+                document.getElementById('results').classList.remove('hidden');
+                
+            } catch(e) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('errorBox').style.removeProperty('display');
+                document.getElementById('errorBox').classList.remove('hidden');
+                document.getElementById('errorText').innerText = "Frontend Dashboard Engine Fault: " + e.message;
+            }
+        }
+
+        // COPY TO CLIPBOARD
+        function copyText(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text);
+            alert("Hook copied to clipboard, Santosh bhai! 🔥");
+        }
+    </script>
+</body>
+</html>
+"""
+
+@app.route('/')
+def home(): 
+    return render_template_string(HTML_UI)
+
+@app.route('/forge', methods=['POST'])
+def forge():
+    data = request.json
+    prompt = f"Topic: {data.get('topic')}\\nNiche: {data.get('niche')}\\nAudience: {data.get('audience')}\\nTone: {data.get('tone')}"
+    
+    payload = {
+        "model": "Meta-Llama-3.3-70B-Instruct", 
+        "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}], 
+        "temperature": 0.7
+    }
+    
+    headers = {"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"}
+    
+    try:
+        r = requests.post(SAMBANOVA_URL, json=payload, headers=headers, timeout=15)
+        
+        if r.status_code != 200:
+            return jsonify({"error": f"SambaNova Returned Status {r.status_code} | Details: {r.text}"})
+            
+        res_data = r.json()
+        ai_text = res_data['choices'][0]['message']['content'].strip()
+        
+        if ai_text.startswith("```json"):
+            ai_text = ai_text.replace("```json", "", 1).strip()
+            if ai_text.endswith("```"):
+                ai_text = ai_text[:-3].strip()
+                
+        return jsonify(json.loads(ai_text))
+        
+    except requests.exceptions.Timeout:
+        return jsonify({"error": "SambaNova Gateway API timeout (15 Seconds Limit Hit)"})
+    except Exception as e: 
+        return jsonify({"error": f"Backend Runtime Exception: {str(e)}"})
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
