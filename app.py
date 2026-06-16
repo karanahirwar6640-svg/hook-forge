@@ -127,9 +127,9 @@ def forge():
     data = request.json
     prompt = f"Topic: {data.get('topic')}\\nNiche: {data.get('niche')}\\nAudience: {data.get('audience')}\\nTone: {data.get('tone')}"
     
-    # SambaNova ka sabse latest standard model use kar rahe hain jo sabke liye active hai
+    # Ye raha naya Model jo API me support karta hai
     payload = {
-        "model": "Meta-Llama-3-8B-Instruct", 
+        "model": "Meta-Llama-3.3-70B-Instruct", 
         "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}], 
         "temperature": 0.7
     }
@@ -137,10 +137,8 @@ def forge():
     headers = {"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"}
     
     try:
-        # Timeout joda taaki request anant kaal tak na latki rahe
         r = requests.post(SAMBANOVA_URL, json=payload, headers=headers, timeout=15)
         
-        # Agar SambaNova khud koi error bhejta hai (Jaise Bad API key)
         if r.status_code != 200:
             return jsonify({"error": f"SambaNova API Error! Status Code: {r.status_code} | Message: {r.text}"})
             
