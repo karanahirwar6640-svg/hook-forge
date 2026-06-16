@@ -362,8 +362,7 @@ def forge():
         ai_text = res_data['choices'][0]['message']['content'].strip()
         
         if ai_text.startswith("```json"):
-            ai_text = ai_text.replace("
-```json", "", 1).strip()
+            ai_text = ai_text.replace("```json", "", 1).strip()
             if ai_text.endswith("```"):
                 ai_text = ai_text[:-3].strip()
                 
