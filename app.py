@@ -38,248 +38,208 @@ HTML_UI = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hook Forge | Cinematic SaaS</title>
+    <title>Hook Forge | Crimson Anime Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Elegant Fonts matching the Reference Image -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
-            --dark-side: #584a5e; /* Deep elegant purple */
-            --light-side: #f5eedc; /* Warm aesthetic beige */
-            --text-light: #f5eedc;
-            --text-dark: #3a2e3f;
-        }
-
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: 'Lato', sans-serif;
-            overflow-x: hidden;
-            /* The Diagonal Split Background */
-            background: linear-gradient(180deg, var(--dark-side) 50%, var(--light-side) 50%);
+            font-family: 'Noto Sans JP', sans-serif;
+            /* Yahan teri di hui Chisato ki image background me set ki hai */
+            background-image: url('https://i.pinimg.com/originals/39/db/e2/39dbe266fbd4af345a049536b52e306a.jpg');
+            background-size: cover;
+            background-position: center right;
+            background-attachment: fixed;
+            background-color: #1a0505;
+            color: #fef3c7; /* Warm cream color text */
         }
 
-        @media (min-width: 768px) {
-            body {
-                background: linear-gradient(108deg, var(--dark-side) 50.5%, var(--light-side) 50.5%);
-            }
+        /* Red Glassmorphism Panel */
+        .glass-panel {
+            background: rgba(15, 2, 2, 0.75); /* Dark translucent red/black */
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-right: 1px solid rgba(220, 38, 38, 0.2);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.7);
         }
 
-        /* 3D Parallax Container */
-        .scene { perspective: 1000px; }
-        .tilt-card {
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
+        .glass-card {
+            background: rgba(30, 5, 5, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
         }
 
-        /* Typography */
-        .font-serif-elegant { font-family: 'Playfair Display', serif; }
-        
-        .title-text {
-            font-size: clamp(3rem, 6vw, 5rem);
-            line-height: 1.1;
-            letter-spacing: 0.1em;
-            text-shadow: 2px 5px 15px rgba(0,0,0,0.2);
-            transform: translateZ(40px); /* 3D pop out */
+        .glass-card:hover {
+            border-color: rgba(220, 38, 38, 0.6);
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.2);
         }
 
-        /* Glassmorphic Inputs & Buttons */
-        .glass-input {
-            background: rgba(255, 255, 255, 0.05);
-            border: none;
-            border-bottom: 1px solid rgba(245, 238, 220, 0.3);
-            color: var(--text-light);
+        /* Anime Title Font */
+        .anime-title {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 15px rgba(220, 38, 38, 0.8);
+        }
+
+        /* Inputs */
+        .crimson-input {
+            background: rgba(20, 0, 0, 0.5);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #fef3c7;
             transition: all 0.3s;
         }
-        .glass-input:focus {
+        .crimson-input:focus {
             outline: none;
-            border-bottom: 1px solid rgba(245, 238, 220, 0.9);
-            background: rgba(255, 255, 255, 0.1);
+            border-color: #ef4444;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+            background: rgba(40, 0, 0, 0.7);
         }
-        .glass-input::placeholder { color: rgba(245, 238, 220, 0.5); }
         
-        select.glass-input option { background: var(--dark-side); color: var(--text-light); }
+        select.crimson-input option { background: #1a0505; color: #fef3c7; }
 
-        .glass-btn {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: var(--text-light);
-            transition: all 0.4s ease;
-            transform: translateZ(30px);
+        /* Button */
+        .crimson-btn {
+            background: linear-gradient(45deg, #7f1d1d, #b91c1c);
+            border: 1px solid #ef4444;
+            box-shadow: 0 0 15px rgba(185, 28, 28, 0.4);
+            transition: all 0.3s ease;
         }
-        .glass-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateZ(35px) scale(1.02);
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); }
-
-        /* Cinematic Loading Animation */
-        .fade-pulse { animation: fadePulse 2s infinite; }
-        @keyframes fadePulse {
-            0% { opacity: 0.3; transform: scale(0.98); }
-            50% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0.3; transform: scale(0.98); }
+        .crimson-btn:hover {
+            background: linear-gradient(45deg, #991b1b, #dc2626);
+            box-shadow: 0 0 25px rgba(220, 38, 38, 0.7);
+            transform: translateY(-2px);
         }
 
-        /* Result Cards on the Light Side */
-        .light-card {
-            background: transparent;
-            border-left: 2px solid rgba(58, 46, 63, 0.2);
-            padding-left: 1.5rem;
-            transform: translateZ(20px);
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); }
+        ::-webkit-scrollbar-thumb { background: #991b1b; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #dc2626; }
+
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="text-white relative">
+<body class="flex flex-col md:flex-row overflow-hidden">
 
-    <!-- Navbar -->
-    <nav class="absolute top-0 w-full p-6 md:px-12 flex justify-between items-center z-50">
-        <div class="flex space-x-6 text-sm tracking-widest uppercase font-bold text-[#f5eedc]">
-            <a href="#" class="hover:opacity-70 transition">Studio</a>
-            <a href="#" class="hover:opacity-70 transition">Persona</a>
-            <a href="#" class="hover:opacity-70 transition border-b border-[#f5eedc]">Forge</a>
-        </div>
-        <button class="text-[#f5eedc] text-2xl hover:opacity-70"><i class="fa-solid fa-bars"></i></button>
-    </nav>
-
-    <!-- Main Content Split -->
-    <main class="min-h-screen flex flex-col md:flex-row relative scene pt-24 md:pt-0">
+    <aside class="w-full md:w-5/12 lg:w-1/3 h-screen glass-panel overflow-y-auto flex flex-col p-6 md:p-8 relative z-20">
         
-        <!-- Left Side: Inputs (Dark Purple) -->
-        <section class="w-full md:w-1/2 p-8 md:p-16 xl:p-24 flex flex-col justify-center relative z-10 tilt-card" id="left-card">
-            
-            <p class="font-serif-elegant italic text-lg opacity-80 mb-2 translate-z-10">2026 SaaS Engine</p>
-            <h1 class="font-serif-elegant title-text mb-8">
-                HOOK<br>FORGE.
-            </h1>
+        <div class="mb-8 mt-4 text-center md:text-left">
+            <h1 class="anime-title text-4xl font-black text-red-500 mb-1">HOOK FORGE</h1>
+            <p class="text-xs tracking-[0.3em] text-red-300/70 uppercase">Crimson Protocol</p>
+        </div>
 
-            <div class="space-y-6 max-w-md transform translate-z-20">
-                <div id="errorBox" class="hidden bg-red-900/40 border border-red-500/50 p-4 rounded text-xs tracking-wider"></div>
+        <div class="space-y-5 flex-1">
+            <div id="errorBox" class="hidden bg-red-950/80 border border-red-500 text-red-200 p-3 rounded-lg text-xs font-mono shadow-lg shadow-red-900/50"></div>
 
-                <div class="grid grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-[10px] uppercase tracking-widest opacity-60 mb-2">Target Niche</label>
-                        <input type="text" id="niche" value="Tech Business" class="w-full glass-input pb-2 text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] uppercase tracking-widest opacity-60 mb-2">Audience</label>
-                        <input type="text" id="audience" value="Creators" class="w-full glass-input pb-2 text-sm">
-                    </div>
-                </div>
-
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-[10px] uppercase tracking-widest opacity-60 mb-2">Psychological Tone</label>
-                    <select id="tone" class="w-full glass-input pb-2 text-sm">
+                    <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400/80 mb-1.5">Target Niche</label>
+                    <input type="text" id="niche" value="Anime & Tech" class="w-full crimson-input rounded-lg px-4 py-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400/80 mb-1.5">Audience</label>
+                    <input type="text" id="audience" value="Weebs & Creators" class="w-full crimson-input rounded-lg px-4 py-3 text-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400/80 mb-1.5">Psychological Tone</label>
+                    <select id="tone" class="w-full crimson-input rounded-lg px-4 py-3 text-sm">
                         <option value="Curious">Curiosity Gap</option>
                         <option value="Aggressive">Brutally Honest</option>
-                        <option value="Storytelling">Narrative Story</option>
+                        <option value="Storytelling">Anime Protagonist Arc</option>
                     </select>
                 </div>
-
                 <div>
-                    <label class="block text-[10px] uppercase tracking-widest opacity-60 mb-2">Core Content Topic</label>
-                    <textarea id="topic" rows="2" placeholder="Describe your post idea here..." class="w-full glass-input pb-2 text-sm resize-none"></textarea>
-                </div>
-
-                <div class="pt-4 flex items-center space-x-6">
-                    <button onclick="forgeHooks()" class="glass-btn px-8 py-3.5 text-xs font-bold tracking-widest uppercase flex items-center space-x-3 cursor-pointer">
-                        <i class="fa-solid fa-play"></i>
-                        <span>Ignite AI Forge</span>
-                    </button>
-                    <span class="text-xs tracking-widest opacity-50 uppercase font-serif-elegant italic">Secure API</span>
+                    <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400/80 mb-1.5">Core Content Topic</label>
+                    <textarea id="topic" rows="3" placeholder="Apna idea yahan likho..." class="w-full crimson-input rounded-lg px-4 py-3 text-sm resize-none"></textarea>
                 </div>
             </div>
-        </section>
 
-        <!-- Right Side: Results (Warm Beige) -->
-        <section class="w-full md:w-1/2 p-8 md:p-16 xl:p-24 flex flex-col justify-center relative z-10 text-[var(--text-dark)] tilt-card" id="right-card">
+            <button onclick="forgeHooks()" class="w-full crimson-btn mt-6 py-4 rounded-lg font-bold tracking-widest uppercase text-xs flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-fire"></i>
+                <span>Ignite The Forge</span>
+            </button>
+        </div>
+
+        <div class="mt-8 text-center md:text-left text-[10px] tracking-wider text-red-500/50 uppercase">
+            <i class="fa-solid fa-shield-halved mr-1"></i> System Online • Llama 3 Engine
+        </div>
+    </aside>
+
+    <main class="w-full md:w-7/12 lg:w-2/3 h-screen overflow-y-auto p-6 md:p-10 relative z-10 hide-scrollbar flex flex-col justify-center">
+        
+        <div id="loading" class="hidden text-center fade-in">
+            <i class="fa-solid fa-circle-notch fa-spin text-5xl text-red-600 mb-4 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]"></i>
+            <h2 class="anime-title text-2xl text-red-100">Extracting Psychology...</h2>
+            <p class="text-sm text-red-300/70 mt-2 tracking-widest">Bridging neural pathways.</p>
+        </div>
+
+        <div id="results" class="hidden space-y-6 max-w-2xl ml-auto mr-auto md:ml-0 fade-in pb-20">
             
-            <!-- Cinematic Loader -->
-            <div id="loading" class="hidden h-full flex-col justify-center space-y-4 fade-pulse">
-                <i class="fa-solid fa-pen-nib text-4xl opacity-50 mb-4"></i>
-                <h3 class="font-serif-elegant text-2xl">"Analyzing psychology..."</h3>
-                <p class="text-sm opacity-70 leading-relaxed max-w-sm">The AI is weaving emotional triggers and loss aversion into your content. Please wait a moment.</p>
-            </div>
-
-            <!-- Empty State / Intro Text -->
-            <div id="intro-state" class="space-y-6 max-w-lg">
-                <h3 class="font-serif-elegant text-2xl">"Words that command attention."</h3>
-                <p class="text-sm leading-loose opacity-80 text-justify">
-                    Welcome to the elite tier of content creation. Hook Forge doesn't just generate text; it analyzes the deep psychology of your audience. Enter your topic on the left, and watch as raw ideas are transformed into magnetic, data-backed hooks that dominate the timeline.
-                </p>
-                <p class="text-xs font-bold tracking-widest uppercase mt-8 opacity-60">Engine: SambaNova Llama 3</p>
-            </div>
-
-            <!-- Actual Results Output -->
-            <div id="results" class="hidden space-y-10 max-w-lg max-h-[80vh] overflow-y-auto pr-4 pb-12">
+            <div class="glass-card p-6 relative overflow-hidden group">
+                <div class="absolute top-0 left-0 w-1 h-full bg-red-600 shadow-[0_0_10px_#dc2626]"></div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-[10px] font-bold tracking-widest bg-red-950/80 text-red-400 px-3 py-1 rounded border border-red-800/50 uppercase">Option A</span>
+                    <span class="text-[10px] font-black tracking-widest text-red-200">POWER LEVEL: <span id="scoreA" class="text-red-500 text-lg"></span></span>
+                </div>
+                <h3 id="textA" class="text-xl md:text-2xl font-bold leading-relaxed mb-5 text-amber-50"></h3>
                 
-                <!-- Hook A -->
-                <div class="light-card group">
-                    <div class="flex justify-between items-baseline mb-2">
-                        <span class="text-xs font-bold tracking-widest uppercase opacity-50">Option A</span>
-                        <span class="text-[10px] bg-[var(--dark-side)] text-[#f5eedc] px-2 py-1 tracking-wider">SCORE: <span id="scoreA"></span>/10</span>
+                <div class="space-y-3 pt-4 border-t border-red-900/50">
+                    <div>
+                        <span class="text-[10px] text-red-400 tracking-widest uppercase font-bold flex items-center"><i class="fa-solid fa-brain mr-2"></i>Psychology</span>
+                        <p id="psychA" class="text-xs text-red-100/80 mt-1 leading-relaxed"></p>
                     </div>
-                    <h2 id="textA" class="font-serif-elegant text-xl lg:text-2xl leading-snug mb-4 group-hover:text-orange-800 transition-colors"></h2>
-                    <div class="space-y-3 text-xs leading-relaxed opacity-80">
-                        <p><strong class="font-bold tracking-wider uppercase text-[10px]">Psychology:</strong> <span id="psychA"></span></p>
-                        <p><strong class="font-bold tracking-wider uppercase text-[10px]">Actionable Fix:</strong> <span id="fixA"></span></p>
+                    <div>
+                        <span class="text-[10px] text-red-400 tracking-widest uppercase font-bold flex items-center"><i class="fa-solid fa-wrench mr-2"></i>Actionable Fix</span>
+                        <p id="fixA" class="text-xs text-red-100/80 mt-1 leading-relaxed"></p>
                     </div>
-                    <button onclick="copyText('textA')" class="mt-4 text-[10px] font-bold tracking-widest uppercase opacity-50 hover:opacity-100 transition-opacity flex items-center space-x-2"><i class="fa-regular fa-copy"></i> <span>Copy</span></button>
                 </div>
-
-                <!-- Hook B -->
-                <div class="light-card group">
-                    <div class="flex justify-between items-baseline mb-2">
-                        <span class="text-xs font-bold tracking-widest uppercase opacity-50">Option B</span>
-                        <span class="text-[10px] bg-[var(--dark-side)] text-[#f5eedc] px-2 py-1 tracking-wider">SCORE: <span id="scoreB"></span>/10</span>
-                    </div>
-                    <h2 id="textB" class="font-serif-elegant text-xl lg:text-2xl leading-snug mb-4 group-hover:text-orange-800 transition-colors"></h2>
-                    <div class="space-y-3 text-xs leading-relaxed opacity-80">
-                        <p><strong class="font-bold tracking-wider uppercase text-[10px]">Psychology:</strong> <span id="psychB"></span></p>
-                        <p><strong class="font-bold tracking-wider uppercase text-[10px]">Actionable Fix:</strong> <span id="fixB"></span></p>
-                    </div>
-                    <button onclick="copyText('textB')" class="mt-4 text-[10px] font-bold tracking-widest uppercase opacity-50 hover:opacity-100 transition-opacity flex items-center space-x-2"><i class="fa-regular fa-copy"></i> <span>Copy</span></button>
-                </div>
-
-                <!-- DNA -->
-                <div class="p-5 border border-dashed border-[#3a2e3f]/30 bg-white/30 backdrop-blur-sm rounded-sm">
-                    <div class="flex items-center space-x-2 mb-3 font-bold text-[10px] tracking-widest uppercase">
-                        <i class="fa-solid fa-dna"></i><span>DNA Matrix</span>
-                    </div>
-                    <p id="dna" class="text-xs leading-relaxed opacity-90"></p>
-                </div>
+                <button onclick="copyText('textA')" class="mt-4 bg-red-950/50 hover:bg-red-900/80 border border-red-800/50 text-red-200 text-[10px] tracking-widest uppercase px-4 py-2 rounded transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
             </div>
-        </section>
+
+            <div class="glass-card p-6 relative overflow-hidden group">
+                <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 shadow-[0_0_10px_#f59e0b]"></div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-[10px] font-bold tracking-widest bg-amber-950/80 text-amber-400 px-3 py-1 rounded border border-amber-800/50 uppercase">Option B</span>
+                    <span class="text-[10px] font-black tracking-widest text-amber-200">POWER LEVEL: <span id="scoreB" class="text-amber-500 text-lg"></span></span>
+                </div>
+                <h3 id="textB" class="text-xl md:text-2xl font-bold leading-relaxed mb-5 text-amber-50"></h3>
+                
+                <div class="space-y-3 pt-4 border-t border-amber-900/30">
+                    <div>
+                        <span class="text-[10px] text-amber-500 tracking-widest uppercase font-bold flex items-center"><i class="fa-solid fa-brain mr-2"></i>Psychology</span>
+                        <p id="psychB" class="text-xs text-red-100/80 mt-1 leading-relaxed"></p>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-amber-500 tracking-widest uppercase font-bold flex items-center"><i class="fa-solid fa-wrench mr-2"></i>Actionable Fix</span>
+                        <p id="fixB" class="text-xs text-red-100/80 mt-1 leading-relaxed"></p>
+                    </div>
+                </div>
+                <button onclick="copyText('textB')" class="mt-4 bg-amber-950/30 hover:bg-amber-900/60 border border-amber-800/50 text-amber-200 text-[10px] tracking-widest uppercase px-4 py-2 rounded transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
+            </div>
+
+            <div class="bg-red-950/40 border border-red-500/30 p-5 rounded-lg backdrop-blur-md">
+                <div class="text-[10px] text-red-400 tracking-widest uppercase font-bold flex items-center mb-2">
+                    <i class="fa-solid fa-dna mr-2 animate-pulse"></i> DNA Comparison Matrix
+                </div>
+                <p id="dna" class="text-xs text-red-100/90 leading-relaxed"></p>
+            </div>
+
+        </div>
     </main>
 
-    <!-- 3D Interactions & API Logic -->
     <script>
-        // 3D Parallax Tilt Effect for Desktop
-        document.addEventListener('mousemove', (e) => {
-            if(window.innerWidth > 768) {
-                const xAxis = (window.innerWidth / 2 - e.pageX) / 60;
-                const yAxis = (window.innerHeight / 2 - e.pageY) / 60;
-                
-                document.getElementById('left-card').style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-                document.getElementById('right-card').style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-            }
-        });
-
-        // API Integration
         async function forgeHooks() {
-            document.getElementById('intro-state').style.display = 'none';
             document.getElementById('results').style.display = 'none';
             document.getElementById('errorBox').style.display = 'none';
-            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('loading').style.display = 'block';
             
             try {
                 const res = await fetch('/forge', {
@@ -298,8 +258,7 @@ HTML_UI = """
                 
                 if (data.error) {
                     document.getElementById('errorBox').style.display = 'block';
-                    document.getElementById('errorBox').innerText = "System Anomaly: " + data.error;
-                    document.getElementById('intro-state').style.display = 'block';
+                    document.getElementById('errorBox').innerText = "System Error: " + data.error;
                     return;
                 }
 
@@ -321,14 +280,13 @@ HTML_UI = """
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('errorBox').style.display = 'block';
                 document.getElementById('errorBox').innerText = "Network Fault: " + e.message;
-                document.getElementById('intro-state').style.display = 'block';
             }
         }
 
         function copyText(elementId) {
             const text = document.getElementById(elementId).innerText.replace(/"/g, '');
             navigator.clipboard.writeText(text);
-            alert("Hook copied securely. 🔥");
+            alert("Hook acquired successfully! ⚔️");
         }
     </script>
 </body>
