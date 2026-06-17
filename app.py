@@ -27,7 +27,7 @@ You must output exactly this JSON structure:
 """
 
 # ==========================================
-# 1. AUTHENTICATION UI (VIDEO BACKGROUND)
+# 1. AUTHENTICATION UI (100% VISIBLE VIDEO)
 # ==========================================
 HTML_LOGIN = """
 <!DOCTYPE html>
@@ -43,24 +43,24 @@ HTML_LOGIN = """
     <style>
         body {
             margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif;
-            background-color: #0d0202; color: #fef3c7; 
+            background-color: #000; color: #fef3c7; 
             display: flex; align-items: center; justify-content: center;
             overflow: hidden; position: relative;
         }
         .bg-video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: 0; opacity: 0.35; pointer-events: none;
+            object-fit: cover; z-index: 0; opacity: 1; pointer-events: none; /* Opacity 1 means 100% visible */
         }
         .video-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(15,2,2,0.4) 0%, rgba(5,0,0,0.85) 100%);
+            background: rgba(0, 0, 0, 0.2); /* Bohat halka tint taaki text padhne me aaye */
             z-index: 1; pointer-events: none;
         }
         .glass-auth-panel {
             position: relative; z-index: 10;
-            background: rgba(10, 2, 2, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 24px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.95), inset 0 0 30px rgba(255,50,50,0.03);
+            background: rgba(10, 2, 2, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 24px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.95), inset 0 0 30px rgba(255,50,50,0.05);
         }
         .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 25px rgba(220, 38, 38, 0.8); }
         .crimson-input { background: rgba(0, 0, 0, 0.65); border: 1px solid rgba(220, 38, 38, 0.25); color: #fef3c7; transition: all 0.3s; }
@@ -85,7 +85,7 @@ HTML_LOGIN = """
         <div id="msgBox" class="hidden p-3 rounded-xl text-xs font-mono text-center mb-6 border"></div>
 
         <div class="space-y-5">
-            <button onclick="loginGitHub()" class="w-full github-btn py-3.5 rounded-xl text-xs tracking-widest uppercase font-bold flex items-center justify-center gap-3">
+            <button onclick="loginGitHub()" id="btn-github" class="w-full github-btn py-3.5 rounded-xl text-xs tracking-widest uppercase font-bold flex items-center justify-center gap-3">
                 <i class="fa-brands fa-github text-base"></i> Continue with GitHub
             </button>
 
@@ -100,7 +100,7 @@ HTML_LOGIN = """
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-red-500/40"><i class="fa-solid fa-shield-halved text-xs"></i></span>
                     <input type="email" id="auth-email" placeholder="Enter corporate email address" class="w-full crimson-input rounded-xl pl-10 pr-4 py-3.5 text-sm focus:outline-none">
                 </div>
-                <button onclick="sendMagicLink()" class="w-full bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 border border-red-600 text-white font-bold py-3.5 rounded-xl text-xs tracking-widest uppercase transition-all shadow-lg shadow-red-950/80">
+                <button onclick="sendMagicLink()" id="btn-email" class="w-full bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 border border-red-600 text-white font-bold py-3.5 rounded-xl text-xs tracking-widest uppercase transition-all shadow-lg shadow-red-950/80">
                     Request Authentication Token
                 </button>
             </div>
@@ -127,30 +127,44 @@ HTML_LOGIN = """
 
         async function loginGitHub() {
             try {
+                const btn = document.getElementById('btn-github');
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-base"></i> Connecting...';
+                
                 const { error } = await supabase.auth.signInWithOAuth({ 
                     provider: 'github',
                     options: { redirectTo: window.location.origin }
                 });
                 if (error) throw error;
             } catch (error) {
-                showMsg('error', error.message);
+                showMsg('error', 'Auth Error: ' + error.message);
+                document.getElementById('btn-github').innerHTML = '<i class="fa-brands fa-github text-base"></i> Continue with GitHub';
+                alert("GitHub Connection Failed: " + error.message);
             }
         }
 
         async function sendMagicLink() {
             const email = document.getElementById('auth-email').value.trim();
-            if(!email) { showMsg('error', 'Please enter a valid business email.'); return; }
+            if(!email) { 
+                showMsg('error', 'Please enter a valid business email.'); 
+                return; 
+            }
             
+            const btn = document.getElementById('btn-email');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
             showMsg('success', 'Verifying cloud routing parameters...');
+            
             try {
                 const { error } = await supabase.auth.signInWithOtp({ 
                     email: email,
                     options: { emailRedirectTo: window.location.origin }
                 });
                 if (error) throw error;
-                showMsg('success', 'Access token dispatched. Check your email console.');
+                showMsg('success', 'Access token dispatched! Please check your email inbox (and spam folder).');
+                btn.innerHTML = 'Token Sent Successfully';
             } catch (error) {
-                showMsg('error', error.message);
+                showMsg('error', 'Server Error: ' + error.message);
+                btn.innerHTML = 'Request Authentication Token';
+                alert("Email Failed: " + error.message);
             }
         }
 
@@ -188,18 +202,23 @@ HTML_UI = """
     <style>
         body {
             margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif;
-            background-color: #0d0202; color: #fef3c7;
+            background-color: #000; color: #fef3c7;
         }
         .bg-video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: 0; opacity: 0.15; pointer-events: none;
+            object-fit: cover; z-index: 0; opacity: 1; pointer-events: none;
+        }
+        .video-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); 
+            z-index: 1; pointer-events: none;
         }
         .glass-card {
-            background: rgba(15, 2, 2, 0.75); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 50, 50, 0.25); border-radius: 16px; box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            background: rgba(15, 2, 2, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 50, 50, 0.3); border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
         }
         .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 20px rgba(220, 38, 38, 0.9); }
-        .crimson-input { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(220, 38, 38, 0.3); color: #fef3c7; transition: all 0.3s; }
+        .crimson-input { background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(220, 38, 38, 0.4); color: #fef3c7; transition: all 0.3s; }
         .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
         select.crimson-input option { background: #1a0505; color: #fef3c7; }
         .crimson-btn { background: linear-gradient(45deg, #7f1d1d, #dc2626); border: 1px solid #ef4444; box-shadow: 0 0 20px rgba(220, 38, 38, 0.5); transition: all 0.3s ease; }
@@ -213,6 +232,7 @@ HTML_UI = """
     <video autoplay muted loop playsinline class="bg-video">
         <source src="https://cdn.discordapp.com/attachments/1510192168273182745/1516741191121633311/From_Klickpin.com-_Natural_Makeup_Looks_Inspiration_for_Summer-pin-id-587860557652168444.mp4?ex=6a33becf&is=6a326d4f&hm=b90901b00ab6161677a16f22153f71174238667e81d0fef2b74ad93d2a20e5aa&" type="video/mp4">
     </video>
+    <div class="video-overlay"></div>
 
     <div class="glass-card w-full max-w-md p-8 relative z-20">
         <div class="text-center mb-6">
