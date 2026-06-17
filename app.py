@@ -359,4 +359,84 @@ HTML_UI = """
 def home():
     if 'user' in session:
         return render_template_string(HTML_UI, username=session['user'])
-    return render_te
+    return render_template_string(HTML_LOGIN)
+
+@app.route('/auth', methods=['POST'])
+def auth():
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        return jsonify({"error": "Backend Error: Supabase keys missing on Render!"})
+
+    data = request.json
+    action = data.get('action')
+    username = data.get('username').strip()
+    password = data.get('password').strip()
+
+    target_url = f"{SUPABASE_URL}/rest/v1/users"
+
+    if action == 'signup':
+        check_url = f"{target_url}?username=eq.{username}"
+        r_check = requests.get(check_url, headers=get_supabase_headers())
+        
+        if r_check.status_code == 200 and len(r_check.json()) > 0:
+            return jsonify({"error": "Identity already registered."})
+        
+        hashed_password = generate_password_hash(password)
+        payload = {"username": username, "password": hashed_password}
+        r_insert = requests.post(target_url, json=payload, headers=get_supabase_headers())
+
+        if r_insert.status_code in [200, 201]:
+            session['user'] = username
+            return jsonify({"success": True, "message": "Cloud registration success!"})
+        return jsonify({"error": "Failed to write user to cloud storage."})
+
+    elif action == 'login':
+        login_url = f"{target_url}?username=eq.{username}"
+        r_login = requests.get(login_url, headers=get_supabase_headers())
+
+        if r_login.status_code == 200 and len(r_login.json()) > 0:
+            user_data = r_login.json()[0]
+            if check_password_hash(user_data['password'], password):
+                session['user'] = username
+                return jsonify({"success": True, "message": "Welcome back!"})
+        
+        return jsonify({"error": "Invalid combination. Denied entry."})
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect('/')
+
+@app.route('/forge', methods=['POST'])
+def forge():
+    if 'user' not in session:
+        return jsonify({"error": "Unauthorized pipeline request."}), 401
+
+    data = request.json
+    prompt = f"Topic: {data.get('topic')}\\nNiche: {data.get('niche')}\\nAudience: {data.get('audience')}\\nTone: {data.get('tone')}"
+    
+    payload = {
+        "model": "Meta-Llama-3.3-70B-Instruct", 
+        "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}], 
+        "temperature": 0.7
+    }
+    headers = {"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"}
+    
+    try:
+        r = requests.post(SAMBANOVA_URL, json=payload, headers=headers, timeout=15)
+        if r.status_code != 200:
+            return jsonify({"error": "SambaNova Pipeline Error. Try again shortly."})
+            
+        res_data = r.json()
+        ai_text = res_data['choices'][0]['message']['content'].strip()
+        if ai_text.startswith("```json"):
+            ai_text = ai_text.replace("```json", "", 1).strip()
+            if ai_text.endswith("```"):
+                ai_text = ai_text[:-3].strip()
+                
+        return jsonify(json.loads(ai_text))
+    except Exception as e: 
+        return jsonify({"error": f"Runtime fault: {str(e)}"})
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
