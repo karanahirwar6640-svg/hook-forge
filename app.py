@@ -27,7 +27,7 @@ You must output exactly this JSON structure:
 """
 
 # ==========================================
-# 1. AUTHENTICATION UI (100% VISIBLE VIDEO)
+# 1. AUTHENTICATION UI (PERMANENT SUPABASE VIDEO)
 # ==========================================
 HTML_LOGIN = """
 <!DOCTYPE html>
@@ -49,12 +49,7 @@ HTML_LOGIN = """
         }
         .bg-video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: 0; opacity: 1; pointer-events: none; /* Opacity 1 means 100% visible */
-        }
-        .video-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.2); /* Bohat halka tint taaki text padhne me aaye */
-            z-index: 1; pointer-events: none;
+            object-fit: cover; z-index: 0; opacity: 1; pointer-events: none; /* 100% Brightness */
         }
         .glass-auth-panel {
             position: relative; z-index: 10;
@@ -71,10 +66,9 @@ HTML_LOGIN = """
 </head>
 <body class="p-4">
 
-    <video autoplay muted loop playsinline class="bg-video">
-        <source src="https://cdn.discordapp.com/attachments/1510192168273182745/1516741191121633311/From_Klickpin.com-_Natural_Makeup_Looks_Inspiration_for_Summer-pin-id-587860557652168444.mp4?ex=6a33becf&is=6a326d4f&hm=b90901b00ab6161677a16f22153f71174238667e81d0fef2b74ad93d2a20e5aa&" type="video/mp4">
+    <video id="bg-vid" autoplay muted loop playsinline class="bg-video">
+        <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
     </video>
-    <div class="video-overlay"></div>
 
     <div class="glass-auth-panel w-full max-w-[410px] p-8 md:p-10">
         <div class="text-center mb-8">
@@ -110,9 +104,15 @@ HTML_LOGIN = """
     </div>
 
     <script>
+        // Force mobile video playback
+        document.addEventListener('DOMContentLoaded', () => {
+            const vid = document.getElementById('bg-vid');
+            if (vid) { vid.play().catch(e => console.log("Autoplay blocked/Link expired", e)); }
+        });
+
         const supabaseUrl = '{{ supabase_url }}';
         const supabaseKey = '{{ supabase_key }}';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        const sbClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         function showMsg(type, text) {
             const box = document.getElementById('msgBox');
@@ -130,7 +130,7 @@ HTML_LOGIN = """
                 const btn = document.getElementById('btn-github');
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-base"></i> Connecting...';
                 
-                const { error } = await supabase.auth.signInWithOAuth({ 
+                const { error } = await sbClient.auth.signInWithOAuth({ 
                     provider: 'github',
                     options: { redirectTo: window.location.origin }
                 });
@@ -154,7 +154,7 @@ HTML_LOGIN = """
             showMsg('success', 'Verifying cloud routing parameters...');
             
             try {
-                const { error } = await supabase.auth.signInWithOtp({ 
+                const { error } = await sbClient.auth.signInWithOtp({ 
                     email: email,
                     options: { emailRedirectTo: window.location.origin }
                 });
@@ -168,7 +168,7 @@ HTML_LOGIN = """
             }
         }
 
-        supabase.auth.onAuthStateChange((event, session) => {
+        sbClient.auth.onAuthStateChange((event, session) => {
             if (event === 'SIGNED_IN' && session) {
                 const identifier = session.user.email || 'Authorized User';
                 fetch('/set_flask_session', {
@@ -208,11 +208,6 @@ HTML_UI = """
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: 0; opacity: 1; pointer-events: none;
         }
-        .video-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); 
-            z-index: 1; pointer-events: none;
-        }
         .glass-card {
             background: rgba(15, 2, 2, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 50, 50, 0.3); border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
@@ -229,10 +224,9 @@ HTML_UI = """
 </head>
 <body class="flex flex-col lg:flex-row items-center justify-center p-4 lg:p-10 gap-8 relative overflow-x-hidden">
 
-    <video autoplay muted loop playsinline class="bg-video">
-        <source src="https://cdn.discordapp.com/attachments/1510192168273182745/1516741191121633311/From_Klickpin.com-_Natural_Makeup_Looks_Inspiration_for_Summer-pin-id-587860557652168444.mp4?ex=6a33becf&is=6a326d4f&hm=b90901b00ab6161677a16f22153f71174238667e81d0fef2b74ad93d2a20e5aa&" type="video/mp4">
+    <video id="bg-vid-dash" autoplay muted loop playsinline class="bg-video">
+        <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
     </video>
-    <div class="video-overlay"></div>
 
     <div class="glass-card w-full max-w-md p-8 relative z-20">
         <div class="text-center mb-6">
@@ -321,12 +315,17 @@ HTML_UI = """
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const vid = document.getElementById('bg-vid-dash');
+            if (vid) { vid.play().catch(e => console.log("Autoplay blocked", e)); }
+        });
+
         const supabaseUrl = '{{ supabase_url }}';
         const supabaseKey = '{{ supabase_key }}';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        const sbClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         async function handleLogout() {
-            await supabase.auth.signOut();
+            await sbClient.auth.signOut();
             window.location.href = '/logout';
         }
 
