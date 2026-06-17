@@ -1,56 +1,41 @@
 import os
-import json
 from flask import Flask, render_template_string, request, jsonify
 import requests
 
 app = Flask(__name__)
-# [KEEP YOUR ENV VARIABLES SAME AS BEFORE]
+
+# [TERE PURANE ENVIRONMENT VARIABLES YAHIN RAHENGE]
 SAMBANOVA_API_KEY = os.environ.get("SAMBANOVA_API_KEY")
 SAMBANOVA_URL = "https://api.sambanova.ai/v1/chat/completions"
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 # ==========================================
-# MASTER UI (RESTORING YOUR ANIME DESIGN)
+# TERA ORIGINAL MASTER DESIGN (RESTORED)
 # ==========================================
 MASTER_HTML = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hook Forge | Restore</title>
+    <title>Hook Forge | Original</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { background: #000; color: #fef3c7; font-family: 'Noto Sans JP', sans-serif; }
-        .glass { background: rgba(5, 0, 0, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(255,50,50,0.3); border-radius: 20px; }
-        .crimson-btn { background: linear-gradient(45deg, #7f1d1d, #dc2626); }
-        .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 20px rgba(255,20,20,0.8); }
+        body { background: #000; color: #fef3c7; font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; }
+        .glass-panel { background: rgba(5, 0, 0, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 50, 50, 0.4); border-radius: 24px; }
+        .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 30px rgba(255, 20, 20, 1); }
+        .crimson-input { background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(220, 38, 38, 0.35); color: #fef3c7; }
+        .crimson-btn { background: linear-gradient(45deg, #7f1d1d, #dc2626); border: 1px solid #ef4444; }
     </style>
 </head>
-<body class="p-6">
-    <div class="max-w-4xl mx-auto">
-        <h1 class="anime-title text-4xl font-black text-red-500 mb-8 text-center tracking-widest">HOOK FORGE: RETENTION ENGINE</h1>
-        
-        <!-- RESTORED INTERFACE -->
-        <div class="glass p-8">
-            <textarea id="raw-script" class="w-full bg-black/50 text-white p-4 rounded-xl border border-red-900 h-40 mb-4 focus:border-red-500 outline-none" placeholder="Paste your boring script..."></textarea>
-            <button onclick="forge()" class="w-full crimson-btn py-4 rounded-xl font-bold uppercase tracking-widest text-white shadow-lg shadow-red-900/50">Forge Master Script</button>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="glass-panel w-full max-w-[450px] p-10">
+        <div class="text-center mb-8">
+            <h1 class="anime-title text-4xl font-black text-red-500 tracking-widest mb-2">HOOK FORGE</h1>
+            <p class="text-[10px] tracking-[0.4em] text-red-300/80 uppercase font-bold">Original Render Engine</p>
         </div>
-
-        <div id="results" class="hidden mt-8 space-y-6">
-            <div class="glass p-6 flex justify-between items-center">
-                <h2 class="text-xl font-bold text-amber-500">VIRAL SCORE: <span id="s-score"></span>/100</h2>
-                <div id="heatmap-tags" class="flex gap-2"></div>
-            </div>
-            <div class="glass p-6">
-                <h3 class="text-red-400 font-bold mb-3 uppercase tracking-widest text-xs">Optimized Master Script</h3>
-                <p id="s-master" class="text-sm leading-relaxed text-amber-50"></p>
-            </div>
-        </div>
+        <textarea id="raw-script" class="w-full crimson-input rounded-xl p-4 h-40 mb-4 focus:outline-none focus:border-red-500" placeholder="Paste your raw script here..."></textarea>
+        <button onclick="forge()" class="w-full crimson-btn py-4 rounded-xl text-xs tracking-widest uppercase font-bold text-white shadow-lg shadow-red-900/50">Forge Master Script</button>
+        <div id="result" class="mt-6 text-sm text-amber-50 leading-relaxed font-mono hidden"></div>
     </div>
 
     <script>
@@ -61,11 +46,9 @@ MASTER_HTML = """
                 body: JSON.stringify({script})
             });
             const data = await res.json();
-            document.getElementById('s-score').innerText = data.retention_score;
-            document.getElementById('s-master').innerText = data.master_script;
-            document.getElementById('heatmap-tags').innerHTML = data.heatmap.map(h => 
-                `<span class="text-[9px] bg-red-900 text-white px-2 py-1 rounded uppercase">${h.section}: ${h.score}/10</span>`).join('');
-            document.getElementById('results').style.display = 'block';
+            const resDiv = document.getElementById('result');
+            resDiv.innerText = data.master_script;
+            resDiv.style.display = 'block';
         }
     </script>
 </body>
@@ -78,10 +61,10 @@ def home():
 
 @app.route('/forge', methods=['POST'])
 def forge():
-    prompt = f"Analyze script and return JSON with retention_score(0-100), heatmap(array of section/score/tip), and master_script: {request.json.get('script')}"
-    payload = {"model": "Meta-Llama-3.3-70B-Instruct", "messages": [{"role": "user", "content": prompt}], "temperature": 0.7}
+    prompt = f"Rewrite this script to be viral and retention-focused: {request.json.get('script')}"
+    payload = {"model": "Meta-Llama-3.3-70B-Instruct", "messages": [{"role": "user", "content": prompt}]}
     r = requests.post(SAMBANOVA_URL, json=payload, headers={"Authorization": f"Bearer {SAMBANOVA_API_KEY}"})
-    return jsonify(json.loads(r.json()['choices'][0]['message']['content'].strip()))
+    return jsonify({"master_script": r.json()['choices'][0]['message']['content'].strip()})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
