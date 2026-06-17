@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, render_template_string, request, jsonify, session, redirect, url_for
+from flask import Flask, render_template_string, request, jsonify, session, redirect
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 
@@ -10,7 +10,6 @@ app.secret_key = 'crimson_enterprise_lycoris_key_2026'
 SAMBANOVA_API_KEY = os.environ.get("SAMBANOVA_API_KEY")
 SAMBANOVA_URL = "https://api.sambanova.ai/v1/chat/completions"
 
-# --- SUPABASE CONFIGURATION ---
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
@@ -37,7 +36,7 @@ You must output exactly this JSON structure:
 """
 
 # ==========================================
-# AUTHENTICATION UI (CHISATO CRIMSON THEME)
+# 1. AUTHENTICATION UI (LOGIN/SIGNUP)
 # ==========================================
 HTML_LOGIN = """
 <!DOCTYPE html>
@@ -49,7 +48,6 @@ HTML_LOGIN = """
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
     <style>
         body {
             margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif;
@@ -61,33 +59,28 @@ HTML_LOGIN = """
             background: rgba(15, 2, 2, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 50, 50, 0.25); border-radius: 24px;
             box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 30px rgba(255,50,50,0.05);
-            transform-style: preserve-3d;
         }
-        .pop-out { transform: translateZ(40px); }
         .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 20px rgba(220, 38, 38, 0.8); }
-        .crimson-input {
-            background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(220, 38, 38, 0.3); color: #fef3c7; transition: all 0.3s;
-        }
+        .crimson-input { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(220, 38, 38, 0.3); color: #fef3c7; transition: all 0.3s; }
         .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
         .auth-tab.active { color: #ef4444; border-bottom: 2px solid #ef4444; }
     </style>
 </head>
 <body class="p-4">
-    <div class="glass-auth-panel w-full max-w-[440px] p-8 md:p-10" data-tilt data-tilt-max="4" data-tilt-speed="400">
-        <div class="pop-out text-center mb-8">
+    <div class="glass-auth-panel w-full max-w-[440px] p-8 md:p-10">
+        <div class="text-center mb-8">
             <h1 class="anime-title text-3xl font-black text-red-500 tracking-wider mb-1">HOOK FORGE</h1>
             <p class="text-[10px] tracking-[0.4em] text-red-400/60 uppercase">Cloud Security Connected</p>
         </div>
 
-        <div class="pop-out flex border-b border-red-950/60 mb-6 text-sm font-bold text-red-300/50">
+        <div class="flex border-b border-red-950/60 mb-6 text-sm font-bold text-red-300/50">
             <button onclick="switchAuthTab('login')" id="tab-login" class="auth-tab active flex-1 pb-3 text-center transition-all">Sign In</button>
             <button onclick="switchAuthTab('signup')" id="tab-signup" class="auth-tab flex-1 pb-3 text-center transition-all">Register</button>
         </div>
 
-        <div id="msgError" class="hidden pop-out bg-red-950/80 border border-red-500/50 text-red-200 p-3 rounded-xl text-xs font-mono text-center mb-4"></div>
-        <div id="msgSuccess" class="hidden pop-out bg-emerald-950/80 border border-emerald-500/50 text-emerald-200 p-3 rounded-xl text-xs font-mono text-center mb-4"></div>
+        <div id="msgBox" class="hidden p-3 rounded-xl text-xs font-mono text-center mb-4 border"></div>
 
-        <div class="space-y-4 pop-out">
+        <div class="space-y-4">
             <div>
                 <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400/70 mb-1.5">Username</label>
                 <div class="relative">
@@ -108,14 +101,8 @@ HTML_LOGIN = """
             </div>
 
             <button onclick="submitAuth()" id="submit-auth-btn" class="w-full bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 border border-red-500 text-white font-bold py-3.5 rounded-xl text-xs tracking-widest uppercase transition-all shadow-lg shadow-red-950/50 mt-2">
-                Continue to Dashboard
+                System Login
             </button>
-
-            <div class="relative flex py-2 items-center">
-                <div class="flex-grow border-t border-red-950/60"></div>
-                <span class="flex-shrink mx-4 text-[9px] uppercase tracking-widest text-red-400/40 font-bold">Secure PostgreSQL Database</span>
-                <div class="flex-grow border-t border-red-950/60"></div>
-            </div>
         </div>
     </div>
 
@@ -127,8 +114,7 @@ HTML_LOGIN = """
             document.querySelectorAll('.auth-tab').forEach(el => el.classList.remove('active'));
             document.getElementById('tab-' + mode).classList.add('active');
             document.getElementById('submit-auth-btn').innerText = mode === 'login' ? 'System Login' : 'Create Free Account';
-            document.getElementById('msgError').style.display = 'none';
-            document.getElementById('msgSuccess').style.display = 'none';
+            document.getElementById('msgBox').style.display = 'none';
         }
 
         function togglePasswordVisibility() {
@@ -148,40 +134,37 @@ HTML_LOGIN = """
             const pass = document.getElementById('auth-pass').value.trim();
             
             if(!user || !pass) {
-                showNotification('error', 'All validation fields are required.');
+                showMsg('error', 'All fields required.');
                 return;
             }
 
             try {
-                const response = await fetch('/auth', {
+                const res = await fetch('/auth', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: currentMode, username: user, password: pass })
                 });
-                const data = await response.json();
+                const data = await res.json();
                 
                 if (data.error) {
-                    showNotification('error', data.error);
+                    showMsg('error', data.error);
                 } else {
-                    showNotification('success', data.message || 'Access Granted!');
+                    showMsg('success', data.message || 'Access Granted!');
                     setTimeout(() => { window.location.reload(); }, 1000);
                 }
             } catch(e) {
-                showNotification('error', 'Database communication failed. Check connection.');
+                showMsg('error', 'Database communication failed.');
             }
         }
 
-        function showNotification(type, text) {
-            const errBox = document.getElementById('msgError');
-            const succBox = document.getElementById('msgSuccess');
+        function showMsg(type, text) {
+            const box = document.getElementById('msgBox');
+            box.style.display = 'block';
+            box.innerText = text;
             if (type === 'error') {
-                succBox.style.display = 'none';
-                errBox.style.display = 'block';
-                errBox.innerText = text;
+                box.className = "p-3 rounded-xl text-xs font-mono text-center mb-4 border bg-red-950/80 border-red-500/50 text-red-200";
             } else {
-                errBox.style.display = 'none';
-                succBox.style.display = 'block';
-                succBox.innerText = text;
+                box.className = "p-3 rounded-xl text-xs font-mono text-center mb-4 border bg-emerald-950/80 border-emerald-500/50 text-emerald-200";
             }
         }
     </script>
@@ -190,7 +173,7 @@ HTML_LOGIN = """
 """
 
 # ==========================================
-# MAIN DASHBOARD SCREEN (3D CRIMSON THEME)
+# 2. MAIN DASHBOARD UI (THE FORGE)
 # ==========================================
 HTML_UI = """
 <!DOCTYPE html>
@@ -198,27 +181,25 @@ HTML_UI = """
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hook Forge | 3D Crimson Anime</title>
+    <title>Hook Forge | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
     <style>
         body {
             margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif;
             background-image: url('https://cdn.discordapp.com/attachments/1510192168273182745/1516483061615951952/39dbe266fbd4af345a049536b52e306a.jpg?ex=6a32ce68&is=6a317ce8&hm=140cfcc462f5342cde06034cbd97cc94656c71b19ea21994376b6b8c1858ecb1&');
-            background-size: cover; background-position: center; background-attachment: fixed; background-color: #1a0505; color: #fef3c7; overflow-x: hidden;
+            background-size: cover; background-position: center; background-attachment: fixed; background-color: #1a0505; color: #fef3c7;
         }
-        .glass-3d-card {
+        .glass-card {
             background: rgba(20, 2, 2, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 50, 50, 0.3); border-radius: 16px; box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,50,50,0.1); transform-style: preserve-3d;
+            border: 1px solid rgba(255, 50, 50, 0.3); border-radius: 16px; box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,50,50,0.1);
         }
-        .pop-out { transform: translateZ(50px); }
         .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 20px rgba(220, 38, 38, 0.9); }
-        .crimson-input { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(220, 38, 38, 0.4); color: #fef3c7; transition: all 0.3s; transform: translateZ(30px); }
+        .crimson-input { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(220, 38, 38, 0.4); color: #fef3c7; transition: all 0.3s; }
         .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
         select.crimson-input option { background: #1a0505; color: #fef3c7; }
-        .crimson-btn { background: linear-gradient(45deg, #7f1d1d, #dc2626); border: 1px solid #ef4444; box-shadow: 0 0 20px rgba(220, 38, 38, 0.5); transition: all 0.3s ease; transform: translateZ(40px); }
+        .crimson-btn { background: linear-gradient(45deg, #7f1d1d, #dc2626); border: 1px solid #ef4444; box-shadow: 0 0 20px rgba(220, 38, 38, 0.5); transition: all 0.3s ease; }
         .crimson-btn:hover { background: linear-gradient(45deg, #991b1b, #f87171); box-shadow: 0 0 30px rgba(220, 38, 38, 0.8); }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -227,29 +208,29 @@ HTML_UI = """
 </head>
 <body class="flex flex-col lg:flex-row items-center justify-center p-4 lg:p-10 gap-8">
 
-    <div class="glass-3d-card w-full max-w-md p-8 relative z-20" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.2">
-        <div class="pop-out text-center mb-6">
+    <div class="glass-card w-full max-w-md p-8 relative z-20">
+        <div class="text-center mb-6">
             <h1 class="anime-title text-4xl font-black text-red-500 mb-1">HOOK FORGE</h1>
             <p class="text-xs tracking-[0.3em] text-red-300 uppercase">Lycoris Protocol</p>
         </div>
         
-        <div class="pop-out flex justify-between items-center mb-6 border-b border-red-900/50 pb-3">
-            <div class="text-[10px] text-red-300 tracking-widest uppercase"><i class="fa-solid fa-user-shield mr-1"></i> Database Active: <span class="text-white font-bold">{{ username }}</span></div>
+        <div class="flex justify-between items-center mb-6 border-b border-red-900/50 pb-3">
+            <div class="text-[10px] text-red-300 tracking-widest uppercase"><i class="fa-solid fa-user-shield mr-1"></i> Active: <span class="text-white font-bold">{{ username }}</span></div>
             <a href="/logout" class="text-[10px] bg-red-950/50 hover:bg-red-600 border border-red-800 px-3 py-1.5 rounded tracking-widest uppercase transition-all"><i class="fa-solid fa-power-off mr-1"></i> Logout</a>
         </div>
 
-        <div id="errorBox" class="hidden pop-out bg-red-900 border border-red-500 text-white p-3 rounded mb-4 text-xs font-mono"></div>
+        <div id="errorBox" class="hidden bg-red-900 border border-red-500 text-white p-3 rounded mb-4 text-xs font-mono"></div>
 
         <div class="space-y-4">
-            <div class="pop-out">
+            <div>
                 <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Niche</label>
                 <input type="text" id="niche" value="Anime & Tech" class="w-full crimson-input rounded-lg px-4 py-3 text-sm">
             </div>
-            <div class="pop-out">
+            <div>
                 <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Audience</label>
                 <input type="text" id="audience" value="Creators" class="w-full crimson-input rounded-lg px-4 py-3 text-sm">
             </div>
-            <div class="pop-out">
+            <div>
                 <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Tone</label>
                 <select id="tone" class="w-full crimson-input rounded-lg px-4 py-3 text-sm">
                     <option value="Curious">Curiosity Gap</option>
@@ -257,7 +238,7 @@ HTML_UI = """
                     <option value="Storytelling">Anime Protagonist Arc</option>
                 </select>
             </div>
-            <div class="pop-out">
+            <div>
                 <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Topic</label>
                 <textarea id="topic" rows="3" class="w-full crimson-input rounded-lg px-4 py-3 text-sm resize-none"></textarea>
             </div>
@@ -268,18 +249,18 @@ HTML_UI = """
         </div>
     </div>
 
-    <div class="glass-3d-card w-full max-w-2xl p-8 relative z-20 min-h-[500px] flex flex-col justify-center" data-tilt data-tilt-max="3" data-tilt-speed="400">
-        <div id="loading" class="hidden text-center pop-out">
+    <div class="glass-card w-full max-w-2xl p-8 relative z-20 min-h-[500px] flex flex-col justify-center">
+        <div id="loading" class="hidden text-center">
             <i class="fa-solid fa-spinner fa-spin text-5xl text-red-500 mb-4 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]"></i>
             <h2 class="anime-title text-2xl text-red-100">Extracting Psychology...</h2>
         </div>
 
-        <div id="empty-state" class="text-center pop-out opacity-60">
+        <div id="empty-state" class="text-center opacity-60">
             <i class="fa-solid fa-crosshairs text-6xl text-red-500/50 mb-4"></i>
             <p class="text-sm tracking-widest uppercase">Awaiting Target Parameters...</p>
         </div>
 
-        <div id="results" class="hidden space-y-6 pop-out overflow-y-auto max-h-[600px] pr-2">
+        <div id="results" class="hidden space-y-6 overflow-y-auto max-h-[600px] pr-2">
             <div class="bg-black/40 border border-red-500/30 p-5 rounded-xl">
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-[10px] bg-red-900 text-red-200 px-2 py-1 rounded font-bold uppercase tracking-wider">Option A</span>
@@ -341,4 +322,41 @@ HTML_UI = """
                     return;
                 }
 
-                document.getElementB
+                document.getElementById('textA').innerText = `"${data.hook_a.text}"`;
+                document.getElementById('scoreA').innerText = data.hook_a.score;
+                document.getElementById('psychA').innerText = data.hook_a.psychology;
+                document.getElementById('fixA').innerText = data.hook_a.reasoning;
+
+                document.getElementById('textB').innerText = `"${data.hook_b.text}"`;
+                document.getElementById('scoreB').innerText = data.hook_b.score;
+                document.getElementById('psychB').innerText = data.hook_b.psychology;
+                document.getElementById('fixB').innerText = data.hook_b.reasoning;
+                document.getElementById('dna').innerText = data.dna_comparison;
+                
+                document.getElementById('results').style.display = 'block';
+                
+            } catch(error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('errorBox').style.display = 'block';
+                document.getElementById('errorBox').innerText = "System Fault: " + error.message;
+            }
+        }
+
+        function copyText(elementId) {
+            const text = document.getElementById(elementId).innerText.replace(/"/g, '');
+            navigator.clipboard.writeText(text);
+            alert("Hook acquired! ⚔️");
+        }
+    </script>
+</body>
+</html>
+"""
+
+# ==========================================
+# 3. BACKEND ENDPOINTS
+# ==========================================
+@app.route('/')
+def home():
+    if 'user' in session:
+        return render_template_string(HTML_UI, username=session['user'])
+    return render_te
