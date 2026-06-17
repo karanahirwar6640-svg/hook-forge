@@ -1,7 +1,6 @@
 import os
 import json
 from flask import Flask, render_template_string, request, jsonify, session, redirect
-from werkzeug.security import generate_password_hash, check_password_hash
 import requests
 
 app = Flask(__name__)
@@ -12,14 +11,6 @@ SAMBANOVA_URL = "https://api.sambanova.ai/v1/chat/completions"
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
-
-def get_supabase_headers():
-    return {
-        "apikey": SUPABASE_KEY,
-        "Authorization": f"Bearer {SUPABASE_KEY}",
-        "Content-Type": "application/json",
-        "Prefer": "return=representation"
-    }
 
 SYSTEM_PROMPT = """
 You are Hook Forge v2.0, an elite social media psychologist, data scientist, and master copywriter. 
@@ -36,7 +27,7 @@ You must output exactly this JSON structure:
 """
 
 # ==========================================
-# 1. AUTHENTICATION UI (LOGIN/SIGNUP)
+# 1. AUTHENTICATION UI (GITHUB + MAGIC LINK)
 # ==========================================
 HTML_LOGIN = """
 <!DOCTYPE html>
@@ -48,6 +39,7 @@ HTML_LOGIN = """
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif;
@@ -56,117 +48,105 @@ HTML_LOGIN = """
             color: #fef3c7; display: flex; align-items: center; justify-content: center;
         }
         .glass-auth-panel {
-            background: rgba(15, 2, 2, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 50, 50, 0.25); border-radius: 24px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 30px rgba(255,50,50,0.05);
+            background: rgba(15, 2, 2, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 50, 50, 0.2); border-radius: 24px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 40px rgba(255,50,50,0.05);
         }
         .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 20px rgba(220, 38, 38, 0.8); }
         .crimson-input { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(220, 38, 38, 0.3); color: #fef3c7; transition: all 0.3s; }
         .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
-        .auth-tab.active { color: #ef4444; border-bottom: 2px solid #ef4444; }
+        .github-btn { background: #171717; border: 1px solid #333; color: white; transition: all 0.3s; }
+        .github-btn:hover { background: #262626; border-color: #555; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
     </style>
 </head>
 <body class="p-4">
-    <div class="glass-auth-panel w-full max-w-[440px] p-8 md:p-10">
+    <div class="glass-auth-panel w-full max-w-[420px] p-8 md:p-10">
         <div class="text-center mb-8">
-            <h1 class="anime-title text-3xl font-black text-red-500 tracking-wider mb-1">HOOK FORGE</h1>
-            <p class="text-[10px] tracking-[0.4em] text-red-400/60 uppercase">Cloud Security Connected</p>
+            <h1 class="anime-title text-4xl font-black text-red-500 tracking-wider mb-2">HOOK FORGE</h1>
+            <p class="text-[10px] tracking-[0.4em] text-red-400/60 uppercase">Enterprise Access Portal</p>
         </div>
 
-        <div class="flex border-b border-red-950/60 mb-6 text-sm font-bold text-red-300/50">
-            <button onclick="switchAuthTab('login')" id="tab-login" class="auth-tab active flex-1 pb-3 text-center transition-all">Sign In</button>
-            <button onclick="switchAuthTab('signup')" id="tab-signup" class="auth-tab flex-1 pb-3 text-center transition-all">Register</button>
-        </div>
+        <div id="msgBox" class="hidden p-3 rounded-xl text-xs font-mono text-center mb-6 border"></div>
 
-        <div id="msgBox" class="hidden p-3 rounded-xl text-xs font-mono text-center mb-4 border"></div>
-
-        <div class="space-y-4">
-            <div>
-                <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400/70 mb-1.5">Username</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-red-500/50"><i class="fa-solid fa-user text-xs"></i></span>
-                    <input type="text" id="auth-user" placeholder="Enter username" class="w-full crimson-input rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none">
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400/70 mb-1.5">Password</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-red-500/50"><i class="fa-solid fa-lock text-xs"></i></span>
-                    <input type="password" id="auth-pass" placeholder="••••••••" class="w-full crimson-input rounded-xl pl-10 pr-10 py-3 text-sm focus:outline-none">
-                    <button onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-red-400/50 hover:text-red-400">
-                        <i id="password-eye" class="fa-solid fa-eye text-xs"></i>
-                    </button>
-                </div>
-            </div>
-
-            <button onclick="submitAuth()" id="submit-auth-btn" class="w-full bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 border border-red-500 text-white font-bold py-3.5 rounded-xl text-xs tracking-widest uppercase transition-all shadow-lg shadow-red-950/50 mt-2">
-                System Login
+        <div class="space-y-5">
+            <!-- GitHub Login -->
+            <button onclick="loginGitHub()" class="w-full github-btn py-3.5 rounded-xl text-sm font-bold tracking-wide flex items-center justify-center gap-3">
+                <i class="fa-brands fa-github text-lg"></i> Continue with GitHub
             </button>
+
+            <!-- Divider -->
+            <div class="relative flex py-2 items-center">
+                <div class="flex-grow border-t border-red-900/50"></div>
+                <span class="flex-shrink-0 mx-4 text-red-500/50 text-[10px] uppercase tracking-widest font-bold">Or Magic Link</span>
+                <div class="flex-grow border-t border-red-900/50"></div>
+            </div>
+
+            <!-- Magic Link -->
+            <div>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-red-500/50"><i class="fa-solid fa-envelope text-xs"></i></span>
+                    <input type="email" id="auth-email" placeholder="Enter your email address" class="w-full crimson-input rounded-xl pl-10 pr-4 py-3.5 text-sm focus:outline-none mb-3">
+                </div>
+                <button onclick="sendMagicLink()" class="w-full bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 border border-red-500 text-white font-bold py-3.5 rounded-xl text-xs tracking-widest uppercase transition-all shadow-lg shadow-red-950/50">
+                    <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Send Magic Link
+                </button>
+            </div>
         </div>
+        <p class="text-center text-[9px] text-red-400/40 mt-8 uppercase tracking-widest">Secure cloud connection via Supabase</p>
     </div>
 
     <script>
-        let currentMode = 'login';
-
-        function switchAuthTab(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.auth-tab').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + mode).classList.add('active');
-            document.getElementById('submit-auth-btn').innerText = mode === 'login' ? 'System Login' : 'Create Free Account';
-            document.getElementById('msgBox').style.display = 'none';
-        }
-
-        function togglePasswordVisibility() {
-            const passInput = document.getElementById('auth-pass');
-            const eyeIcon = document.getElementById('password-eye');
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
-                eyeIcon.className = "fa-solid fa-eye-slash text-xs";
-            } else {
-                passInput.type = 'password';
-                eyeIcon.className = "fa-solid fa-eye text-xs";
-            }
-        }
-
-        async function submitAuth() {
-            const user = document.getElementById('auth-user').value.trim();
-            const pass = document.getElementById('auth-pass').value.trim();
-            
-            if(!user || !pass) {
-                showMsg('error', 'All fields required.');
-                return;
-            }
-
-            try {
-                const res = await fetch('/auth', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: currentMode, username: user, password: pass })
-                });
-                const data = await res.json();
-                
-                if (data.error) {
-                    showMsg('error', data.error);
-                } else {
-                    showMsg('success', data.message || 'Access Granted!');
-                    setTimeout(() => { window.location.reload(); }, 1000);
-                }
-            } catch(e) {
-                showMsg('error', 'Database communication failed.');
-            }
-        }
+        const supabaseUrl = '{{ supabase_url }}';
+        const supabaseKey = '{{ supabase_key }}';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         function showMsg(type, text) {
             const box = document.getElementById('msgBox');
             box.style.display = 'block';
             box.innerText = text;
             if (type === 'error') {
-                box.className = "p-3 rounded-xl text-xs font-mono text-center mb-4 border bg-red-950/80 border-red-500/50 text-red-200";
+                box.className = "p-3 rounded-xl text-xs font-mono text-center mb-6 border bg-red-950/80 border-red-500/50 text-red-200";
             } else {
-                box.className = "p-3 rounded-xl text-xs font-mono text-center mb-4 border bg-emerald-950/80 border-emerald-500/50 text-emerald-200";
+                box.className = "p-3 rounded-xl text-xs font-mono text-center mb-6 border bg-emerald-950/80 border-emerald-500/50 text-emerald-200";
             }
         }
+
+        async function loginGitHub() {
+            try {
+                const { error } = await supabase.auth.signInWithOAuth({ provider: 'github' });
+                if (error) throw error;
+            } catch (error) {
+                showMsg('error', error.message);
+            }
+        }
+
+        async function sendMagicLink() {
+            const email = document.getElementById('auth-email').value.trim();
+            if(!email) { showMsg('error', 'Please enter a valid email.'); return; }
+            
+            showMsg('success', 'Sending Magic Link via Cloud...');
+            try {
+                const { error } = await supabase.auth.signInWithOtp({ email: email });
+                if (error) throw error;
+                showMsg('success', 'Magic link dispatched! Check your inbox.');
+            } catch (error) {
+                showMsg('error', error.message);
+            }
+        }
+
+        // Auto-detect login and set Backend Session
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                const identifier = session.user.email || 'Hacker';
+                fetch('/set_flask_session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: identifier })
+                }).then(() => {
+                    window.location.href = '/'; // Strip tokens from URL and enter Dashboard
+                });
+            }
+        });
     </script>
 </body>
 </html>
@@ -185,6 +165,7 @@ HTML_UI = """
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif;
@@ -215,8 +196,8 @@ HTML_UI = """
         </div>
         
         <div class="flex justify-between items-center mb-6 border-b border-red-900/50 pb-3">
-            <div class="text-[10px] text-red-300 tracking-widest uppercase"><i class="fa-solid fa-user-shield mr-1"></i> Active: <span class="text-white font-bold">{{ username }}</span></div>
-            <a href="/logout" class="text-[10px] bg-red-950/50 hover:bg-red-600 border border-red-800 px-3 py-1.5 rounded tracking-widest uppercase transition-all"><i class="fa-solid fa-power-off mr-1"></i> Logout</a>
+            <div class="text-[10px] text-red-300 tracking-widest uppercase truncate max-w-[200px]"><i class="fa-solid fa-user-shield mr-1"></i> <span class="text-white font-bold">{{ username }}</span></div>
+            <button onclick="handleLogout()" class="text-[10px] bg-red-950/50 hover:bg-red-600 border border-red-800 px-3 py-1.5 rounded tracking-widest uppercase transition-all"><i class="fa-solid fa-power-off mr-1"></i> Logout</button>
         </div>
 
         <div id="errorBox" class="hidden bg-red-900 border border-red-500 text-white p-3 rounded mb-4 text-xs font-mono"></div>
@@ -295,6 +276,15 @@ HTML_UI = """
     </div>
 
     <script>
+        const supabaseUrl = '{{ supabase_url }}';
+        const supabaseKey = '{{ supabase_key }}';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            window.location.href = '/logout';
+        }
+
         async function forgeHooks() {
             try {
                 document.getElementById('empty-state').style.display = 'none';
@@ -358,48 +348,14 @@ HTML_UI = """
 @app.route('/')
 def home():
     if 'user' in session:
-        return render_template_string(HTML_UI, username=session['user'])
-    return render_template_string(HTML_LOGIN)
+        return render_template_string(HTML_UI, username=session['user'], supabase_url=SUPABASE_URL, supabase_key=SUPABASE_KEY)
+    return render_template_string(HTML_LOGIN, supabase_url=SUPABASE_URL, supabase_key=SUPABASE_KEY)
 
-@app.route('/auth', methods=['POST'])
-def auth():
-    if not SUPABASE_URL or not SUPABASE_KEY:
-        return jsonify({"error": "Backend Error: Supabase keys missing on Render!"})
-
+@app.route('/set_flask_session', methods=['POST'])
+def set_flask_session():
     data = request.json
-    action = data.get('action')
-    username = data.get('username').strip()
-    password = data.get('password').strip()
-
-    target_url = f"{SUPABASE_URL}/rest/v1/users"
-
-    if action == 'signup':
-        check_url = f"{target_url}?username=eq.{username}"
-        r_check = requests.get(check_url, headers=get_supabase_headers())
-        
-        if r_check.status_code == 200 and len(r_check.json()) > 0:
-            return jsonify({"error": "Identity already registered."})
-        
-        hashed_password = generate_password_hash(password)
-        payload = {"username": username, "password": hashed_password}
-        r_insert = requests.post(target_url, json=payload, headers=get_supabase_headers())
-
-        if r_insert.status_code in [200, 201]:
-            session['user'] = username
-            return jsonify({"success": True, "message": "Cloud registration success!"})
-        return jsonify({"error": "Failed to write user to cloud storage."})
-
-    elif action == 'login':
-        login_url = f"{target_url}?username=eq.{username}"
-        r_login = requests.get(login_url, headers=get_supabase_headers())
-
-        if r_login.status_code == 200 and len(r_login.json()) > 0:
-            user_data = r_login.json()[0]
-            if check_password_hash(user_data['password'], password):
-                session['user'] = username
-                return jsonify({"success": True, "message": "Welcome back!"})
-        
-        return jsonify({"error": "Invalid combination. Denied entry."})
+    session['user'] = data.get('email', 'Hacker')
+    return jsonify({"success": True})
 
 @app.route('/logout')
 def logout():
@@ -429,7 +385,8 @@ def forge():
         res_data = r.json()
         ai_text = res_data['choices'][0]['message']['content'].strip()
         if ai_text.startswith("```json"):
-            ai_text = ai_text.replace("```json", "", 1).strip()
+            ai_text = ai_text.replace("
+```json", "", 1).strip()
             if ai_text.endswith("```"):
                 ai_text = ai_text[:-3].strip()
                 
