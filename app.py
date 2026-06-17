@@ -69,19 +69,16 @@ HTML_LOGIN = """
         <div id="msgBox" class="hidden p-3 rounded-xl text-xs font-mono text-center mb-6 border"></div>
 
         <div class="space-y-5">
-            <!-- GitHub Login -->
             <button onclick="loginGitHub()" class="w-full github-btn py-3.5 rounded-xl text-sm font-bold tracking-wide flex items-center justify-center gap-3">
                 <i class="fa-brands fa-github text-lg"></i> Continue with GitHub
             </button>
 
-            <!-- Divider -->
             <div class="relative flex py-2 items-center">
                 <div class="flex-grow border-t border-red-900/50"></div>
                 <span class="flex-shrink-0 mx-4 text-red-500/50 text-[10px] uppercase tracking-widest font-bold">Or Magic Link</span>
                 <div class="flex-grow border-t border-red-900/50"></div>
             </div>
 
-            <!-- Magic Link -->
             <div>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-red-500/50"><i class="fa-solid fa-envelope text-xs"></i></span>
@@ -385,8 +382,7 @@ def forge():
         res_data = r.json()
         ai_text = res_data['choices'][0]['message']['content'].strip()
         if ai_text.startswith("```json"):
-            ai_text = ai_text.replace("
-```json", "", 1).strip()
+            ai_text = ai_text.replace("```json", "", 1).strip()
             if ai_text.endswith("```"):
                 ai_text = ai_text[:-3].strip()
                 
