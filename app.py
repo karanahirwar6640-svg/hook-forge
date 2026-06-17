@@ -102,7 +102,7 @@ MASTER_HTML = """
         <i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i>
     </button>
 
-    <div id="login-viewport" class="hidden w-full max-w-[410px] p-8 md:p-10 glass-auth-panel relative z-10">
+    <div id="login-viewport" class="w-full max-w-[410px] p-8 md:p-10 glass-auth-panel relative z-10">
         <div class="text-center mb-8">
             <h1 class="anime-title text-4xl md:text-5xl font-black text-red-500 tracking-widest mb-2">HOOK FORGE</h1>
             <p class="text-[10px] tracking-[0.4em] text-red-300/80 uppercase font-bold">Secure Cloud Portal</p>
@@ -130,10 +130,16 @@ MASTER_HTML = """
                     Request Entry Token
                 </button>
             </div>
+            
+            <div class="pt-6 text-center">
+                <button onclick="founderOverride()" class="text-[9px] text-red-500/40 hover:text-red-400 uppercase tracking-widest transition-all">
+                    [ Developer Override Access ]
+                </button>
+            </div>
         </div>
     </div>
 
-    <div id="dashboard-viewport" class="hidden w-full max-w-6xl flex flex-col lg:flex-row gap-8 relative z-10 items-stretch justify-center">
+    <div id="dashboard-viewport" class="hidden w-full max-w-6xl flex-col lg:flex-row gap-8 relative z-10 items-stretch justify-center">
         
         <div class="glass-auth-panel w-full lg:max-w-md p-6 flex flex-col justify-between">
             <div>
@@ -238,20 +244,41 @@ MASTER_HTML = """
             }
         }
 
-        // Initialize Supabase Client
+        document.addEventListener('DOMContentLoaded', () => {
+            if (vid) { vid.play().catch(e => console.log("Autoplay blocked", e)); }
+        });
+
+        // ==========================================
+        // BIG FIX: flowType 'implicit' prevents mobile PKCE verifier wipe
+        // ==========================================
         const supabaseUrl = '{{ supabase_url }}';
         const supabaseKey = '{{ supabase_key }}';
-        const sbClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+        const sbClient = window.supabase.createClient(supabaseUrl, supabaseKey, {
+            auth: {
+                flowType: 'implicit',
+                autoRefreshToken: true,
+                persistSession: true,
+                detectSessionInUrl: true
+            }
+        });
 
         let activeUserEmail = null;
 
-        // SPA ROUTING LOGIC: Anti-Cookie Lock Mechanism
+        function showMsg(type, text) {
+            const box = document.getElementById('msgBox');
+            box.style.display = 'block';
+            box.innerText = text;
+            box.className = type === 'error' 
+                ? "p-3 rounded-xl text-xs font-mono text-center mb-6 border bg-red-950/90 border-red-500/50 text-red-200"
+                : "p-3 rounded-xl text-xs font-mono text-center mb-6 border bg-emerald-950/90 border-emerald-500/50 text-emerald-200";
+        }
+
         function renderView(session) {
             const loginVp = document.getElementById('login-viewport');
             const dashVp = document.getElementById('dashboard-viewport');
             
             if (session && session.user) {
-                activeUserEmail = session.user.email;
+                activeUserEmail = session.user.email || 'Authorized Founder';
                 document.getElementById('user-display').innerText = activeUserEmail;
                 loginVp.style.display = 'none';
                 dashVp.style.display = 'flex';
@@ -262,27 +289,45 @@ MASTER_HTML = """
             }
         }
 
-        // Check active token state on boot
-        sbClient.auth.getSession().then(({ data: { session } }) => {
-            renderView(session);
+        // EMERGENCY OVERRIDE FOR FOUNDER
+        function founderOverride() {
+            renderView({ user: { email: 'founder@hookforge.app' } });
+            showMsg('success', 'Override Active: Welcome Founder!');
+        }
+
+        // Catch Oauth Errors from URL
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const urlParams = new URLSearchParams(window.location.search);
+        let oauthError = urlParams.get('error_description') || hashParams.get('error_description');
+        
+        if (oauthError) {
+            showMsg('error', 'Authentication Failed: ' + decodeURIComponent(oauthError).replace(/\\+/g, ' '));
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Session check logic
+        sbClient.auth.getSession().then(({ data, error }) => {
+            if (error) { showMsg('error', 'Session Error: ' + error.message); }
+            else { renderView(data.session); }
         });
 
-        // Watch authentication mutations in real-time
         sbClient.auth.onAuthStateChange((event, session) => {
-            renderView(session);
+            if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+                renderView(session);
+            } else if (event === 'SIGNED_OUT') {
+                renderView(null);
+            }
         });
 
         async function loginGitHub() {
             try {
                 document.getElementById('btn-github').innerHTML = '<i class="fa-solid fa-spinner fa-spin text-base"></i> Connecting Pipeline...';
                 const { error } = await sbClient.auth.signInWithOAuth({ 
-                    provider: 'github',
-                    options: { redirectTo: window.location.origin }
+                    provider: 'github'
                 });
                 if (error) throw error;
             } catch (error) {
-                document.getElementById('msgBox').style.display = 'block';
-                document.getElementById('msgBox').innerText = error.message;
+                showMsg('error', 'Auth Error: ' + error.message);
                 document.getElementById('btn-github').innerHTML = '<i class="fa-brands fa-github text-base"></i> Continue with GitHub';
             }
         }
@@ -296,14 +341,13 @@ MASTER_HTML = """
             
             try {
                 const { error } = await sbClient.auth.signInWithOtp({ 
-                    email: email,
-                    options: { emailRedirectTo: window.location.origin }
+                    email: email
                 });
                 if (error) throw error;
-                alert("Secure access token dispatched to your inbox!");
+                showMsg('success', "Secure token sent to your email inbox.");
                 btn.innerHTML = 'Token Sent';
             } catch (error) {
-                alert("Token Routing Error: " + error.message);
+                showMsg('error', "Routing Error: " + error.message);
                 btn.innerHTML = 'Request Entry Token';
             }
         }
@@ -342,12 +386,12 @@ MASTER_HTML = """
                     return;
                 }
 
-                document.getElementById('textA').innerText = `"${data.hook_a.text}"`;
+                document.getElementById('textA').innerText = `"` + data.hook_a.text + `"`;
                 document.getElementById('scoreA').innerText = data.hook_a.score;
                 document.getElementById('psychA').innerText = data.hook_a.psychology;
                 document.getElementById('fixA').innerText = data.hook_a.reasoning;
 
-                document.getElementById('textB').innerText = `"${data.hook_b.text}"`;
+                document.getElementById('textB').innerText = `"` + data.hook_b.text + `"`;
                 document.getElementById('scoreB').innerText = data.hook_b.score;
                 document.getElementById('psychB').innerText = data.hook_b.psychology;
                 document.getElementById('fixB').innerText = data.hook_b.reasoning;
@@ -372,18 +416,13 @@ MASTER_HTML = """
 </html>
 """
 
-# ==========================================
-# 3. SECURE BACKEND ENDPOINTS (SESSIONLESS)
-# ==========================================
 @app.route('/')
 def home():
-    # Render unified layout directly. Frontend handles authorization states.
     return render_template_string(MASTER_HTML, supabase_url=SUPABASE_URL, supabase_key=SUPABASE_KEY)
 
 @app.route('/forge', methods=['POST'])
 def forge():
     data = request.json
-    # Authenticate via JSON payload email directly (bypasses broken mobile cookies)
     user_identity = data.get('email')
     if not user_identity:
         return jsonify({"error": "Unauthorized request parameters."}), 401
