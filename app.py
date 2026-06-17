@@ -12,38 +12,48 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 # ==========================================
-# ELITE AI PROMPTS
+# ELITE AI PROMPTS (THE 9-FIGURE COPYWRITER UPGRADE)
 # ==========================================
 HOOK_SYSTEM_PROMPT = """
-You are Hook Forge v2.0, an elite social media psychologist, data scientist, and master copywriter. 
-Your job is to generate high-converting hooks and analyze them deeply.
-You must ALWAYS respond in valid JSON format. Do not write any markdown prose outside the JSON.
+You are Hook Forge v2.0, an elite 9-figure direct-response copywriter and behavioral psychologist. 
+Your singular goal is to craft hooks that paralyze the user's thumb and force them to watch.
+
+STRICT RULES:
+1. NO AI-SPEAK: Never use words like "Unlock", "Delve", "Discover", "Elevate", "In today's world", "Embark". 
+2. BE HUMAN: Write like a slightly aggressive, highly authoritative expert speaking directly to a friend.
+3. PSYCHOLOGICAL TRIGGERS: Use 'The Curiosity Gap', 'Fear of Missing Out (FOMO)', 'Contrarian Truths', or 'Status Enhancement'.
+4. BREVITY: Keep hooks under 15 words. Punchy. Visceral.
 
 The user will provide: Topic, Niche, Audience, and Tone.
 You must output exactly this JSON structure:
 {
-  "hook_a": { "text": "Viral hook text A", "score": 8, "reasoning": "Actionable fix", "psychology": "Deep psychological breakdown" },
-  "hook_b": { "text": "Viral hook text B", "score": 9, "reasoning": "Actionable fix", "psychology": "Deep psychological breakdown" },
-  "dna_comparison": "Direct comparison of Hook A vs Hook B."
+  "hook_a": { "text": "High-tension hook text", "score": 95, "reasoning": "Actionable tactical fix", "psychology": "Deep psychological breakdown" },
+  "hook_b": { "text": "Contrarian hook text", "score": 98, "reasoning": "Actionable tactical fix", "psychology": "Deep psychological breakdown" },
+  "dna_comparison": "Direct ruthless comparison of Hook A vs Hook B."
 }
 """
 
 SCRIPT_SYSTEM_PROMPT = """
-You are Script Forge, an elite 9-figure social media retention engineer and master copywriter.
-Your job is to take a raw, boring script and transform it into a highly engaging, fast-paced, viral short-form video script.
-Focus on:
-1. A scroll-stopping 3-second hook at the very beginning.
-2. Removing all fluff and boring pauses.
-3. Fast pacing and high retention mechanics (curiosity loops, pattern interrupts).
-4. A strong, clear CTA (Call to Action) at the end.
+You are Script Forge, the world's most ruthless Short-Form Video Retention Engineer. 
+Your job is to take a raw, unstructured, boring script and forge it into a fast-paced, high-retention viral masterpiece.
 
-You must ALWAYS respond in valid JSON format. Do not write any markdown prose outside the JSON.
-You must output exactly this JSON structure:
+STRICT RULES:
+1. THE 100% PRECISION RULE: Cut 100% of the fluff, repetitive words, and boring intros (like "Hi guys").
+2. PACING: Every sentence must be short (max 12 words). The script must feel like a fast-paced cinematic vlog—visually dynamic and constantly moving. 
+3. READING LEVEL: Grade 5. Simple, punchy, conversational. 
+4. NO AI-SPEAK: Zero use of "Unlock", "Dive in", "Crucial", or "Game-changer".
+5. STRUCTURE:
+   - Seconds 0-3: The Visceral Hook (Pattern interrupt).
+   - Seconds 3-15: The Escalation (Build extreme curiosity/tension).
+   - Seconds 15-45: The Payoff (High-value delivery with zero fluff).
+   - Last 5 Seconds: The Seamless CTA (Call to Action).
+
+You must ALWAYS respond in valid JSON format:
 {
-  "retention_score": 95,
-  "hook_extracted": "The explosive opening line used...",
-  "master_script": "The FULL upgraded, pacing-optimized script including the hook and CTA...",
-  "psychology_breakdown": "Explanation of changes, fluff removed, and why this script will hold retention..."
+  "retention_score": 98,
+  "hook_extracted": "The explosive opening line",
+  "master_script": "The FULL upgraded, fast-paced script tailored for vocal delivery",
+  "psychology_breakdown": "Explanation of what fluff was cut and why the new pacing guarantees high retention"
 }
 """
 
@@ -126,6 +136,7 @@ MASTER_HTML = """
 
     <button onclick="toggleAudio()" class="audio-btn shadow-lg"><i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i></button>
 
+    <!-- LOGIN SCREEN -->
     <div id="login-viewport" class="w-full max-w-[410px] p-8 md:p-10 glass-panel relative z-10">
         <div class="text-center mb-8">
             <h1 class="anime-title text-4xl md:text-5xl font-black text-red-500 tracking-widest mb-2">HOOK FORGE</h1>
@@ -158,8 +169,10 @@ MASTER_HTML = """
         </div>
     </div>
 
+    <!-- MAIN DASHBOARD -->
     <div id="dashboard-viewport" class="hidden w-full max-w-6xl flex-col relative z-10">
         
+        <!-- HEADER & TABS -->
         <div class="w-full flex flex-col md:flex-row justify-between items-center mb-6 px-4">
             <div class="text-center md:text-left mb-4 md:mb-0">
                 <h1 class="anime-title text-3xl font-black text-red-500 mb-1">HOOK FORGE</h1>
@@ -176,10 +189,13 @@ MASTER_HTML = """
 
         <div id="errorBox" class="hidden bg-red-900/80 border border-red-500 text-white p-3 rounded mb-4 text-xs font-mono w-full"></div>
 
+        <!-- TWO COLUMN LAYOUT -->
         <div class="flex flex-col lg:flex-row gap-6 w-full items-stretch">
             
+            <!-- LEFT PANEL: CONTROLS -->
             <div class="glass-panel w-full lg:max-w-md p-6 flex flex-col justify-between">
                 
+                <!-- HOOK INPUTS -->
                 <div id="inputs-hook" class="space-y-4">
                     <div>
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Niche</label>
@@ -214,6 +230,7 @@ MASTER_HTML = """
                     </div>
                 </div>
 
+                <!-- SCRIPT INPUTS -->
                 <div id="inputs-script" class="hidden space-y-4 flex-grow flex flex-col">
                     <p class="text-[10px] tracking-widest text-red-300/80 uppercase border-b border-red-900/50 pb-2 mb-2">Transform raw script into highly retained viral content.</p>
                     <div class="flex-grow flex flex-col">
@@ -222,11 +239,13 @@ MASTER_HTML = """
                     </div>
                 </div>
 
+                <!-- ACTION BUTTON -->
                 <button onclick="igniteEngine()" id="btn-ignite" class="w-full crimson-btn py-4 rounded-lg font-bold tracking-widest uppercase text-xs mt-6">
                     <i class="fa-solid fa-fire mr-2"></i> Ignite Hook Engine
                 </button>
             </div>
 
+            <!-- RIGHT PANEL: RESULTS -->
             <div class="glass-panel flex-grow p-6 flex flex-col justify-center min-h-[500px]">
                 <div id="loading" class="hidden text-center">
                     <i class="fa-solid fa-spinner fa-spin text-5xl text-red-500 mb-4 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]"></i>
@@ -238,6 +257,7 @@ MASTER_HTML = """
                     <p id="empty-text" class="text-xs font-mono tracking-widest uppercase">Awaiting Target Parameters...</p>
                 </div>
 
+                <!-- HOOK RESULTS -->
                 <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
                     <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl">
                         <div class="flex justify-between items-center mb-3">
@@ -271,6 +291,7 @@ MASTER_HTML = """
                     </div>
                 </div>
 
+                <!-- SCRIPT RESULTS -->
                 <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
                     <div class="bg-black/50 border border-amber-500/30 p-5 rounded-xl relative shadow-[0_0_30px_rgba(245,158,11,0.1)]">
                         <div class="absolute top-4 right-4 text-center">
@@ -314,7 +335,7 @@ MASTER_HTML = """
         });
 
         let activeUserEmail = null;
-        let currentMode = 'hook'; // 'hook' or 'script'
+        let currentMode = 'hook'; 
 
         function showMsg(type, text) {
             const box = document.getElementById('msgBox');
@@ -351,16 +372,12 @@ MASTER_HTML = """
 
         async function handleLogout() { await sbClient.auth.signOut(); }
 
-        // --- DUAL ENGINE LOGIC ---
         function switchMode(mode) {
             currentMode = mode;
-            // Tabs
             document.getElementById('tab-hook').className = mode === 'hook' ? 'tab-btn tab-active' : 'tab-btn tab-inactive';
             document.getElementById('tab-script').className = mode === 'script' ? 'tab-btn tab-active' : 'tab-btn tab-inactive';
-            // Inputs
             document.getElementById('inputs-hook').style.display = mode === 'hook' ? 'block' : 'none';
             document.getElementById('inputs-script').style.display = mode === 'script' ? 'flex' : 'none';
-            // Button & Text
             const btn = document.getElementById('btn-ignite');
             if(mode === 'hook'){
                 btn.innerHTML = '<i class="fa-solid fa-fire mr-2"></i> Ignite Hook Engine';
@@ -369,7 +386,6 @@ MASTER_HTML = """
                 btn.innerHTML = '<i class="fa-solid fa-bolt mr-2"></i> Forge Master Script';
                 document.getElementById('empty-text').innerText = 'Awaiting Raw Script Data...';
             }
-            // Reset Results UI
             document.getElementById('empty-state').style.display = 'block';
             document.getElementById('results-hook').style.display = 'none';
             document.getElementById('results-script').style.display = 'none';
