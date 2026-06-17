@@ -27,7 +27,7 @@ You must output exactly this JSON structure:
 """
 
 # ==========================================
-# 1. AUTHENTICATION UI (PERMANENT SUPABASE VIDEO)
+# 1. AUTHENTICATION UI (ULTRA-TRANSPARENT + AUDIO)
 # ==========================================
 HTML_LOGIN = """
 <!DOCTYPE html>
@@ -49,19 +49,33 @@ HTML_LOGIN = """
         }
         .bg-video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: 0; opacity: 1; pointer-events: none; /* 100% Brightness */
+            object-fit: cover; z-index: 0; pointer-events: none;
         }
+        .video-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.15); /* Bohat hi halka tint */
+            z-index: 1; pointer-events: none;
+        }
+        /* ULTRA TRANSPARENT GLASS EFFECT */
         .glass-auth-panel {
             position: relative; z-index: 10;
-            background: rgba(10, 2, 2, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 24px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.95), inset 0 0 30px rgba(255,50,50,0.05);
+            background: rgba(5, 0, 0, 0.3); /* Ekdum transparent */
+            backdrop-filter: blur(6px); /* Blur kam kiya taaki video saaf dikhe */
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 50, 50, 0.4); border-radius: 24px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,50,50,0.15);
         }
-        .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 25px rgba(220, 38, 38, 0.8); }
-        .crimson-input { background: rgba(0, 0, 0, 0.65); border: 1px solid rgba(220, 38, 38, 0.25); color: #fef3c7; transition: all 0.3s; }
-        .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.25); }
-        .github-btn { background: #141414; border: 1px solid #262626; color: white; transition: all 0.3s; }
-        .github-btn:hover { background: #1f1f1f; border-color: #ef4444/40; box-shadow: 0 0 25px rgba(220,38,38,0.2); }
+        .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 30px rgba(255, 20, 20, 1); }
+        .crimson-input { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(220, 38, 38, 0.3); color: #fef3c7; transition: all 0.3s; }
+        .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+        .github-btn { background: rgba(20, 20, 20, 0.7); border: 1px solid rgba(80, 80, 80, 0.5); color: white; transition: all 0.3s; backdrop-filter: blur(4px); }
+        .github-btn:hover { background: rgba(40, 40, 40, 0.9); border-color: rgba(239, 68, 68, 0.6); box-shadow: 0 0 25px rgba(220,38,38,0.3); }
+        .audio-btn {
+            position: absolute; bottom: 20px; right: 20px; z-index: 50;
+            background: rgba(0,0,0,0.5); padding: 12px; border-radius: 50%;
+            border: 1px solid rgba(255,50,50,0.3); color: #ef4444; transition: all 0.3s;
+        }
+        .audio-btn:hover { background: rgba(255,50,50,0.2); box-shadow: 0 0 15px rgba(255,50,50,0.5); }
     </style>
 </head>
 <body class="p-4">
@@ -69,11 +83,16 @@ HTML_LOGIN = """
     <video id="bg-vid" autoplay muted loop playsinline class="bg-video">
         <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
     </video>
+    <div class="video-overlay"></div>
+
+    <button onclick="toggleAudio()" class="audio-btn">
+        <i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i>
+    </button>
 
     <div class="glass-auth-panel w-full max-w-[410px] p-8 md:p-10">
         <div class="text-center mb-8">
-            <h1 class="anime-title text-4xl font-black text-red-500 tracking-wider mb-2">HOOK FORGE</h1>
-            <p class="text-[10px] tracking-[0.4em] text-red-400/60 uppercase">Secure Cloud Infrastructure</p>
+            <h1 class="anime-title text-5xl font-black text-red-500 tracking-widest mb-2">HOOK FORGE</h1>
+            <p class="text-[10px] tracking-[0.4em] text-red-300/80 uppercase font-bold">Secure Cloud Infrastructure</p>
         </div>
 
         <div id="msgBox" class="hidden p-3 rounded-xl text-xs font-mono text-center mb-6 border"></div>
@@ -84,30 +103,39 @@ HTML_LOGIN = """
             </button>
 
             <div class="relative flex py-2 items-center">
-                <div class="flex-grow border-t border-red-950/60"></div>
-                <span class="flex-shrink-0 mx-4 text-red-500/40 text-[9px] uppercase tracking-[0.3em] font-bold">Secure Terminal Access</span>
-                <div class="flex-grow border-t border-red-950/60"></div>
+                <div class="flex-grow border-t border-red-500/30"></div>
+                <span class="flex-shrink-0 mx-4 text-red-400/60 text-[9px] uppercase tracking-[0.3em] font-bold">Terminal Access</span>
+                <div class="flex-grow border-t border-red-500/30"></div>
             </div>
 
             <div>
                 <div class="relative mb-3">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-red-500/40"><i class="fa-solid fa-shield-halved text-xs"></i></span>
-                    <input type="email" id="auth-email" placeholder="Enter corporate email address" class="w-full crimson-input rounded-xl pl-10 pr-4 py-3.5 text-sm focus:outline-none">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-red-400/60"><i class="fa-solid fa-shield-halved text-xs"></i></span>
+                    <input type="email" id="auth-email" placeholder="Enter corporate email" class="w-full crimson-input rounded-xl pl-10 pr-4 py-3.5 text-sm focus:outline-none">
                 </div>
-                <button onclick="sendMagicLink()" id="btn-email" class="w-full bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 border border-red-600 text-white font-bold py-3.5 rounded-xl text-xs tracking-widest uppercase transition-all shadow-lg shadow-red-950/80">
-                    Request Authentication Token
+                <button onclick="sendMagicLink()" id="btn-email" class="w-full bg-gradient-to-r from-red-800/90 to-red-600/90 hover:from-red-600 hover:to-red-500 border border-red-500 text-white font-bold py-3.5 rounded-xl text-xs tracking-widest uppercase transition-all shadow-lg shadow-red-900/80 backdrop-blur-md">
+                    Request Entry Token
                 </button>
             </div>
         </div>
-        
-        <p class="text-center text-[9px] text-red-500/30 mt-8 uppercase tracking-widest">Authorized Personnel Only</p>
     </div>
 
     <script>
-        // Force mobile video playback
+        const vid = document.getElementById('bg-vid');
+        vid.volume = 0.2; // 20% volume taaki kaan na phate
+
+        function toggleAudio() {
+            if (vid.muted) {
+                vid.muted = false;
+                document.getElementById('audio-icon').className = "fa-solid fa-volume-low text-lg";
+            } else {
+                vid.muted = true;
+                document.getElementById('audio-icon').className = "fa-solid fa-volume-xmark text-lg";
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            const vid = document.getElementById('bg-vid');
-            if (vid) { vid.play().catch(e => console.log("Autoplay blocked/Link expired", e)); }
+            if (vid) { vid.play().catch(e => console.log("Autoplay blocked", e)); }
         });
 
         const supabaseUrl = '{{ supabase_url }}';
@@ -119,11 +147,37 @@ HTML_LOGIN = """
             box.style.display = 'block';
             box.innerText = text;
             if (type === 'error') {
-                box.className = "p-3 rounded-xl text-xs font-mono text-center mb-6 border bg-red-950/90 border-red-500/40 text-red-200";
+                box.className = "p-3 rounded-xl text-xs font-mono text-center mb-6 border bg-red-950/80 border-red-500/50 text-red-200 backdrop-blur-md";
             } else {
-                box.className = "p-3 rounded-xl text-xs font-mono text-center mb-6 border bg-emerald-950/90 border-emerald-500/40 text-emerald-200";
+                box.className = "p-3 rounded-xl text-xs font-mono text-center mb-6 border bg-emerald-950/80 border-emerald-500/50 text-emerald-200 backdrop-blur-md";
             }
         }
+
+        async function processLogin(session) {
+            const identifier = session.user.email || 'Authorized User';
+            try {
+                await fetch('/set_flask_session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: identifier })
+                });
+                window.location.href = '/'; // Redirect to dashboard
+            } catch(e) { console.error(e); }
+        }
+
+        // On Page Load: Check if user just came back from GitHub
+        sbClient.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                processLogin(session);
+            }
+        });
+
+        // Realtime Event Listener
+        sbClient.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                processLogin(session);
+            }
+        });
 
         async function loginGitHub() {
             try {
@@ -138,20 +192,16 @@ HTML_LOGIN = """
             } catch (error) {
                 showMsg('error', 'Auth Error: ' + error.message);
                 document.getElementById('btn-github').innerHTML = '<i class="fa-brands fa-github text-base"></i> Continue with GitHub';
-                alert("GitHub Connection Failed: " + error.message);
             }
         }
 
         async function sendMagicLink() {
             const email = document.getElementById('auth-email').value.trim();
-            if(!email) { 
-                showMsg('error', 'Please enter a valid business email.'); 
-                return; 
-            }
+            if(!email) { showMsg('error', 'Please enter a valid email.'); return; }
             
             const btn = document.getElementById('btn-email');
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
-            showMsg('success', 'Verifying cloud routing parameters...');
+            showMsg('success', 'Verifying cloud routing...');
             
             try {
                 const { error } = await sbClient.auth.signInWithOtp({ 
@@ -159,27 +209,13 @@ HTML_LOGIN = """
                     options: { emailRedirectTo: window.location.origin }
                 });
                 if (error) throw error;
-                showMsg('success', 'Access token dispatched! Please check your email inbox (and spam folder).');
+                showMsg('success', 'Access token dispatched! Check your email.');
                 btn.innerHTML = 'Token Sent Successfully';
             } catch (error) {
                 showMsg('error', 'Server Error: ' + error.message);
-                btn.innerHTML = 'Request Authentication Token';
-                alert("Email Failed: " + error.message);
+                btn.innerHTML = 'Request Entry Token';
             }
         }
-
-        sbClient.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_IN' && session) {
-                const identifier = session.user.email || 'Authorized User';
-                fetch('/set_flask_session', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: identifier })
-                }).then(() => {
-                    window.location.href = '/';
-                });
-            }
-        });
     </script>
 </body>
 </html>
@@ -206,20 +242,31 @@ HTML_UI = """
         }
         .bg-video {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: 0; opacity: 1; pointer-events: none;
+            object-fit: cover; z-index: 0; pointer-events: none;
+        }
+        .video-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3); 
+            z-index: 1; pointer-events: none;
         }
         .glass-card {
-            background: rgba(15, 2, 2, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            background: rgba(10, 2, 2, 0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 50, 50, 0.3); border-radius: 16px; box-shadow: 0 30px 60px rgba(0,0,0,0.8);
         }
         .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 20px rgba(220, 38, 38, 0.9); }
-        .crimson-input { background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(220, 38, 38, 0.4); color: #fef3c7; transition: all 0.3s; }
+        .crimson-input { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(220, 38, 38, 0.4); color: #fef3c7; transition: all 0.3s; }
         .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
         select.crimson-input option { background: #1a0505; color: #fef3c7; }
         .crimson-btn { background: linear-gradient(45deg, #7f1d1d, #dc2626); border: 1px solid #ef4444; box-shadow: 0 0 20px rgba(220, 38, 38, 0.5); transition: all 0.3s ease; }
         .crimson-btn:hover { background: linear-gradient(45deg, #991b1b, #f87171); box-shadow: 0 0 30px rgba(220, 38, 38, 0.8); }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 10px; }
+        .audio-btn {
+            position: fixed; bottom: 20px; right: 20px; z-index: 50;
+            background: rgba(0,0,0,0.5); padding: 12px; border-radius: 50%;
+            border: 1px solid rgba(255,50,50,0.3); color: #ef4444; transition: all 0.3s;
+        }
+        .audio-btn:hover { background: rgba(255,50,50,0.2); box-shadow: 0 0 15px rgba(255,50,50,0.5); }
     </style>
 </head>
 <body class="flex flex-col lg:flex-row items-center justify-center p-4 lg:p-10 gap-8 relative overflow-x-hidden">
@@ -227,6 +274,11 @@ HTML_UI = """
     <video id="bg-vid-dash" autoplay muted loop playsinline class="bg-video">
         <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
     </video>
+    <div class="video-overlay"></div>
+
+    <button onclick="toggleAudio()" class="audio-btn">
+        <i id="audio-icon-dash" class="fa-solid fa-volume-xmark text-lg"></i>
+    </button>
 
     <div class="glass-card w-full max-w-md p-8 relative z-20">
         <div class="text-center mb-6">
@@ -314,129 +366,4 @@ HTML_UI = """
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const vid = document.getElementById('bg-vid-dash');
-            if (vid) { vid.play().catch(e => console.log("Autoplay blocked", e)); }
-        });
-
-        const supabaseUrl = '{{ supabase_url }}';
-        const supabaseKey = '{{ supabase_key }}';
-        const sbClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-        async function handleLogout() {
-            await sbClient.auth.signOut();
-            window.location.href = '/logout';
-        }
-
-        async function forgeHooks() {
-            try {
-                document.getElementById('empty-state').style.display = 'none';
-                document.getElementById('results').style.display = 'none';
-                document.getElementById('errorBox').style.display = 'none';
-                document.getElementById('loading').style.display = 'block';
-                
-                const response = await fetch('/forge', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        topic: document.getElementById('topic').value || "No topic",
-                        niche: document.getElementById('niche').value,
-                        audience: document.getElementById('audience').value,
-                        tone: document.getElementById('tone').value
-                    })
-                });
-                
-                const data = await response.json();
-                document.getElementById('loading').style.display = 'none';
-                
-                if (data.error) {
-                    document.getElementById('errorBox').style.display = 'block';
-                    document.getElementById('errorBox').innerText = data.error;
-                    return;
-                }
-
-                document.getElementById('textA').innerText = `"${data.hook_a.text}"`;
-                document.getElementById('scoreA').innerText = data.hook_a.score;
-                document.getElementById('psychA').innerText = data.hook_a.psychology;
-                document.getElementById('fixA').innerText = data.hook_a.reasoning;
-
-                document.getElementById('textB').innerText = `"${data.hook_b.text}"`;
-                document.getElementById('scoreB').innerText = data.hook_b.score;
-                document.getElementById('psychB').innerText = data.hook_b.psychology;
-                document.getElementById('fixB').innerText = data.hook_b.reasoning;
-                document.getElementById('dna').innerText = data.dna_comparison;
-                
-                document.getElementById('results').style.display = 'block';
-                
-            } catch(error) {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('errorBox').style.display = 'block';
-                document.getElementById('errorBox').innerText = "System Fault: " + error.message;
-            }
-        }
-
-        function copyText(elementId) {
-            const text = document.getElementById(elementId).innerText.replace(/"/g, '');
-            navigator.clipboard.writeText(text);
-            alert("Hook acquired! ⚔️");
-        }
-    </script>
-</body>
-</html>
-"""
-
-# ==========================================
-# 3. BACKEND ENDPOINTS
-# ==========================================
-@app.route('/')
-def home():
-    if 'user' in session:
-        return render_template_string(HTML_UI, username=session['user'], supabase_url=SUPABASE_URL, supabase_key=SUPABASE_KEY)
-    return render_template_string(HTML_LOGIN, supabase_url=SUPABASE_URL, supabase_key=SUPABASE_KEY)
-
-@app.route('/set_flask_session', methods=['POST'])
-def set_flask_session():
-    data = request.json
-    session['user'] = data.get('email', 'Authorized User')
-    return jsonify({"success": True})
-
-@app.route('/logout')
-def logout():
-    session.pop('user', None)
-    return redirect('/')
-
-@app.route('/forge', methods=['POST'])
-def forge():
-    if 'user' not in session:
-        return jsonify({"error": "Unauthorized pipeline request."}), 401
-
-    data = request.json
-    prompt = f"Topic: {data.get('topic')}\\nNiche: {data.get('niche')}\\nAudience: {data.get('audience')}\\nTone: {data.get('tone')}"
-    
-    payload = {
-        "model": "Meta-Llama-3.3-70B-Instruct", 
-        "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}], 
-        "temperature": 0.7
-    }
-    headers = {"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"}
-    
-    try:
-        r = requests.post(SAMBANOVA_URL, json=payload, headers=headers, timeout=15)
-        if r.status_code != 200:
-            return jsonify({"error": "SambaNova Pipeline Error. Try again shortly."})
-            
-        res_data = r.json()
-        ai_text = res_data['choices'][0]['message']['content'].strip()
-        if ai_text.startswith("```json"):
-            ai_text = ai_text.replace("```json", "", 1).strip()
-            if ai_text.endswith("```"):
-                ai_text = ai_text[:-3].strip()
-                
-        return jsonify(json.loads(ai_text))
-    except Exception as e: 
-        return jsonify({"error": f"Runtime fault: {str(e)}"})
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    <s
