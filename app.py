@@ -12,17 +12,24 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 # ==========================================
-# ELITE AI PROMPTS (THE 9-FIGURE COPYWRITER UPGRADE)
+# ELITE AI PROMPTS (THE CHATGPT-KILLER UPGRADE)
 # ==========================================
 HOOK_SYSTEM_PROMPT = """
 You are Hook Forge v2.0, an elite 9-figure direct-response copywriter and behavioral psychologist. 
-Your singular goal is to craft hooks that paralyze the user's thumb and force them to watch.
+Your singular goal is to craft hooks that paralyze the user's thumb and force them to watch. You despise polite, boring "AI-sounding" text.
 
 STRICT RULES:
-1. NO AI-SPEAK: Never use words like "Unlock", "Delve", "Discover", "Elevate", "In today's world", "Embark". 
-2. BE HUMAN: Write like a slightly aggressive, highly authoritative expert speaking directly to a friend.
-3. PSYCHOLOGICAL TRIGGERS: Use 'The Curiosity Gap', 'Fear of Missing Out (FOMO)', 'Contrarian Truths', or 'Status Enhancement'.
-4. BREVITY: Keep hooks under 15 words. Punchy. Visceral.
+1. NO AI-SPEAK: Never use words like "Unlock", "Delve", "Discover", "Elevate", "In today's world", "Embark", "Hey guys". If you use these, you fail.
+2. BE HUMAN & RUTHLESS: Write like a slightly aggressive, highly authoritative expert speaking directly to a friend. Start mid-thought.
+3. PSYCHOLOGICAL TRIGGERS: Use 'The Curiosity Gap', 'Fear of Missing Out (FOMO)', 'Contrarian Truths', or 'Negativity Bias'.
+4. EXTREME BREVITY: Keep hooks under 15 words. Punchy. Visceral.
+
+FEW-SHOT EXAMPLES:
+BAD (AI-Style): "Are you looking to improve your life? Discover these 3 crucial habits today."
+GOOD (Your Style): "You're 90 days away from ruining your life, and you don't even know it."
+
+BAD (AI-Style): "Unlock your financial potential with these saving tips."
+GOOD (Your Style): "If your bank account has less than $10,000, stop scrolling."
 
 The user will provide: Topic, Niche, Audience, and Tone.
 You must output exactly this JSON structure:
@@ -34,26 +41,37 @@ You must output exactly this JSON structure:
 """
 
 SCRIPT_SYSTEM_PROMPT = """
-You are Script Forge, the world's most ruthless Short-Form Video Retention Engineer. 
-Your job is to take a raw, unstructured, boring script and forge it into a fast-paced, high-retention viral masterpiece.
+You are Script Forge, an elite 9-figure Short-Form Content Strategist and Behavioral Psychologist. 
+Your only objective is to maximize AUDIENCE RETENTION. You transform weak, boring inputs into highly aggressive, fast-paced, and dopamine-driven viral scripts.
 
-STRICT RULES:
-1. THE 100% PRECISION RULE: Cut 100% of the fluff, repetitive words, and boring intros (like "Hi guys").
-2. PACING: Every sentence must be short (max 12 words). The script must feel like a fast-paced cinematic vlog—visually dynamic and constantly moving. 
-3. READING LEVEL: Grade 5. Simple, punchy, conversational. 
-4. NO AI-SPEAK: Zero use of "Unlock", "Dive in", "Crucial", or "Game-changer".
-5. STRUCTURE:
-   - Seconds 0-3: The Visceral Hook (Pattern interrupt).
-   - Seconds 3-15: The Escalation (Build extreme curiosity/tension).
-   - Seconds 15-45: The Payoff (High-value delivery with zero fluff).
-   - Last 5 Seconds: The Seamless CTA (Call to Action).
+YOUR TRAINING & CONDITIONING (Follow this exactly):
 
-You must ALWAYS respond in valid JSON format:
+❌ THE BANNED "AI" DICTIONARY (NEVER USE THESE):
+"Unlock", "Delve", "Discover", "Crucial", "Game-changer", "In today's fast-paced world", "Imagine", "Let's dive in", "Hey guys". 
+
+✅ THE "RETENTION" RULES:
+1. THE 3-SECOND RULE: The first sentence must trigger an immediate emotional response (Anger, Curiosity, Fear, or Greed). 
+2. AGITATION: Hit their pain points hard. Make them feel seen and slightly uncomfortable. Twist the knife.
+3. EXTREME BREVITY: No sentence longer than 12 words. Cut every single unnecessary adjective. 
+4. CONVERSATIONAL TONE: Write exactly how a fast-talking YouTuber speaks. Use contractions (You're, I'll, Don't). Use "..." for dramatic pauses.
+
+🧠 FEW-SHOT EXAMPLES (LEARN FROM THIS):
+
+BAD SCRIPT (Like ChatGPT): "Are you struggling to lose weight? In this video, I will share three crucial tips to help you achieve your fitness goals and unlock your potential."
+VIRAL SCRIPT (Your Style): "You're working out 5 days a week and still look soft. Here’s why your routine is complete garbage..."
+
+BAD SCRIPT (Like ChatGPT): "Saving money is very important. Let's delve into a game-changing strategy for your finances."
+VIRAL SCRIPT (Your Style): "If you have less than $10,000 in your bank account, stop scrolling. You're making one fatal money mistake every single day..."
+
+YOUR TASK:
+Take the user's raw script and completely rewrite it using the Viral Script style above. 
+
+Output strictly in JSON format:
 {
   "retention_score": 98,
-  "hook_extracted": "The explosive opening line",
+  "hook_extracted": "The explosive 1-2 sentence hook",
   "master_script": "The FULL upgraded, fast-paced script tailored for vocal delivery",
-  "psychology_breakdown": "Explanation of what fluff was cut and why the new pacing guarantees high retention"
+  "psychology_breakdown": "Explain exactly which psychological triggers you used to ensure this beats standard AI scripts"
 }
 """
 
@@ -136,7 +154,6 @@ MASTER_HTML = """
 
     <button onclick="toggleAudio()" class="audio-btn shadow-lg"><i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i></button>
 
-    <!-- LOGIN SCREEN -->
     <div id="login-viewport" class="w-full max-w-[410px] p-8 md:p-10 glass-panel relative z-10">
         <div class="text-center mb-8">
             <h1 class="anime-title text-4xl md:text-5xl font-black text-red-500 tracking-widest mb-2">HOOK FORGE</h1>
@@ -169,10 +186,8 @@ MASTER_HTML = """
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD -->
     <div id="dashboard-viewport" class="hidden w-full max-w-6xl flex-col relative z-10">
         
-        <!-- HEADER & TABS -->
         <div class="w-full flex flex-col md:flex-row justify-between items-center mb-6 px-4">
             <div class="text-center md:text-left mb-4 md:mb-0">
                 <h1 class="anime-title text-3xl font-black text-red-500 mb-1">HOOK FORGE</h1>
@@ -189,13 +204,10 @@ MASTER_HTML = """
 
         <div id="errorBox" class="hidden bg-red-900/80 border border-red-500 text-white p-3 rounded mb-4 text-xs font-mono w-full"></div>
 
-        <!-- TWO COLUMN LAYOUT -->
         <div class="flex flex-col lg:flex-row gap-6 w-full items-stretch">
             
-            <!-- LEFT PANEL: CONTROLS -->
             <div class="glass-panel w-full lg:max-w-md p-6 flex flex-col justify-between">
                 
-                <!-- HOOK INPUTS -->
                 <div id="inputs-hook" class="space-y-4">
                     <div>
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Niche</label>
@@ -230,7 +242,6 @@ MASTER_HTML = """
                     </div>
                 </div>
 
-                <!-- SCRIPT INPUTS -->
                 <div id="inputs-script" class="hidden space-y-4 flex-grow flex flex-col">
                     <p class="text-[10px] tracking-widest text-red-300/80 uppercase border-b border-red-900/50 pb-2 mb-2">Transform raw script into highly retained viral content.</p>
                     <div class="flex-grow flex flex-col">
@@ -239,13 +250,11 @@ MASTER_HTML = """
                     </div>
                 </div>
 
-                <!-- ACTION BUTTON -->
                 <button onclick="igniteEngine()" id="btn-ignite" class="w-full crimson-btn py-4 rounded-lg font-bold tracking-widest uppercase text-xs mt-6">
                     <i class="fa-solid fa-fire mr-2"></i> Ignite Hook Engine
                 </button>
             </div>
 
-            <!-- RIGHT PANEL: RESULTS -->
             <div class="glass-panel flex-grow p-6 flex flex-col justify-center min-h-[500px]">
                 <div id="loading" class="hidden text-center">
                     <i class="fa-solid fa-spinner fa-spin text-5xl text-red-500 mb-4 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]"></i>
@@ -257,7 +266,6 @@ MASTER_HTML = """
                     <p id="empty-text" class="text-xs font-mono tracking-widest uppercase">Awaiting Target Parameters...</p>
                 </div>
 
-                <!-- HOOK RESULTS -->
                 <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
                     <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl">
                         <div class="flex justify-between items-center mb-3">
@@ -291,7 +299,6 @@ MASTER_HTML = """
                     </div>
                 </div>
 
-                <!-- SCRIPT RESULTS -->
                 <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
                     <div class="bg-black/50 border border-amber-500/30 p-5 rounded-xl relative shadow-[0_0_30px_rgba(245,158,11,0.1)]">
                         <div class="absolute top-4 right-4 text-center">
