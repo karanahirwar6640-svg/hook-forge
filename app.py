@@ -366,4 +366,142 @@ HTML_UI = """
         </div>
     </div>
 
-    <s
+    <script>
+        const vidDash = document.getElementById('bg-vid-dash');
+        vidDash.volume = 0.2;
+
+        function toggleAudio() {
+            if (vidDash.muted) {
+                vidDash.muted = false;
+                document.getElementById('audio-icon-dash').className = "fa-solid fa-volume-low text-lg";
+            } else {
+                vidDash.muted = true;
+                document.getElementById('audio-icon-dash').className = "fa-solid fa-volume-xmark text-lg";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (vidDash) { vidDash.play().catch(e => console.log("Autoplay blocked", e)); }
+        });
+
+        const supabaseUrl = '{{ supabase_url }}';
+        const supabaseKey = '{{ supabase_key }}';
+        const sbClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function handleLogout() {
+            await fetch('/logout');
+            await sbClient.auth.signOut();
+            window.location.href = '/';
+        }
+
+        async function forgeHooks() {
+            try {
+                document.getElementById('empty-state').style.display = 'none';
+                document.getElementById('results').style.display = 'none';
+                document.getElementById('errorBox').style.display = 'none';
+                document.getElementById('loading').style.display = 'block';
+                
+                const response = await fetch('/forge', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        topic: document.getElementById('topic').value || "No topic",
+                        niche: document.getElementById('niche').value,
+                        audience: document.getElementById('audience').value,
+                        tone: document.getElementById('tone').value
+                    })
+                });
+                
+                const data = await response.json();
+                document.getElementById('loading').style.display = 'none';
+                
+                if (data.error) {
+                    document.getElementById('errorBox').style.display = 'block';
+                    document.getElementById('errorBox').innerText = data.error;
+                    return;
+                }
+
+                document.getElementById('textA').innerText = `"${data.hook_a.text}"`;
+                document.getElementById('scoreA').innerText = data.hook_a.score;
+                document.getElementById('psychA').innerText = data.hook_a.psychology;
+                document.getElementById('fixA').innerText = data.hook_a.reasoning;
+
+                document.getElementById('textB').innerText = `"${data.hook_b.text}"`;
+                document.getElementById('scoreB').innerText = data.hook_b.score;
+                document.getElementById('psychB').innerText = data.hook_b.psychology;
+                document.getElementById('fixB').innerText = data.hook_b.reasoning;
+                document.getElementById('dna').innerText = data.dna_comparison;
+                
+                document.getElementById('results').style.display = 'block';
+                
+            } catch(error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('errorBox').style.display = 'block';
+                document.getElementById('errorBox').innerText = "System Fault: " + error.message;
+            }
+        }
+
+        function copyText(elementId) {
+            const text = document.getElementById(elementId).innerText.replace(/"/g, '');
+            navigator.clipboard.writeText(text);
+            alert("Hook acquired! ⚔️");
+        }
+    </script>
+</body>
+</html>
+"""
+
+# ==========================================
+# 3. BACKEND ENDPOINTS
+# ==========================================
+@app.route('/')
+def home():
+    if 'user' in session:
+        return render_template_string(HTML_UI, username=session['user'], supabase_url=SUPABASE_URL, supabase_key=SUPABASE_KEY)
+    return render_template_string(HTML_LOGIN, supabase_url=SUPABASE_URL, supabase_key=SUPABASE_KEY)
+
+@app.route('/set_flask_session', methods=['POST'])
+def set_flask_session():
+    data = request.json
+    session['user'] = data.get('email', 'Authorized User')
+    return jsonify({"success": True})
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect('/')
+
+@app.route('/forge', methods=['POST'])
+def forge():
+    if 'user' not in session:
+        return jsonify({"error": "Unauthorized pipeline request."}), 401
+
+    data = request.json
+    prompt = f"Topic: {data.get('topic')}\\nNiche: {data.get('niche')}\\nAudience: {data.get('audience')}\\nTone: {data.get('tone')}"
+    
+    payload = {
+        "model": "Meta-Llama-3.3-70B-Instruct", 
+        "messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}], 
+        "temperature": 0.7
+    }
+    headers = {"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"}
+    
+    try:
+        r = requests.post(SAMBANOVA_URL, json=payload, headers=headers, timeout=15)
+        if r.status_code != 200:
+            return jsonify({"error": "SambaNova Pipeline Error. Try again shortly."})
+            
+        res_data = r.json()
+        ai_text = res_data['choices'][0]['message']['content'].strip()
+        if ai_text.startswith("```json"):
+            ai_text = ai_text.replace("```json", "", 1).strip()
+            if ai_text.endswith("```"):
+                ai_text = ai_text[:-3].strip()
+                
+        return jsonify(json.loads(ai_text))
+    except Exception as e: 
+        return jsonify({"error": f"Runtime fault: {str(e)}"})
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
