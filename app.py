@@ -7,7 +7,7 @@ from flask import Flask, render_template_string, request, jsonify
 app = Flask(__name__)
 
 SAMBANOVA_API_KEY = os.environ.get("SAMBANOVA_API_KEY")
-SAMBANOVA_URL = "https://api.sambanova.ai/v1/chat/completions"
+SAMBANOVA_URL = "[https://api.sambanova.ai/v1/chat/completions](https://api.sambanova.ai/v1/chat/completions)"
 
 HOOK_SYSTEM_PROMPT = """
 You are Hook Forge v2.0, an elite 9-figure direct-response copywriter and behavioral psychologist. 
@@ -47,7 +47,6 @@ Rewrite the user's raw script. Output strictly in JSON format:
 
 @app.route('/')
 def home():
-    # Ab ye alag file se HTML read karega!
     with open('index.html', 'r', encoding='utf-8') as f:
         return render_template_string(f.read())
 
@@ -77,9 +76,14 @@ def forge_script():
     try:
         r = requests.post(SAMBANOVA_URL, json={"model": "Meta-Llama-3.3-70B-Instruct", "messages": [{"role": "system", "content": SCRIPT_SYSTEM_PROMPT}, {"role": "user", "content": s + i}]}, headers={"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"})
         c = r.json()['choices'][0]['message']['content'].strip()
-        if c.startswith("```json"): c = c[7:-3].strip()
-        elif c.startswith("
-```"): c = c[3:-3].strip()
+        
+        # FIXED CLIPBOARD BUG HERE: No more direct backticks!
+        backticks = chr(96) * 3
+        if c.startswith(backticks + "json"): 
+            c = c[7:-3].strip()
+        elif c.startswith(backticks): 
+            c = c[3:-3].strip()
+            
         return jsonify(json.loads(c))
     except Exception as e:
         return jsonify({"error": "Failed to parse AI output."})
