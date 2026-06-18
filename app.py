@@ -41,7 +41,7 @@ Rewrite the user's raw script. Output strictly in JSON format:
 }
 """
 
-MASTER_HTML="""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hook Forge</title><script src="https://cdn.tailwindcss.com"></script><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>
+HTML_PART_1="""<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hook Forge</title><script src="https://cdn.tailwindcss.com"></script><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><style>
 body{margin:0;min-height:100vh;font-family:'Noto Sans JP',sans-serif;background:#000;color:#fef3c7;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow-x:hidden;transition:all .6s cubic-bezier(.4,0,.2,1);perspective:1500px}
 .bg-vid{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none;transition:opacity .3s,transform .5s;transform-origin:center}
 .v-anim{opacity:0!important;transform:scale(1.05)}
@@ -65,7 +65,8 @@ body.t-a2 .gl-pan{border-color:rgba(168,85,247,.5)} body.t-a2 .a-title,body.t-a2
 body.t-lux{background:#050505;color:#fff;font-family:'Inter',sans-serif} body.t-lux .gl-pan{background:#0a0a0a!important;backdrop-filter:none!important;border:1px solid rgba(255,255,255,.1)!important;box-shadow:0 20px 50px #000!important} body.t-lux .a-title{font-family:'Inter',sans-serif!important;font-weight:800!important;letter-spacing:.05em!important;text-shadow:0 0 20px rgba(255,255,255,.2)!important;color:#fff!important} body.t-lux .c-in{background:#111!important;border:1px solid rgba(255,255,255,.15)!important;color:#fff!important} body.t-lux .c-in:focus{border-color:#fff!important} body.t-lux .c-btn{background:#fff!important;border:none!important;color:#000!important;font-weight:800!important;box-shadow:0 4px 15px rgba(255,255,255,.2)!important} body.t-lux .c-btn:hover{background:#e5e5e5!important;box-shadow:0 6px 20px rgba(255,255,255,.4)!important} body.t-lux .t-act{background:#fff!important;border:none!important;color:#000!important} body.t-lux .t-in{border:1px solid rgba(255,255,255,.1)!important;color:#888!important} body.t-lux .bg-vid{opacity:0!important;visibility:hidden} body.t-lux .v-over{background:0 0!important} body.t-lux .text-red-400,body.t-lux .text-amber-400,body.t-lux .text-red-500{color:#fff!important} body.t-lux .border-red-500\\/20,body.t-lux .border-amber-500\\/20{border-color:rgba(255,255,255,.1)!important;background:#111!important} body.t-lux #m-btn{opacity:0;pointer-events:none}
 .m-txt{white-space:pre-line;word-break:break-word}
 </style></head><body class="p-4">
-<video id="bg-v" autoplay muted loop playsinline class="bg-vid"><source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4"></video><div class="v-over"></div>
+"""
+HTML_PART_2="""<video id="bg-v" autoplay muted loop playsinline class="bg-vid"><source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4"></video><div class="v-over"></div>
 <button onclick="tLux(event)" id="t-btn" class="fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-yellow-500/50 text-yellow-500 shadow-[0_0_15px_rgba(212,175,55,.4)] transition-all hover:scale-110 overflow-hidden"><i id="t-ico" class="fa-solid fa-crown text-xl"></i></button>
 <button onclick="cAura(event)" id="m-btn" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[100] bg-black/60 p-4 rounded-full border border-red-500 text-red-500 shadow-[0_0_15px_rgba(255,0,0,.5)] transition-all hover:scale-110 overflow-hidden"><i class="fa-solid fa-infinity text-2xl"></i></button>
 <button onclick="tAud()" class="a-btn shadow-lg hover:scale-110"><i id="a-ico" class="fa-solid fa-volume-xmark text-lg"></i></button>
@@ -117,9 +118,11 @@ function sMod(m){cM=m;$('tb-h').className=m==='h'?'t-btn t-act':'t-btn t-in';$('
 async function ig(){$('emp').style.display='none';$('res-h').style.display='none';$('res-s').style.display='none';$('err').style.display='none';$('ld').style.display='block';try{let p=cM==='h'?{niche:$('h-n').value,audience:$('h-a').value,tone:$('h-t').value,topic:$('h-top').value}:{script:$('s-r').value,url:$('s-u').value};let r=await fetch(cM==='h'?'/fh':'/fs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});let d=await r.json();$('ld').style.display='none';if(d.error)throw new Error(d.error);if(cM==='h'){$('scA').innerText=d.hook_a.score;$('scB').innerText=d.hook_b.score;$('res-h').style.display='block';mDec('txA',`"${d.hook_a.text}"`);mDec('txB',`"${d.hook_b.text}"`);}else{$('res-s').style.display='block';aSc(d.retention_score);mDec('sm',d.master_script);}}catch(e){$('ld').style.display='none';$('err').innerText="ERR: "+e.message;$('err').style.display='block';}}
 function cp(i){navigator.clipboard.writeText($(i).innerText);}
 </script></body></html>"""
+MASTER_HTML = HTML_PART_1 + HTML_PART_2
 
 @app.route('/')
-def home(): return render_template_string(MASTER_HTML)
+def home(): 
+    return render_template_string(MASTER_HTML)
 
 @app.route('/fh', methods=['POST'])
 def fh():
@@ -143,4 +146,4 @@ def fs():
 http://googleusercontent.com/immersive_entry_chip/0
 http://googleusercontent.com/immersive_entry_chip/1
 
-Ab deploy maar, abki baar koi limit hit nahi karegi aur ekdum makhan chalega! Phir aaram se un naye animations ka maza le. 🚀🔥
+**Bhai, is tareeke se tera code kabhi nahi katega kyunki koi bhi tukda bada nahi hai!** Ek ke neeche ek 1, 2, 3 paste kar aur deploy maar de. Isme sab kuch—Matrix Text, 3D Panels, naya UI aur Infinity button add ho chuka hai. 🚀🔥
