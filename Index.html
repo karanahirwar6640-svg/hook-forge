@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hook Forge | Enterprise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif; background-color: #000; color: #fef3c7; display: flex; align-items: center; justify-content: center; flex-direction: column; overflow-x: hidden; position: relative; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); perspective: 1500px; }
+        .bg-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none; transition: opacity 0.3s ease-in-out, transform 0.5s ease-out; transform-origin: center; }
+        .video-switch-anim { opacity: 0 !important; transform: scale(1.05); }
+        .video-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.05); z-index: 1; pointer-events: none; }
+        .glass-panel { background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 50, 50, 0.4); border-radius: 24px; box-shadow: 0 40px 80px rgba(0,0,0,0.95); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; will-change: transform; }
+        .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 30px rgba(255, 20, 20, 1); transition: all 0.5s ease; }
+        .crimson-input { background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(220, 38, 38, 0.35); color: #fef3c7; transition: all 0.3s; }
+        .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+        .crimson-btn { position: relative; overflow: hidden; background: linear-gradient(45deg, #7f1d1d, #dc2626); border: 1px solid #ef4444; box-shadow: 0 0 20px rgba(220, 38, 38, 0.5); transition: all 0.3s ease; }
+        .crimson-btn:hover { background: linear-gradient(45deg, #991b1b, #f87171); box-shadow: 0 0 30px rgba(220, 38, 38, 0.8); transform: translateY(-2px); }
+        .shockwave { position: absolute; background: rgba(255, 255, 255, 0.6); border-radius: 50%; transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+        @keyframes scoreLock { 0% { transform: scale(1); text-shadow: 0 0 10px rgba(245,158,11,0.5); } 50% { transform: scale(1.4); text-shadow: 0 0 40px rgba(245,158,11,1); color: #fff; } 100% { transform: scale(1); text-shadow: 0 0 15px rgba(245,158,11,0.8); } }
+        .score-animate { animation: scoreLock 0.5s ease-out; }
+        .audio-btn { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); padding: 12px; border-radius: 50%; border: 1px solid rgba(255,50,50,0.4); color: #ef4444; transition: all 0.3s; }
+        .tab-btn { padding: 10px 20px; font-size: 10px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; border-radius: 8px; transition: all 0.3s; }
+        .tab-active { background: rgba(220, 38, 38, 0.2); border: 1px solid #ef4444; color: #fef3c7; box-shadow: 0 0 15px rgba(220,38,38,0.4); }
+        .tab-inactive { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,50,50,0.2); color: rgba(254, 243, 199, 0.5); }
+        body.theme-aura-1 .glass-panel { border-color: rgba(50, 150, 255, 0.5); } body.theme-aura-1 .anime-title { color: #60a5fa !important; text-shadow: 0 0 30px rgba(50, 150, 255, 0.8); } body.theme-aura-1 .crimson-btn { background: linear-gradient(45deg, #1e3a8a, #2563eb); border-color: #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); } body.theme-aura-1 .text-red-400, body.theme-aura-1 .text-red-500 { color: #60a5fa !important; } body.theme-aura-1 .tab-active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); } body.theme-aura-1 #multiverse-btn { border-color: #3b82f6; color: #3b82f6; box-shadow: 0 0 15px rgba(59,130,246,0.5); }
+        body.theme-aura-2 .glass-panel { border-color: rgba(168, 85, 247, 0.5); } body.theme-aura-2 .anime-title { color: #c084fc !important; text-shadow: 0 0 30px rgba(168, 85, 247, 0.8); } body.theme-aura-2 .crimson-btn { background: linear-gradient(45deg, #581c87, #9333ea); border-color: #a855f7; box-shadow: 0 0 20px rgba(168, 85, 247, 0.5); } body.theme-aura-2 .text-red-400, body.theme-aura-2 .text-red-500 { color: #c084fc !important; } body.theme-aura-2 .tab-active { background: rgba(168, 85, 247, 0.2); border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); } body.theme-aura-2 #multiverse-btn { border-color: #a855f7; color: #a855f7; box-shadow: 0 0 15px rgba(168,85,247,0.5); }
+        body.theme-luxury { background: #050505; color: #fff; font-family: 'Inter', sans-serif; } body.theme-luxury .glass-panel { background: #0a0a0a !important; backdrop-filter: none !important; border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: 0 20px 50px rgba(0,0,0,1) !important; } body.theme-luxury .anime-title { font-family: 'Inter', sans-serif !important; font-weight: 800 !important; letter-spacing: 0.05em !important; text-shadow: 0 0 20px rgba(255,255,255,0.2) !important; color: #fff !important; } body.theme-luxury .crimson-input { background: #111 !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; color: #fff !important; } body.theme-luxury .crimson-input:focus { border-color: #fff !important; } body.theme-luxury .crimson-btn { background: #fff !important; border: none !important; color: #000 !important; font-weight: 800 !important; box-shadow: 0 4px 15px rgba(255,255,255,0.2) !important; } body.theme-luxury .crimson-btn:hover { background: #e5e5e5 !important; box-shadow: 0 6px 20px rgba(255,255,255,0.4) !important; } body.theme-luxury .tab-active { background: #fff !important; border: none !important; color: #000 !important; } body.theme-luxury .tab-inactive { border: 1px solid rgba(255, 255, 255, 0.1) !important; color: #888 !important; } body.theme-luxury .bg-video { opacity: 0 !important; visibility: hidden; } body.theme-luxury .video-overlay { background: transparent !important; } body.theme-luxury .text-red-400, body.theme-luxury .text-amber-400, body.theme-luxury .text-red-500 { color: #fff !important; } body.theme-luxury .border-red-500\/20, body.theme-luxury .border-amber-500\/20 { border-color: rgba(255,255,255,0.1) !important; background: #111 !important; } body.theme-luxury #multiverse-btn { opacity: 0; pointer-events: none; }
+        .matrix-text { white-space: pre-line; word-break: break-word; }
+    </style>
+</head>
+<body class="p-4">
+    <video id="bg-vid" autoplay muted loop playsinline class="bg-video">
+        <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+    <button onclick="toggleDomainExpansion(event)" id="theme-btn" class="fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-yellow-500/50 text-yellow-500 shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all hover:scale-110 overflow-hidden"><i id="theme-icon" class="fa-solid fa-crown text-xl transition-all"></i></button>
+    <button onclick="cycleAura(event)" id="multiverse-btn" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[100] bg-black/60 p-4 rounded-full border border-red-500 text-red-500 shadow-[0_0_15px_rgba(255,0,0,0.5)] transition-all hover:scale-110 overflow-hidden"><i class="fa-solid fa-infinity text-2xl"></i></button>
+    <button onclick="toggleAudio()" class="audio-btn shadow-lg hover:scale-110"><i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i></button>
+
+    <div id="dashboard-viewport" class="w-full max-w-6xl flex-col relative z-10 flex mt-4 md:mt-0">
+        <div class="w-full flex flex-col md:flex-row justify-between items-center mb-6 px-4">
+            <div class="text-center md:text-left mb-4 md:mb-0">
+                <h1 class="anime-title text-3xl md:text-4xl font-black text-red-500 mb-1" id="main-title">HOOK FORGE</h1>
+                <p class="text-[9px] tracking-[0.4em] text-red-300 uppercase"><i class="fa-solid fa-user-shield mr-1"></i> <span id="user-display">Founder</span></p>
+            </div>
+            <div class="flex space-x-3 bg-black/40 p-1.5 rounded-xl border border-red-900/50 backdrop-blur-sm transition-colors" id="tab-container">
+                <button id="tab-hook" onclick="switchMode('hook')" class="tab-btn tab-active"><i class="fa-solid fa-fire mr-1"></i> Hook Forge</button>
+                <button id="tab-script" onclick="switchMode('script')" class="tab-btn tab-inactive"><i class="fa-solid fa-scroll mr-1"></i> Script Forge</button>
+            </div>
+        </div>
+
+        <div id="errorBox" class="hidden bg-red-900/80 border border-red-500 text-white p-3 rounded mb-4 text-xs font-mono w-full"></div>
+
+        <div class="flex flex-col lg:flex-row gap-6 w-full items-stretch">
+            <div class="glass-panel parallax-panel w-full lg:max-w-md p-6 flex flex-col justify-between">
+                <div id="inputs-hook" class="space-y-4">
+                    <div><label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Niche</label><input type="text" id="h-niche" value="Anime & Tech" class="w-full crimson-input rounded-lg px-4 py-3 text-sm"></div>
+                    <div><label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Audience</label><input type="text" id="h-audience" value="Creators" class="w-full crimson-input rounded-lg px-4 py-3 text-sm"></div>
+                    <div><label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Tone Matrix</label><select id="h-tone" class="w-full crimson-input rounded-lg px-4 py-3 text-sm"><option value="Curious">Curiosity Gap</option><option value="Aggressive">Brutally Honest</option></select></div>
+                    <div><label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Topic</label><textarea id="h-topic" rows="3" class="w-full crimson-input rounded-lg px-4 py-3 text-sm resize-none" placeholder="Enter core concept..."></textarea></div>
+                </div>
+
+                <div id="inputs-script" class="hidden space-y-4 flex-grow flex flex-col">
+                    <p class="text-[10px] tracking-widest text-red-300/80 uppercase border-b border-red-900/50 pb-2 mb-2 transition-colors">Transform raw script into highly retained viral content.</p>
+                    <div><label class="block text-[10px] font-bold tracking-widest uppercase text-red-500 mb-1"><i class="fa-solid fa-crosshairs mr-1"></i> Target URL</label><input type="url" id="s-url" class="w-full crimson-input rounded-lg px-4 py-3 text-sm mb-2" placeholder="Paste YouTube/Insta link..."></div>
+                    <div class="flex-grow flex flex-col"><label class="block text-[10px] font-bold tracking-widest uppercase text-amber-400 mb-1"><i class="fa-solid fa-code mr-1"></i> Raw Script Input</label><textarea id="s-raw" class="w-full flex-grow min-h-[250px] crimson-input rounded-lg px-4 py-3 text-sm resize-none" placeholder="Paste script..."></textarea></div>
+                </div>
+                <button onclick="createShockwave(event); igniteEngine();" id="btn-ignite" class="w-full crimson-btn py-4 rounded-lg font-bold tracking-widest uppercase text-xs mt-6 overflow-hidden"><i class="fa-solid fa-fire mr-2"></i> Ignite Hook Engine</button>
+            </div>
+
+            <div class="glass-panel parallax-panel flex-grow p-6 flex flex-col justify-center min-h-[500px]">
+                <div id="loading" class="hidden text-center"><i id="loading-icon" class="fa-solid fa-spinner fa-spin text-5xl text-red-500 mb-4 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]"></i><h2 id="loading-text" class="anime-title text-2xl text-red-100">Extracting Matrix...</h2></div>
+                <div id="empty-state" class="text-center opacity-50"><i class="fa-solid fa-crosshairs text-6xl text-red-500/50 mb-4" id="empty-icon"></i><p id="empty-text" class="text-xs font-mono tracking-widest uppercase">Awaiting Target Parameters...</p></div>
+                
+                <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
+                    <div class="bg-black/40 border border-red-500/20 p-5 rounded-xl"><div class="flex justify-between items-center mb-3"><span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Option A</span><span class="text-[10px] text-red-400 font-black tracking-widest">SCORE: <span id="scoreA" class="text-red-500 text-base"></span></span></div><h3 id="textA" class="matrix-text text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide"></h3><button onclick="copyText('textA')" class="mt-3 text-[10px] uppercase tracking-widest text-red-400 hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button></div>
+                    <div class="bg-black/40 border border-amber-500/20 p-5 rounded-xl"><div class="flex justify-between items-center mb-3"><span class="text-[10px] bg-amber-950/80 text-amber-300 border border-amber-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Option B</span><span class="text-[10px] text-amber-400 font-black tracking-widest">SCORE: <span id="scoreB" class="text-amber-500 text-base"></span></span></div><h3 id="textB" class="matrix-text text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide"></h3><button onclick="copyText('textB')" class="mt-3 text-[10px] uppercase tracking-widest text-amber-400 hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button></div>
+                </div>
+
+                <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
+                    <div class="bg-black/40 border border-red-500/20 p-5 rounded-xl flex justify-between items-center"><div><h3 class="text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Viral Retention Score</h3></div><div class="text-4xl font-black text-amber-500 drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]"><span id="s-score" class="inline-block">0</span><span class="text-lg text-amber-500/50">/100</span></div></div>
+                    <div class="bg-black/40 border border-red-500/20 p-5 rounded-xl relative"><span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider mb-3 inline-block">Master Script</span><p id="s-master" class="matrix-text text-sm text-amber-50 leading-relaxed font-mono whitespace-pre-line"></p><button onclick="copyText('s-master')" class="mt-4 text-[10px] uppercase tracking-widest text-red-400 hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy Script</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'hook';
+        let isMuted = true;
+        let isLuxuryMode = false;
+        let currentAura = 0;
+
+        const videos = [
+            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4",
+            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/your_name.mp4",
+            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(1).mp4"
+        ];
+
+        document.querySelectorAll('.parallax-panel').forEach(panel => {
+            panel.addEventListener('mousemove', e => {
+                if(window.innerWidth < 768) return; 
+                const rect = panel.getBoundingClientRect();
+                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                const rotateX = ((y - rect.height/2) / (rect.height/2)) * -4; 
+                const rotateY = ((x - rect.width/2) / (rect.width/2)) * 4;
+                panel.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            panel.addEventListener('mouseenter', () => { if(window.innerWidth >= 768) panel.style.transition = 'transform 0.1s ease-out'; });
+            panel.addEventListener('mouseleave', () => { if(window.innerWidth >= 768) { panel.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)'; panel.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)'; } });
+        });
+
+        function matrixDecrypt(elementId, targetText) {
+            const el = document.getElementById(elementId);
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*<>?';
+            let iterations = 0; const maxIterations = 25; 
+            const interval = setInterval(() => {
+                el.innerText = targetText.split('').map((char, index) => {
+                    if (index < (iterations / maxIterations) * targetText.length) return char;
+                    if (char === ' ' || char === '\\n') return char;
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join('');
+                iterations++;
+                if (iterations >= maxIterations) { clearInterval(interval); el.innerText = targetText; }
+            }, 30); 
+        }
+
+        function createShockwave(e) {
+            const btn = e.currentTarget;
+            const circle = document.createElement('span');
+            const d = Math.max(btn.clientWidth, btn.clientHeight);
+            circle.style.width = circle.style.height = `${d}px`;
+            circle.style.left = `${e.clientX - btn.getBoundingClientRect().left - d/2}px`;
+            circle.style.top = `${e.clientY - btn.getBoundingClientRect().top - d/2}px`;
+            circle.classList.add('shockwave');
+            const oldShockwave = btn.getElementsByClassName('shockwave')[0];
+            if (oldShockwave) oldShockwave.remove();
+            btn.appendChild(circle);
+        }
+
+        function animateScore(targetValue) {
+            const scoreEl = document.getElementById('s-score');
+            scoreEl.classList.remove('score-animate'); 
+            let startValue = 0, duration = 1200, startTime = null;
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = Math.min((timestamp - startTime) / duration, 1);
+                scoreEl.innerText = Math.floor(progress * (targetValue - startValue) + startValue);
+                if (progress < 1) window.requestAnimationFrame(step);
+                else { scoreEl.innerText = targetValue; scoreEl.classList.add('score-animate'); }
+            }
+            window.requestAnimationFrame(step);
+        }
+
+        function playWarpTransition(callback) {
+            const vid = document.getElementById('bg-vid');
+            vid.classList.add('video-switch-anim'); 
+            setTimeout(() => { callback(); setTimeout(() => { vid.classList.remove('video-switch-anim'); }, 100); }, 300);
+        }
+
+        function cycleAura(e) {
+            if (isLuxuryMode) return;
+            createShockwave(e);
+            currentAura = (currentAura + 1) % videos.length;
+            playWarpTransition(() => {
+                const vid = document.getElementById('bg-vid');
+                vid.src = videos[currentAura]; 
