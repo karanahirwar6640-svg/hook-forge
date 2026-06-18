@@ -88,15 +88,17 @@ MASTER_HTML = """
             background-color: #000; color: #fef3c7; 
             display: flex; align-items: center; justify-content: center; flex-direction: column;
             overflow-x: hidden; position: relative;
-            transition: all 0.5s ease; /* Smooth transition for theme change */
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .bg-video {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: 0; pointer-events: none;
+            transition: opacity 0.5s ease;
         }
         .video-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.2); z-index: 1; pointer-events: none;
+            background: rgba(0, 0, 0, 0.3); z-index: 1; pointer-events: none;
+            transition: all 0.5s ease;
         }
         
         .glass-panel {
@@ -104,7 +106,7 @@ MASTER_HTML = """
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 50, 50, 0.4); border-radius: 24px;
             box-shadow: 0 40px 80px rgba(0,0,0,0.95);
-            transition: all 0.5s ease;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         @media (max-width: 768px) {
@@ -119,8 +121,7 @@ MASTER_HTML = """
         .crimson-input { background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(220, 38, 38, 0.35); color: #fef3c7; transition: all 0.3s; }
         .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
         select.crimson-input option { background: #000; color: #fef3c7; }
-        .github-btn { background: rgba(15, 15, 15, 0.6); border: 1px solid rgba(255, 50, 50, 0.3); color: white; transition: all 0.3s; }
-        .github-btn:hover { background: rgba(30, 30, 30, 0.9); box-shadow: 0 0 20px rgba(220,38,38,0.3); }
+        
         .crimson-btn { background: linear-gradient(45deg, #7f1d1d, #dc2626); border: 1px solid #ef4444; box-shadow: 0 0 20px rgba(220, 38, 38, 0.5); transition: all 0.3s ease; }
         .crimson-btn:hover { background: linear-gradient(45deg, #991b1b, #f87171); box-shadow: 0 0 30px rgba(220, 38, 38, 0.8); }
         
@@ -141,16 +142,27 @@ MASTER_HTML = """
         /* ==========================================
            THEME: LUXURY PREMIUM (EXECUTIVE MODE)
            ========================================== */
-        body.theme-luxury { background: radial-gradient(circle at center, #111 0%, #000 100%); color: #e5e7eb; font-family: 'Inter', -apple-system, sans-serif; }
-        body.theme-luxury .glass-panel { background: rgba(15, 15, 15, 0.7) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; border: 1px solid rgba(212, 175, 55, 0.3) !important; box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05) !important; }
-        body.theme-luxury .anime-title { font-family: 'Inter', sans-serif; font-weight: 300; letter-spacing: 0.3em; text-shadow: none; background: linear-gradient(135deg, #fef3c7 0%, #d4af37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        body.theme-luxury .crimson-input { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
-        body.theme-luxury .crimson-input:focus { border-color: rgba(212, 175, 55, 0.6); box-shadow: 0 0 15px rgba(212, 175, 55, 0.15); }
-        body.theme-luxury .crimson-btn { background: linear-gradient(135deg, #1f1f1f, #2a2a2a); border: 1px solid rgba(212, 175, 55, 0.4); color: #d4af37; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        body.theme-luxury .crimson-btn:hover { background: linear-gradient(135deg, #2a2a2a, #333); border-color: rgba(212, 175, 55, 0.8); color: #fef3c7; }
-        body.theme-luxury .tab-active { background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; color: #d4af37; box-shadow: none; }
-        body.theme-luxury .bg-video { display: none; } /* Hide video in luxury mode */
+        body.theme-luxury { 
+            background-color: #050505; color: #e5e7eb; font-family: 'Inter', sans-serif; 
+        }
+        body.theme-luxury .glass-panel { 
+            background: rgba(12, 12, 12, 0.85) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; 
+            border: 1px solid rgba(212, 175, 55, 0.25) !important; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05) !important; 
+        }
+        body.theme-luxury .anime-title { 
+            font-family: 'Inter', sans-serif; font-weight: 300; letter-spacing: 0.3em; text-shadow: none; 
+            background: linear-gradient(135deg, #fef3c7 0%, #d4af37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        }
+        body.theme-luxury .crimson-input { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.08); color: #fff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
+        body.theme-luxury .crimson-input:focus { border-color: rgba(212, 175, 55, 0.5); box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
+        body.theme-luxury .crimson-btn { background: linear-gradient(135deg, #151515, #222); border: 1px solid rgba(212, 175, 55, 0.3); color: #d4af37; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        body.theme-luxury .crimson-btn:hover { background: linear-gradient(135deg, #222, #2a2a2a); border-color: rgba(212, 175, 55, 0.7); color: #fef3c7; }
+        body.theme-luxury .tab-active { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.5); color: #d4af37; box-shadow: none; }
+        body.theme-luxury .tab-inactive { border: 1px solid rgba(255, 255, 255, 0.05); }
+        body.theme-luxury .bg-video { opacity: 0; }
         body.theme-luxury .video-overlay { background: #050505; }
+        body.theme-luxury #aura-controls { opacity: 0; pointer-events: none; }
     </style>
 </head>
 <body class="p-4">
@@ -160,54 +172,33 @@ MASTER_HTML = """
     </video>
     <div class="video-overlay"></div>
 
-    <button onclick="toggleAudio()" class="audio-btn shadow-lg"><i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i></button>
+    <button onclick="toggleDomainExpansion()" id="theme-btn" class="fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-yellow-500/50 text-yellow-500 shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all hover:scale-110">
+        <i id="theme-icon" class="fa-solid fa-crown text-xl"></i>
+    </button>
 
-    <div id="login-viewport" class="w-full max-w-[410px] p-8 md:p-10 glass-panel relative z-10">
-        <div class="text-center mb-8">
-            <h1 class="anime-title text-4xl md:text-5xl font-black text-red-500 tracking-widest mb-2">HOOK FORGE</h1>
-            <p class="text-[10px] tracking-[0.4em] text-red-300/80 uppercase font-bold">Secure Cloud Portal</p>
-        </div>
-        <div id="msgBox" class="hidden p-3 rounded-xl text-xs font-mono text-center mb-6 border bg-red-950/80 border-red-500/50 text-red-200"></div>
-        <div class="space-y-5">
-            <button onclick="loginGitHub()" id="btn-github" class="w-full github-btn py-4 rounded-xl text-xs tracking-widest uppercase font-bold flex items-center justify-center gap-3 shadow-md">
-                <i class="fa-brands fa-github text-base"></i> Continue with GitHub
-            </button>
-            <div class="relative flex py-2 items-center">
-                <div class="flex-grow border-t border-red-500/30"></div>
-                <span class="flex-shrink-0 mx-4 text-red-400/60 text-[9px] uppercase tracking-[0.3em] font-bold">Secure Routing</span>
-                <div class="flex-grow border-t border-red-500/30"></div>
-            </div>
-            <div>
-                <div class="relative mb-3">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-red-400/60"><i class="fa-solid fa-shield-halved text-xs"></i></span>
-                    <input type="email" id="auth-email" placeholder="Enter security email" class="w-full crimson-input rounded-xl pl-10 pr-4 py-3.5 text-sm focus:outline-none">
-                </div>
-                <button onclick="sendMagicLink()" id="btn-email" class="w-full crimson-btn text-white font-bold py-4 rounded-xl text-xs tracking-widest uppercase transition-all shadow-lg">
-                    Request Entry Token
-                </button>
-            </div>
-            <div class="pt-6 text-center">
-                <button onclick="founderOverride()" class="text-[9px] text-red-500/40 hover:text-red-400 uppercase tracking-widest transition-all">
-                    [ Developer Override Access ]
-                </button>
-            </div>
-        </div>
+    <div id="aura-controls" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[100] flex gap-4 bg-black/50 py-2 px-5 border border-red-900/50 rounded-full backdrop-blur-md transition-all duration-500">
+        <button onclick="switchAura(0)" class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_red] aura-dot transition-all"></button>
+        <button onclick="switchAura(1)" class="w-3 h-3 rounded-full bg-red-900/40 hover:bg-red-500 transition-all aura-dot"></button>
+        <button onclick="switchAura(2)" class="w-3 h-3 rounded-full bg-red-900/40 hover:bg-red-500 transition-all aura-dot"></button>
     </div>
 
-    <div id="dashboard-viewport" class="hidden w-full max-w-6xl flex-col relative z-10">
+    <button onclick="toggleAudio()" class="audio-btn shadow-lg"><i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i></button>
+
+    <div id="login-viewport" class="hidden w-full max-w-[410px] p-8 md:p-10 glass-panel relative z-10">
+        </div>
+
+    <div id="dashboard-viewport" class="w-full max-w-6xl flex-col relative z-10 flex">
         
         <div class="w-full flex flex-col md:flex-row justify-between items-center mb-6 px-4">
             <div class="text-center md:text-left mb-4 md:mb-0">
-                <h1 class="anime-title text-3xl font-black text-red-500 mb-1">HOOK FORGE</h1>
+                <h1 class="anime-title text-3xl font-black text-red-500 mb-1" id="main-title">HOOK FORGE</h1>
                 <p class="text-[9px] tracking-[0.4em] text-red-300 uppercase"><i class="fa-solid fa-user-shield mr-1"></i> <span id="user-display">Founder</span></p>
             </div>
             
-            <div class="flex space-x-3 bg-black/40 p-1.5 rounded-xl border border-red-900/50 backdrop-blur-sm">
+            <div class="flex space-x-3 bg-black/40 p-1.5 rounded-xl border border-red-900/50 backdrop-blur-sm" id="tab-container">
                 <button id="tab-hook" onclick="switchMode('hook')" class="tab-btn tab-active"><i class="fa-solid fa-fire mr-1"></i> Hook Forge</button>
                 <button id="tab-script" onclick="switchMode('script')" class="tab-btn tab-inactive"><i class="fa-solid fa-scroll mr-1"></i> Script Forge</button>
             </div>
-            
-            <button onclick="handleLogout()" class="mt-4 md:mt-0 bg-red-950/60 hover:bg-red-700 border border-red-800 px-4 py-2 rounded-lg text-[9px] uppercase tracking-widest text-white font-bold transition-all hidden md:block"><i class="fa-solid fa-power-off"></i></button>
         </div>
 
         <div id="errorBox" class="hidden bg-red-900/80 border border-red-500 text-white p-3 rounded mb-4 text-xs font-mono w-full"></div>
@@ -218,48 +209,38 @@ MASTER_HTML = """
                 
                 <div id="inputs-hook" class="space-y-4">
                     <div>
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Niche</label>
+                        <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1" id="lbl-niche">Niche</label>
                         <input type="text" id="h-niche" value="Anime & Tech" class="w-full crimson-input rounded-lg px-4 py-3 text-sm">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Audience</label>
+                        <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1" id="lbl-aud">Audience</label>
                         <input type="text" id="h-audience" value="Creators" class="w-full crimson-input rounded-lg px-4 py-3 text-sm">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Tone Matrix (15+ Options)</label>
+                        <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1" id="lbl-tone">Tone Matrix</label>
                         <select id="h-tone" class="w-full crimson-input rounded-lg px-4 py-3 text-sm">
                             <option value="Curious">Curiosity Gap</option>
                             <option value="Aggressive">Brutally Honest</option>
-                            <option value="Storytelling">Anime Protagonist Arc</option>
                             <option value="Controversial">Controversial / Polarizing</option>
-                            <option value="Educational">Educational / Value-Bomb</option>
-                            <option value="Urgent">Urgent / FOMO</option>
-                            <option value="Inspirational">Inspirational / Cinematic</option>
-                            <option value="Sarcastic">Sarcastic / Witty</option>
-                            <option value="Empathetic">Empathetic / Relatable</option>
-                            <option value="Analytical">Data-Driven / Analytical</option>
-                            <option value="Vulnerable">Vulnerable / Authentic</option>
-                            <option value="Hype">High Energy / Hype</option>
                             <option value="Minimalist">Minimalist / Straight to Point</option>
-                            <option value="Philosophical">Deep / Philosophical</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Topic</label>
+                        <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1" id="lbl-top">Topic</label>
                         <textarea id="h-topic" rows="3" class="w-full crimson-input rounded-lg px-4 py-3 text-sm resize-none" placeholder="Enter core concept..."></textarea>
                     </div>
                 </div>
 
                 <div id="inputs-script" class="hidden space-y-4 flex-grow flex flex-col">
-                    <p class="text-[10px] tracking-widest text-red-300/80 uppercase border-b border-red-900/50 pb-2 mb-2">Transform raw script into highly retained viral content.</p>
+                    <p class="text-[10px] tracking-widest text-red-300/80 uppercase border-b border-red-900/50 pb-2 mb-2" id="lbl-transform">Transform raw script into highly retained viral content.</p>
                     
                     <div>
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-red-500 mb-1"><i class="fa-solid fa-crosshairs mr-1"></i> Target Competitor URL (Optional)</label>
-                        <input type="url" id="s-url" class="w-full crimson-input rounded-lg px-4 py-3 text-sm mb-2" placeholder="Paste YouTube/Insta link to snipe structure...">
+                        <label class="block text-[10px] font-bold tracking-widest uppercase text-red-500 mb-1" id="lbl-url"><i class="fa-solid fa-crosshairs mr-1"></i> Target Competitor URL (Optional)</label>
+                        <input type="url" id="s-url" class="w-full crimson-input rounded-lg px-4 py-3 text-sm mb-2" placeholder="Paste YouTube/Insta link to snipe...">
                     </div>
 
                     <div class="flex-grow flex flex-col">
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-amber-400 mb-1"><i class="fa-solid fa-code mr-1"></i> Raw Script Input</label>
+                        <label class="block text-[10px] font-bold tracking-widest uppercase text-amber-400 mb-1" id="lbl-raw"><i class="fa-solid fa-code mr-1"></i> Raw Script Input</label>
                         <textarea id="s-raw" class="w-full flex-grow min-h-[250px] crimson-input rounded-lg px-4 py-3 text-sm resize-none" placeholder="Paste your boring, unoptimized script here..."></textarea>
                     </div>
                 </div>
@@ -271,8 +252,8 @@ MASTER_HTML = """
 
             <div class="glass-panel flex-grow p-6 flex flex-col justify-center min-h-[500px]">
                 <div id="loading" class="hidden text-center">
-                    <i class="fa-solid fa-spinner fa-spin text-5xl text-red-500 mb-4 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]"></i>
-                    <h2 id="loading-text" class="anime-title text-2xl text-red-100">Extracting Psychology Matrix...</h2>
+                    <i id="loading-icon" class="fa-solid fa-spinner fa-spin text-5xl text-red-500 mb-4 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]"></i>
+                    <h2 id="loading-text" class="anime-title text-2xl text-red-100">Extracting Matrix...</h2>
                 </div>
 
                 <div id="empty-state" class="text-center opacity-50">
@@ -284,32 +265,19 @@ MASTER_HTML = """
                     <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl">
                         <div class="flex justify-between items-center mb-3">
                             <span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Option A</span>
-                            <span class="text-[10px] text-red-400 font-black tracking-widest">MATRIX SCORE: <span id="scoreA" class="text-red-500 text-base"></span></span>
+                            <span class="text-[10px] text-red-400 font-black tracking-widest">SCORE: <span id="scoreA" class="text-red-500 text-base"></span></span>
                         </div>
                         <h3 id="textA" class="text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide"></h3>
-                        <div class="text-xs text-red-200/80 space-y-2 border-t border-red-900/30 pt-3">
-                            <p><strong class="text-red-400">Psychology:</strong> <span id="psychA"></span></p>
-                            <p><strong class="text-red-400">Tactical Fix:</strong> <span id="fixA"></span></p>
-                        </div>
                         <button onclick="copyText('textA')" class="mt-3 text-[10px] uppercase tracking-widest text-red-400 hover:text-red-200 transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
                     </div>
 
                     <div class="bg-black/50 border border-amber-500/20 p-5 rounded-xl">
                         <div class="flex justify-between items-center mb-3">
                             <span class="text-[10px] bg-amber-950/80 text-amber-300 border border-amber-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Option B</span>
-                            <span class="text-[10px] text-amber-400 font-black tracking-widest">MATRIX SCORE: <span id="scoreB" class="text-amber-500 text-base"></span></span>
+                            <span class="text-[10px] text-amber-400 font-black tracking-widest">SCORE: <span id="scoreB" class="text-amber-500 text-base"></span></span>
                         </div>
                         <h3 id="textB" class="text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide"></h3>
-                        <div class="text-xs text-red-200/80 space-y-2 border-t border-red-900/30 pt-3">
-                            <p><strong class="text-amber-400">Psychology:</strong> <span id="psychB"></span></p>
-                            <p><strong class="text-amber-400">Tactical Fix:</strong> <span id="fixB"></span></p>
-                        </div>
                         <button onclick="copyText('textB')" class="mt-3 text-[10px] uppercase tracking-widest text-amber-400 hover:text-amber-200 transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
-                    </div>
-                    
-                    <div class="text-xs text-red-300 bg-red-950/20 p-4 rounded border border-red-900/40 font-mono leading-relaxed">
-                        <strong class="uppercase tracking-widest block mb-1 text-red-400"><i class="fa-solid fa-dna mr-2"></i>DNA Matrix Analysis</strong>
-                        <span id="dna"></span>
                     </div>
                 </div>
 
@@ -317,27 +285,16 @@ MASTER_HTML = """
                     <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl flex justify-between items-center">
                         <div>
                             <h3 class="text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Viral Retention Score</h3>
-                            <p class="text-[10px] text-red-200/80 font-mono">Based on 3-second hook & pacing</p>
                         </div>
                         <div class="text-4xl font-black text-amber-500 drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]">
                             <span id="s-score"></span><span class="text-lg text-amber-500/50">/100</span>
                         </div>
                     </div>
 
-                    <div class="bg-black/50 border border-amber-500/20 p-5 rounded-xl">
-                        <span class="text-[10px] bg-amber-950/80 text-amber-300 border border-amber-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider mb-3 inline-block">The Hook</span>
-                        <h3 id="s-hook" class="text-base font-bold text-amber-50 tracking-wide italic"></h3>
-                    </div>
-
                     <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl relative">
-                        <span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider mb-3 inline-block">Optimized Master Script</span>
+                        <span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider mb-3 inline-block">Master Script</span>
                         <p id="s-master" class="text-sm text-amber-50 leading-relaxed font-mono whitespace-pre-line"></p>
                         <button onclick="copyText('s-master')" class="mt-4 text-[10px] uppercase tracking-widest text-red-400 hover:text-red-200 transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy Script</button>
-                    </div>
-
-                    <div class="text-xs text-red-300 bg-red-950/20 p-4 rounded border border-red-900/40 font-mono leading-relaxed">
-                        <strong class="uppercase tracking-widest block mb-1 text-red-400"><i class="fa-solid fa-brain mr-2"></i>Psychology Breakdown</strong>
-                        <span id="s-psych"></span>
                     </div>
                 </div>
             </div>
@@ -347,6 +304,50 @@ MASTER_HTML = """
     <script>
         let currentMode = 'hook';
         let isMuted = true;
+        let isLuxuryMode = false;
+
+        // MULTIVERSE VIDEOS
+        const videos = [
+            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4",
+            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(2).mp4",
+            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(1).mp4"
+        ];
+
+        function switchAura(index) {
+            const vid = document.getElementById('bg-vid');
+            vid.src = videos[index];
+            vid.play();
+            
+            const dots = document.querySelectorAll('.aura-dot');
+            dots.forEach((dot, i) => {
+                if(i === index) {
+                    dot.className = 'w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_red] aura-dot transition-all';
+                } else {
+                    dot.className = 'w-3 h-3 rounded-full bg-red-900/40 hover:bg-red-500 transition-all aura-dot';
+                }
+            });
+        }
+
+        function toggleDomainExpansion() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            const themeBtn = document.getElementById('theme-btn');
+            const title = document.getElementById('main-title');
+            
+            isLuxuryMode = !isLuxuryMode;
+            
+            if (isLuxuryMode) {
+                body.classList.add('theme-luxury');
+                icon.className = 'fa-solid fa-eye text-xl'; // Turns to Eye
+                themeBtn.className = 'fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-red-500/50 text-red-500 shadow-[0_0_15px_rgba(255,0,0,0.4)] transition-all hover:scale-110';
+                title.classList.replace('text-red-500', 'text-[#d4af37]');
+            } else {
+                body.classList.remove('theme-luxury');
+                icon.className = 'fa-solid fa-crown text-xl'; // Turns to Crown
+                themeBtn.className = 'fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-yellow-500/50 text-yellow-500 shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all hover:scale-110';
+                title.classList.replace('text-[#d4af37]', 'text-red-500');
+            }
+        }
 
         function toggleAudio() {
             const vid = document.getElementById('bg-vid');
@@ -379,6 +380,14 @@ MASTER_HTML = """
             document.getElementById('errorBox').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
 
+            if(isLuxuryMode) {
+                document.getElementById('loading-icon').classList.replace('text-red-500', 'text-[#d4af37]');
+                document.getElementById('loading-text').classList.replace('text-red-100', 'text-[#d4af37]');
+            } else {
+                document.getElementById('loading-icon').classList.replace('text-[#d4af37]', 'text-red-500');
+                document.getElementById('loading-text').classList.replace('text-[#d4af37]', 'text-red-100');
+            }
+
             try {
                 let endpoint = currentMode === 'hook' ? '/forge_hook' : '/forge_script';
                 let payloadData = {};
@@ -406,28 +415,17 @@ MASTER_HTML = """
                 const data = await res.json();
                 document.getElementById('loading').style.display = 'none';
 
-                if (data.error) {
-                    throw new Error(data.error);
-                }
+                if (data.error) throw new Error(data.error);
 
                 if (currentMode === 'hook') {
                     document.getElementById('scoreA').innerText = data.hook_a.score;
                     document.getElementById('textA').innerText = `"${data.hook_a.text}"`;
-                    document.getElementById('psychA').innerText = data.hook_a.psychology;
-                    document.getElementById('fixA').innerText = data.hook_a.reasoning;
-
                     document.getElementById('scoreB').innerText = data.hook_b.score;
                     document.getElementById('textB').innerText = `"${data.hook_b.text}"`;
-                    document.getElementById('psychB').innerText = data.hook_b.psychology;
-                    document.getElementById('fixB').innerText = data.hook_b.reasoning;
-
-                    document.getElementById('dna').innerText = data.dna_comparison;
                     document.getElementById('results-hook').style.display = 'block';
                 } else {
                     document.getElementById('s-score').innerText = data.retention_score;
-                    document.getElementById('s-hook').innerText = `"${data.hook_extracted}"`;
                     document.getElementById('s-master').innerText = data.master_script;
-                    document.getElementById('s-psych').innerText = data.psychology_breakdown;
                     document.getElementById('results-script').style.display = 'block';
                 }
             } catch (err) {
@@ -441,19 +439,6 @@ MASTER_HTML = """
             const text = document.getElementById(elementId).innerText;
             navigator.clipboard.writeText(text);
         }
-
-        function founderOverride() {
-            document.getElementById('login-viewport').style.display = 'none';
-            document.getElementById('dashboard-viewport').style.display = 'flex';
-        }
-
-        function handleLogout() {
-            document.getElementById('login-viewport').style.display = 'block';
-            document.getElementById('dashboard-viewport').style.display = 'none';
-        }
-
-        function loginGitHub() { founderOverride(); }
-        function sendMagicLink() { founderOverride(); }
     </script>
 </body>
 </html>
