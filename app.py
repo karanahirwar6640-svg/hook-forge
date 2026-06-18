@@ -1,5 +1,6 @@
 import os
 import json
+import re
 from flask import Flask, render_template_string, request, jsonify
 import requests
 
@@ -55,16 +56,8 @@ YOUR TRAINING & CONDITIONING (Follow this exactly):
 3. EXTREME BREVITY: No sentence longer than 12 words. Cut every single unnecessary adjective. 
 4. CONVERSATIONAL TONE: Write exactly how a fast-talking YouTuber speaks. Use contractions (You're, I'll, Don't). Use "..." for dramatic pauses.
 
-🧠 FEW-SHOT EXAMPLES (LEARN FROM THIS):
-
-BAD SCRIPT (Like ChatGPT): "Are you struggling to lose weight? In this video, I will share three crucial tips to help you achieve your fitness goals and unlock your potential."
-VIRAL SCRIPT (Your Style): "You're working out 5 days a week and still look soft. Here’s why your routine is complete garbage..."
-
-BAD SCRIPT (Like ChatGPT): "Saving money is very important. Let's delve into a game-changing strategy for your finances."
-VIRAL SCRIPT (Your Style): "If you have less than $10,000 in your bank account, stop scrolling. You're making one fatal money mistake every single day..."
-
 YOUR TASK:
-Take the user's raw script and completely rewrite it using the Viral Script style above. 
+Take the user's raw script and completely rewrite it using the Viral Script style above. If there is a target competitor URL provided, analyze its structure to crush them.
 
 Output strictly in JSON format:
 {
@@ -135,7 +128,6 @@ MASTER_HTML = """
             border: 1px solid rgba(255,50,50,0.4); color: #ef4444; transition: all 0.3s;
         }
         
-        /* TAB STYLES */
         .tab-btn { padding: 10px 20px; font-size: 10px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; border-radius: 8px; transition: all 0.3s; }
         .tab-active { background: rgba(220, 38, 38, 0.2); border: 1px solid #ef4444; color: #fef3c7; box-shadow: 0 0 15px rgba(220,38,38,0.4); }
         .tab-inactive { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,50,50,0.2); color: rgba(254, 243, 199, 0.5); }
@@ -244,6 +236,13 @@ MASTER_HTML = """
 
                 <div id="inputs-script" class="hidden space-y-4 flex-grow flex flex-col">
                     <p class="text-[10px] tracking-widest text-red-300/80 uppercase border-b border-red-900/50 pb-2 mb-2">Transform raw script into highly retained viral content.</p>
+                    
+                    <!-- TARGET COMPETITOR SNIPER -->
+                    <div>
+                        <label class="block text-[10px] font-bold tracking-widest uppercase text-red-500 mb-1"><i class="fa-solid fa-crosshairs mr-1"></i> Target Competitor URL (Optional)</label>
+                        <input type="url" id="s-url" class="w-full crimson-input rounded-lg px-4 py-3 text-sm mb-2" placeholder="Paste YouTube/Insta link to snipe structure...">
+                    </div>
+
                     <div class="flex-grow flex flex-col">
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-amber-400 mb-1"><i class="fa-solid fa-code mr-1"></i> Raw Script Input</label>
                         <textarea id="s-raw" class="w-full flex-grow min-h-[250px] crimson-input rounded-lg px-4 py-3 text-sm resize-none" placeholder="Paste your boring, unoptimized script here..."></textarea>
@@ -266,6 +265,7 @@ MASTER_HTML = """
                     <p id="empty-text" class="text-xs font-mono tracking-widest uppercase">Awaiting Target Parameters...</p>
                 </div>
 
+                <!-- HOOK RESULTS -->
                 <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
                     <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl">
                         <div class="flex justify-between items-center mb-3">
@@ -299,8 +299,8 @@ MASTER_HTML = """
                     </div>
                 </div>
 
+                <!-- SCRIPT RESULTS -->
                 <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
-                    
                     <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl flex justify-between items-center">
                         <div>
                             <h3 class="text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Viral Retention Score</h3>
@@ -326,7 +326,6 @@ MASTER_HTML = """
                         <strong class="uppercase tracking-widest block mb-1 text-red-400"><i class="fa-solid fa-brain mr-2"></i>Psychology Breakdown</strong>
                         <span id="s-psych"></span>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -380,7 +379,8 @@ MASTER_HTML = """
                     };
                 } else {
                     payloadData = {
-                        script: document.getElementById('s-raw').value
+                        script: document.getElementById('s-raw').value,
+                        url: document.getElementById('s-url').value  // Captured URL
                     };
                 }
 
@@ -411,7 +411,6 @@ MASTER_HTML = """
                     document.getElementById('dna').innerText = data.dna_comparison;
                     document.getElementById('results-hook').style.display = 'block';
                 } else {
-                    // SCRIPT MODE - DISPLAYING THE NEW FEATURE
                     document.getElementById('s-score').innerText = data.retention_score;
                     document.getElementById('s-hook').innerText = `"${data.hook_extracted}"`;
                     document.getElementById('s-master').innerText = data.master_script;
@@ -440,7 +439,6 @@ MASTER_HTML = """
             document.getElementById('dashboard-viewport').style.display = 'none';
         }
 
-        // Placeholders for auth functions
         function loginGitHub() { founderOverride(); }
         function sendMagicLink() { founderOverride(); }
     </script>
@@ -469,19 +467,49 @@ def forge_hook():
 @app.route('/forge_script', methods=['POST'])
 def forge_script():
     data = request.json
+    raw_script = data.get('script', '')
+    target_url = data.get('url', '').strip()
+    
+    # URL SNIPER LOGIC
+    sniper_intel = ""
+    if target_url:
+        try:
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+            }
+            res = requests.get(target_url, headers=headers, timeout=5)
+            html = res.text
+            
+            og_title = re.search(r'<meta\s+(?:property|name)="og:title"\s+content="([^"]+)"', html, re.IGNORECASE)
+            title_tag = re.search(r'<title>(.*?)</title>', html, re.IGNORECASE)
+            
+            if og_title:
+                video_title = og_title.group(1)
+            elif title_tag:
+                video_title = title_tag.group(1)
+            else:
+                video_title = "this viral competitor content"
+            
+            video_title = re.sub(r'(\s*-\s*YouTube|\s*\|\s*TikTok|\s*on Instagram.*|\s*-\s*X)', '', video_title)
+            sniper_intel = f"\n\n🚨 TARGET ACQUIRED: Crush this competitor video titled '{video_title}'. Analyze its core hook and pacing, and make our script 10x more engaging to steal their audience."
+        except Exception as e:
+            sniper_intel = f"\n\n🚨 TARGET URL ACQUIRED: {target_url}. Steal the pacing and engagement strategy of this competitor."
+
+    final_prompt = raw_script + sniper_intel
+
     payload = {
         "model": "Meta-Llama-3.3-70B-Instruct", 
-        "messages": [{"role": "system", "content": SCRIPT_SYSTEM_PROMPT}, {"role": "user", "content": data.get('script')}]
+        "messages": [{"role": "system", "content": SCRIPT_SYSTEM_PROMPT}, {"role": "user", "content": final_prompt}]
     }
     try:
         r = requests.post(SAMBANOVA_URL, json=payload, headers={"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"})
-        # Extracting the JSON string generated by the AI
         content = r.json()['choices'][0]['message']['content'].strip()
         
-        # Sometimes Llama adds markdown code blocks like ```json ... ```, this cleans it up
         if content.startswith("```json"):
             content = content[7:-3].strip()
-        elif content.startswith("```"):
+        elif content.startswith("
+```"):
             content = content[3:-3].strip()
 
         return jsonify(json.loads(content))
