@@ -8,83 +8,234 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif; background-color: #000; color: #fef3c7; display: flex; align-items: center; justify-content: center; flex-direction: column; overflow-x: hidden; position: relative; transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); perspective: 1500px; }
-        .bg-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none; transition: opacity 0.3s ease-in-out, transform 0.5s ease-out; transform-origin: center; }
+        body {
+            margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif;
+            background-color: #000; color: #fef3c7; 
+            display: flex; align-items: center; justify-content: center; flex-direction: column;
+            overflow-x: hidden; position: relative;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            perspective: 1500px;
+        }
+        
+        .bg-video {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; z-index: 0; pointer-events: none;
+            transition: opacity 0.3s ease-in-out, transform 0.5s ease-out;
+            transform-origin: center; opacity: 0.8;
+        }
         .video-switch-anim { opacity: 0 !important; transform: scale(1.05); }
-        .video-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.05); z-index: 1; pointer-events: none; }
-        .glass-panel { background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 50, 50, 0.4); border-radius: 24px; box-shadow: 0 40px 80px rgba(0,0,0,0.95); transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; will-change: transform; }
-        .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 30px rgba(255, 20, 20, 1); transition: all 0.5s ease; }
-        .crimson-input { background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(220, 38, 38, 0.35); color: #fef3c7; transition: all 0.3s; }
-        .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
-        .crimson-btn { position: relative; overflow: hidden; background: linear-gradient(45deg, #7f1d1d, #dc2626); border: 1px solid #ef4444; box-shadow: 0 0 20px rgba(220, 38, 38, 0.5); transition: all 0.3s ease; }
+        .video-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 1; pointer-events: none; }
+        
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.7); 
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(220, 38, 38, 0.3); border-radius: 24px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.95);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d; will-change: transform;
+            z-index: 10;
+        }
+        
+        .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 30px rgba(220, 38, 38, 0.8); transition: all 0.5s ease; }
+        
+        .crimson-input { 
+            background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(220, 38, 38, 0.3); 
+            color: #fef3c7; transition: all 0.3s; 
+        }
+        .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); background: rgba(0,0,0,0.8); }
+        select.crimson-input option { background: #111; color: #fef3c7; }
+        
+        .crimson-btn { 
+            position: relative; overflow: hidden; cursor: pointer;
+            background: linear-gradient(45deg, #7f1d1d, #dc2626); border: 1px solid #ef4444; 
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.5); transition: all 0.3s ease; 
+        }
         .crimson-btn:hover { background: linear-gradient(45deg, #991b1b, #f87171); box-shadow: 0 0 30px rgba(220, 38, 38, 0.8); transform: translateY(-2px); }
-        .shockwave { position: absolute; background: rgba(255, 255, 255, 0.6); border-radius: 50%; transform: scale(0); animation: ripple 0.6s linear; pointer-events: none; }
+        
+        .shockwave {
+            position: absolute; background: rgba(255, 255, 255, 0.6); border-radius: 50%;
+            transform: scale(0); animation: ripple 0.6s linear; pointer-events: none;
+        }
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+        .tab-btn { padding: 10px 20px; font-size: 11px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 8px; transition: all 0.3s; cursor: pointer; }
+        .tab-active { background: rgba(220, 38, 38, 0.25); border: 1px solid #ef4444; color: #fef3c7; box-shadow: 0 0 15px rgba(220,38,38,0.4); }
+        .tab-inactive { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,50,50,0.1); color: rgba(254, 243, 199, 0.5); }
+        .tab-inactive:hover { background: rgba(220, 38, 38, 0.1); color: #fff; }
+
+        .floating-btn { cursor: pointer; z-index: 100; background: rgba(0,0,0,0.7); padding: 16px; border-radius: 50%; transition: all 0.3s; display: flex; align-items: center; justify-content: center; width: 55px; height: 55px;}
+        .floating-btn:hover { transform: scale(1.1); }
+        
+        #theme-btn { position: fixed; top: 20px; right: 20px; border: 1px solid rgba(212,175,55,0.5); color: #d4af37; box-shadow: 0 0 15px rgba(212,175,55,0.4); }
+        #multiverse-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); border: 1px solid rgba(239,68,68,0.5); color: #ef4444; box-shadow: 0 0 15px rgba(239,68,68,0.5); }
+        #audio-btn { position: fixed; bottom: 20px; right: 20px; border: 1px solid rgba(239,68,68,0.5); color: #ef4444; }
+
         @keyframes scoreLock { 0% { transform: scale(1); text-shadow: 0 0 10px rgba(245,158,11,0.5); } 50% { transform: scale(1.4); text-shadow: 0 0 40px rgba(245,158,11,1); color: #fff; } 100% { transform: scale(1); text-shadow: 0 0 15px rgba(245,158,11,0.8); } }
         .score-animate { animation: scoreLock 0.5s ease-out; }
-        .audio-btn { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: rgba(0,0,0,0.6); padding: 12px; border-radius: 50%; border: 1px solid rgba(255,50,50,0.4); color: #ef4444; transition: all 0.3s; }
-        .tab-btn { padding: 10px 20px; font-size: 10px; font-weight: bold; letter-spacing: 0.2em; text-transform: uppercase; border-radius: 8px; transition: all 0.3s; }
-        .tab-active { background: rgba(220, 38, 38, 0.2); border: 1px solid #ef4444; color: #fef3c7; box-shadow: 0 0 15px rgba(220,38,38,0.4); }
-        .tab-inactive { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,50,50,0.2); color: rgba(254, 243, 199, 0.5); }
-        body.theme-aura-1 .glass-panel { border-color: rgba(50, 150, 255, 0.5); } body.theme-aura-1 .anime-title { color: #60a5fa !important; text-shadow: 0 0 30px rgba(50, 150, 255, 0.8); } body.theme-aura-1 .crimson-btn { background: linear-gradient(45deg, #1e3a8a, #2563eb); border-color: #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); } body.theme-aura-1 .text-red-400, body.theme-aura-1 .text-red-500 { color: #60a5fa !important; } body.theme-aura-1 .tab-active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); } body.theme-aura-1 #multiverse-btn { border-color: #3b82f6; color: #3b82f6; box-shadow: 0 0 15px rgba(59,130,246,0.5); }
-        body.theme-aura-2 .glass-panel { border-color: rgba(168, 85, 247, 0.5); } body.theme-aura-2 .anime-title { color: #c084fc !important; text-shadow: 0 0 30px rgba(168, 85, 247, 0.8); } body.theme-aura-2 .crimson-btn { background: linear-gradient(45deg, #581c87, #9333ea); border-color: #a855f7; box-shadow: 0 0 20px rgba(168, 85, 247, 0.5); } body.theme-aura-2 .text-red-400, body.theme-aura-2 .text-red-500 { color: #c084fc !important; } body.theme-aura-2 .tab-active { background: rgba(168, 85, 247, 0.2); border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); } body.theme-aura-2 #multiverse-btn { border-color: #a855f7; color: #a855f7; box-shadow: 0 0 15px rgba(168,85,247,0.5); }
-        body.theme-luxury { background: #050505; color: #fff; font-family: 'Inter', sans-serif; } body.theme-luxury .glass-panel { background: #0a0a0a !important; backdrop-filter: none !important; border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: 0 20px 50px rgba(0,0,0,1) !important; } body.theme-luxury .anime-title { font-family: 'Inter', sans-serif !important; font-weight: 800 !important; letter-spacing: 0.05em !important; text-shadow: 0 0 20px rgba(255,255,255,0.2) !important; color: #fff !important; } body.theme-luxury .crimson-input { background: #111 !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; color: #fff !important; } body.theme-luxury .crimson-input:focus { border-color: #fff !important; } body.theme-luxury .crimson-btn { background: #fff !important; border: none !important; color: #000 !important; font-weight: 800 !important; box-shadow: 0 4px 15px rgba(255,255,255,0.2) !important; } body.theme-luxury .crimson-btn:hover { background: #e5e5e5 !important; box-shadow: 0 6px 20px rgba(255,255,255,0.4) !important; } body.theme-luxury .tab-active { background: #fff !important; border: none !important; color: #000 !important; } body.theme-luxury .tab-inactive { border: 1px solid rgba(255, 255, 255, 0.1) !important; color: #888 !important; } body.theme-luxury .bg-video { opacity: 0 !important; visibility: hidden; } body.theme-luxury .video-overlay { background: transparent !important; } body.theme-luxury .text-red-400, body.theme-luxury .text-amber-400, body.theme-luxury .text-red-500 { color: #fff !important; } body.theme-luxury .border-red-500\/20, body.theme-luxury .border-amber-500\/20 { border-color: rgba(255,255,255,0.1) !important; background: #111 !important; } body.theme-luxury #multiverse-btn { opacity: 0; pointer-events: none; }
+
+        body.theme-luxury { background: #050505; color: #fff; font-family: 'Inter', sans-serif; }
+        body.theme-luxury .glass-panel { background: #0a0a0a !important; backdrop-filter: none !important; border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: 0 20px 50px rgba(0,0,0,1) !important; }
+        body.theme-luxury .anime-title { font-family: 'Inter', sans-serif !important; font-weight: 800 !important; letter-spacing: 0.05em !important; text-shadow: 0 0 20px rgba(255,255,255,0.2) !important; color: #fff !important; }
+        body.theme-luxury .crimson-input { background: #111 !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; color: #fff !important; }
+        body.theme-luxury .crimson-btn { background: #fff !important; border: none !important; color: #000 !important; font-weight: 800 !important; box-shadow: 0 4px 15px rgba(255,255,255,0.2) !important; }
+        body.theme-luxury .crimson-btn:hover { background: #e5e5e5 !important; box-shadow: 0 6px 20px rgba(255,255,255,0.4) !important; }
+        body.theme-luxury .tab-active { background: #fff !important; border: none !important; color: #000 !important; }
+        body.theme-luxury .tab-inactive { border: 1px solid rgba(255, 255, 255, 0.1) !important; color: #888 !important; }
+        body.theme-luxury .bg-video { opacity: 0 !important; visibility: hidden; }
+        body.theme-luxury .video-overlay { background: transparent !important; }
+        body.theme-luxury #multiverse-btn { opacity: 0; pointer-events: none; }
+        
         .matrix-text { white-space: pre-line; word-break: break-word; }
     </style>
 </head>
-<body class="p-4">
+<body class="p-4 md:p-8">
+
     <video id="bg-vid" autoplay muted loop playsinline class="bg-video">
         <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
-    <button onclick="toggleDomainExpansion(event)" id="theme-btn" class="fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-yellow-500/50 text-yellow-500 shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all hover:scale-110 overflow-hidden"><i id="theme-icon" class="fa-solid fa-crown text-xl transition-all"></i></button>
-    <button onclick="cycleAura(event)" id="multiverse-btn" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[100] bg-black/60 p-4 rounded-full border border-red-500 text-red-500 shadow-[0_0_15px_rgba(255,0,0,0.5)] transition-all hover:scale-110 overflow-hidden"><i class="fa-solid fa-infinity text-2xl"></i></button>
-    <button onclick="toggleAudio()" class="audio-btn shadow-lg hover:scale-110"><i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i></button>
 
-    <div id="dashboard-viewport" class="w-full max-w-6xl flex-col relative z-10 flex mt-4 md:mt-0">
-        <div class="w-full flex flex-col md:flex-row justify-between items-center mb-6 px-4">
-            <div class="text-center md:text-left mb-4 md:mb-0">
-                <h1 class="anime-title text-3xl md:text-4xl font-black text-red-500 mb-1" id="main-title">HOOK FORGE</h1>
-                <p class="text-[9px] tracking-[0.4em] text-red-300 uppercase"><i class="fa-solid fa-user-shield mr-1"></i> <span id="user-display">Founder</span></p>
+    <div id="theme-btn" class="floating-btn" onclick="toggleDomainExpansion(event)">
+        <i id="theme-icon" class="fa-solid fa-crown text-xl"></i>
+    </div>
+
+    <div id="multiverse-btn" class="floating-btn" onclick="cycleAura(event)">
+        <i class="fa-solid fa-infinity text-2xl"></i>
+    </div>
+
+    <div id="audio-btn" class="floating-btn" onclick="toggleAudio(event)">
+        <i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i>
+    </div>
+
+    <div id="dashboard-viewport" class="w-full max-w-6xl flex-col relative z-10 flex mt-8 md:mt-0">
+        
+        <div class="w-full flex flex-col md:flex-row justify-between items-center mb-8 px-4">
+            <div class="text-center md:text-left mb-6 md:mb-0">
+                <h1 class="anime-title text-4xl md:text-5xl font-black text-red-500 mb-2 tracking-wide" id="main-title">HOOK FORGE</h1>
+                <p class="text-[10px] tracking-[0.4em] text-red-300 font-bold uppercase"><i class="fa-solid fa-user-shield mr-1"></i> <span id="user-display">Founder Edition</span></p>
             </div>
-            <div class="flex space-x-3 bg-black/40 p-1.5 rounded-xl border border-red-900/50 backdrop-blur-sm transition-colors" id="tab-container">
+            
+            <div class="flex space-x-3 bg-black/50 p-2 rounded-xl border border-red-900/50 backdrop-blur-md" id="tab-container">
                 <button id="tab-hook" onclick="switchMode('hook')" class="tab-btn tab-active"><i class="fa-solid fa-fire mr-1"></i> Hook Forge</button>
                 <button id="tab-script" onclick="switchMode('script')" class="tab-btn tab-inactive"><i class="fa-solid fa-scroll mr-1"></i> Script Forge</button>
             </div>
         </div>
 
-        <div id="errorBox" class="hidden bg-red-900/80 border border-red-500 text-white p-3 rounded mb-4 text-xs font-mono w-full"></div>
+        <div id="errorBox" class="hidden bg-red-900/90 border border-red-500 text-white p-4 rounded-lg mb-6 text-sm font-mono w-full shadow-lg"></div>
 
-        <div class="flex flex-col lg:flex-row gap-6 w-full items-stretch">
-            <div class="glass-panel parallax-panel w-full lg:max-w-md p-6 flex flex-col justify-between">
-                <div id="inputs-hook" class="space-y-4">
-                    <div><label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Niche</label><input type="text" id="h-niche" value="Anime & Tech" class="w-full crimson-input rounded-lg px-4 py-3 text-sm"></div>
-                    <div><label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Audience</label><input type="text" id="h-audience" value="Creators" class="w-full crimson-input rounded-lg px-4 py-3 text-sm"></div>
-                    <div><label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Tone Matrix</label><select id="h-tone" class="w-full crimson-input rounded-lg px-4 py-3 text-sm"><option value="Curious">Curiosity Gap</option><option value="Aggressive">Brutally Honest</option></select></div>
-                    <div><label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Topic</label><textarea id="h-topic" rows="3" class="w-full crimson-input rounded-lg px-4 py-3 text-sm resize-none" placeholder="Enter core concept..."></textarea></div>
+        <div class="flex flex-col lg:flex-row gap-8 w-full items-stretch">
+            
+            <div class="glass-panel w-full lg:w-1/3 p-6 md:p-8 flex flex-col justify-between">
+                
+                <div id="inputs-hook" class="space-y-5">
+                    <div>
+                        <label class="block text-[11px] font-bold tracking-widest uppercase text-red-400 mb-2">Target Niche</label>
+                        <input type="text" id="h-niche" value="Anime & Tech" class="w-full crimson-input rounded-lg px-4 py-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold tracking-widest uppercase text-red-400 mb-2">Target Audience</label>
+                        <input type="text" id="h-audience" value="Content Creators" class="w-full crimson-input rounded-lg px-4 py-3 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold tracking-widest uppercase text-red-400 mb-2">Psychological Tone Matrix</label>
+                        <select id="h-tone" class="w-full crimson-input rounded-lg px-4 py-3 text-sm">
+                            <option value="Aggressive & Brutally Honest">Aggressive & Brutally Honest</option>
+                            <option value="Curiosity Gap (Hold a secret)">Curiosity Gap (Hold a secret)</option>
+                            <option value="Contrarian (Challenge the norm)">Contrarian (Challenge the norm)</option>
+                            <option value="FOMO (Fear Of Missing Out)">FOMO (Fear Of Missing Out)</option>
+                            <option value="Urgent / High Scarcity Matrix">Urgent / High Scarcity Matrix</option>
+                            <option value="Storytelling (Vulnerable/Real)">Storytelling (Vulnerable/Real)</option>
+                            <option value="Educational & Authoritative">Educational & Authoritative</option>
+                            <option value="Minimalist / Straight to Point">Minimalist / Straight to Point</option>
+                            <option value="Sarcastic & Witty Dialect">Sarcastic & Witty Dialect</option>
+                            <option value="Call-out (Highly Targeted)">Call-out (Highly Targeted)</option>
+                            <option value="Inspirational & Visionary Aura">Inspirational & Visionary Aura</option>
+                            <option value="Fear-Inducing (Risk/Warning)">Fear-Inducing (Risk/Warning)</option>
+                            <option value="Value-Bomb (Data & Proof)">Value-Bomb (Data & Proof)</option>
+                            <option value="Trend-Jacking (Hyped Vibe)">Trend-Jacking (Hyped Vibe)</option>
+                            <option value="Empathetic & Relatable">Empathetic & Relatable</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold tracking-widest uppercase text-red-400 mb-2">Core Topic</label>
+                        <textarea id="h-topic" rows="4" class="w-full crimson-input rounded-lg px-4 py-3 text-sm resize-none" placeholder="Enter the main idea you want to hook them with..."></textarea>
+                    </div>
                 </div>
 
-                <div id="inputs-script" class="hidden space-y-4 flex-grow flex flex-col">
-                    <p class="text-[10px] tracking-widest text-red-300/80 uppercase border-b border-red-900/50 pb-2 mb-2 transition-colors">Transform raw script into highly retained viral content.</p>
-                    <div><label class="block text-[10px] font-bold tracking-widest uppercase text-red-500 mb-1"><i class="fa-solid fa-crosshairs mr-1"></i> Target URL</label><input type="url" id="s-url" class="w-full crimson-input rounded-lg px-4 py-3 text-sm mb-2" placeholder="Paste YouTube/Insta link..."></div>
-                    <div class="flex-grow flex flex-col"><label class="block text-[10px] font-bold tracking-widest uppercase text-amber-400 mb-1"><i class="fa-solid fa-code mr-1"></i> Raw Script Input</label><textarea id="s-raw" class="w-full flex-grow min-h-[250px] crimson-input rounded-lg px-4 py-3 text-sm resize-none" placeholder="Paste script..."></textarea></div>
+                <div id="inputs-script" class="hidden space-y-5 flex-grow flex flex-col">
+                    <p class="text-[11px] tracking-widest text-red-300/80 uppercase border-b border-red-900/50 pb-3 mb-2 font-bold">Transform raw thoughts into highly retained viral scripts.</p>
+                    <div>
+                        <label class="block text-[11px] font-bold tracking-widest uppercase text-red-500 mb-2"><i class="fa-solid fa-crosshairs mr-1"></i> Competitor Target URL (Optional)</label>
+                        <input type="url" id="s-url" class="w-full crimson-input rounded-lg px-4 py-3 text-sm" placeholder="Paste a viral YouTube/Insta link to crush...">
+                    </div>
+                    <div class="flex-grow flex flex-col">
+                        <label class="block text-[11px] font-bold tracking-widest uppercase text-amber-400 mb-2 mt-2"><i class="fa-solid fa-code mr-1"></i> Raw Script / Brain Dump</label>
+                        <textarea id="s-raw" class="w-full flex-grow min-h-[200px] crimson-input rounded-lg px-4 py-3 text-sm resize-none" placeholder="Paste your boring script or bullet points here..."></textarea>
+                    </div>
                 </div>
-                <button onclick="createShockwave(event); igniteEngine();" id="btn-ignite" class="w-full crimson-btn py-4 rounded-lg font-bold tracking-widest uppercase text-xs mt-6 overflow-hidden"><i class="fa-solid fa-fire mr-2"></i> Ignite Hook Engine</button>
+
+                <button onclick="createShockwave(event); igniteEngine();" id="btn-ignite" class="w-full crimson-btn py-4 rounded-xl font-black tracking-widest uppercase text-sm mt-8 shadow-xl">
+                    <i class="fa-solid fa-bolt mr-2"></i> Ignite Engine
+                </button>
             </div>
 
-            <div class="glass-panel parallax-panel flex-grow p-6 flex flex-col justify-center min-h-[500px]">
-                <div id="loading" class="hidden text-center"><i id="loading-icon" class="fa-solid fa-spinner fa-spin text-5xl text-red-500 mb-4 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]"></i><h2 id="loading-text" class="anime-title text-2xl text-red-100">Extracting Matrix...</h2></div>
-                <div id="empty-state" class="text-center opacity-50"><i class="fa-solid fa-crosshairs text-6xl text-red-500/50 mb-4" id="empty-icon"></i><p id="empty-text" class="text-xs font-mono tracking-widest uppercase">Awaiting Target Parameters...</p></div>
+            <div class="glass-panel flex-grow p-6 md:p-8 flex flex-col justify-center min-h-[550px] relative">
                 
-                <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
-                    <div class="bg-black/40 border border-red-500/20 p-5 rounded-xl"><div class="flex justify-between items-center mb-3"><span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Option A</span><span class="text-[10px] text-red-400 font-black tracking-widest">SCORE: <span id="scoreA" class="text-red-500 text-base"></span></span></div><h3 id="textA" class="matrix-text text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide"></h3><button onclick="copyText('textA')" class="mt-3 text-[10px] uppercase tracking-widest text-red-400 hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button></div>
-                    <div class="bg-black/40 border border-amber-500/20 p-5 rounded-xl"><div class="flex justify-between items-center mb-3"><span class="text-[10px] bg-amber-950/80 text-amber-300 border border-amber-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Option B</span><span class="text-[10px] text-amber-400 font-black tracking-widest">SCORE: <span id="scoreB" class="text-amber-500 text-base"></span></span></div><h3 id="textB" class="matrix-text text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide"></h3><button onclick="copyText('textB')" class="mt-3 text-[10px] uppercase tracking-widest text-amber-400 hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button></div>
+                <div id="loading" class="hidden text-center absolute inset-0 flex flex-col items-center justify-center bg-black/60 rounded-24px backdrop-blur-sm z-20">
+                    <i class="fa-solid fa-circle-notch fa-spin text-6xl text-red-500 mb-6 drop-shadow-[0_0_20px_rgba(220,38,38,1)]"></i>
+                    <h2 class="anime-title text-2xl tracking-widest uppercase text-white font-bold">Forging Neural Matrix...</h2>
                 </div>
 
-                <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
-                    <div class="bg-black/40 border border-red-500/20 p-5 rounded-xl flex justify-between items-center"><div><h3 class="text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Viral Retention Score</h3></div><div class="text-4xl font-black text-amber-500 drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]"><span id="s-score" class="inline-block">0</span><span class="text-lg text-amber-500/50">/100</span></div></div>
-                    <div class="bg-black/40 border border-red-500/20 p-5 rounded-xl relative"><span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider mb-3 inline-block">Master Script</span><p id="s-master" class="matrix-text text-sm text-amber-50 leading-relaxed font-mono whitespace-pre-line"></p><button onclick="copyText('s-master')" class="mt-4 text-[10px] uppercase tracking-widest text-red-400 hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy Script</button></div>
+                <div id="empty-state" class="text-center opacity-40 transition-opacity hover:opacity-100">
+                    <i class="fa-solid fa-crosshairs text-7xl text-red-500/50 mb-6 drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]"></i>
+                    <p class="text-sm font-mono tracking-[0.3em] uppercase text-red-200">System Standing By</p>
+                    <p class="text-[10px] mt-2 text-gray-400">Enter parameters and Ignite the Engine.</p>
                 </div>
+
+                <div id="results-hook" class="hidden space-y-6 overflow-y-auto max-h-[650px] pr-2 custom-scrollbar">
+                    <div class="bg-black/60 border border-red-500/30 p-6 rounded-2xl shadow-lg relative group">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-red-500 rounded-l-2xl"></div>
+                        <div class="flex justify-between items-center mb-4 pl-3">
+                            <span class="text-[11px] bg-red-950/80 text-red-200 border border-red-800/50 px-3 py-1 rounded font-black uppercase tracking-widest shadow-inner">Variant Alpha</span>
+                            <span class="text-[11px] text-red-400 font-black tracking-widest">VIRAL SCORE: <span id="scoreA" class="text-red-500 text-lg ml-1 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span></span>
+                        </div>
+                        <h3 id="textA" class="matrix-text text-lg md:text-xl font-bold text-white mb-4 tracking-wide pl-3 leading-relaxed"></h3>
+                        <div class="pl-3 mt-4">
+                            <button onclick="copyText('textA')" class="bg-red-900/40 hover:bg-red-700/60 border border-red-500/50 text-red-100 text-[10px] px-4 py-2 rounded uppercase tracking-widest font-bold transition-all"><i class="fa-solid fa-copy mr-2"></i>Copy Hook</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-black/60 border border-amber-500/30 p-6 rounded-2xl shadow-lg relative group">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-amber-500 rounded-l-2xl"></div>
+                        <div class="flex justify-between items-center mb-4 pl-3">
+                            <span class="text-[11px] bg-amber-950/80 text-amber-200 border border-amber-800/50 px-3 py-1 rounded font-black uppercase tracking-widest shadow-inner">Variant Beta</span>
+                            <span class="text-[11px] text-amber-400 font-black tracking-widest">VIRAL SCORE: <span id="scoreB" class="text-amber-500 text-lg ml-1 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]"></span></span>
+                        </div>
+                        <h3 id="textB" class="matrix-text text-lg md:text-xl font-bold text-white mb-4 tracking-wide pl-3 leading-relaxed"></h3>
+                        <div class="pl-3 mt-4">
+                            <button onclick="copyText('textB')" class="bg-amber-900/40 hover:bg-amber-700/60 border border-amber-500/50 text-amber-100 text-[10px] px-4 py-2 rounded uppercase tracking-widest font-bold transition-all"><i class="fa-solid fa-copy mr-2"></i>Copy Hook</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="results-script" class="hidden space-y-6 overflow-y-auto max-h-[650px] pr-2 custom-scrollbar">
+                    <div class="bg-black/60 border border-red-500/30 p-6 rounded-2xl flex justify-between items-center shadow-lg">
+                        <div>
+                            <h3 class="text-[12px] font-black tracking-widest uppercase text-red-400 mb-1">Estimated Retention</h3>
+                            <p class="text-[10px] text-gray-400">Based on dopamine-looping algorithms</p>
+                        </div>
+                        <div class="text-5xl font-black text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.6)]">
+                            <span id="s-score" class="inline-block">0</span><span class="text-xl text-amber-500/50">/100</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-black/60 border border-red-500/30 p-6 rounded-2xl relative shadow-lg">
+                        <span class="text-[11px] bg-red-950/80 text-red-200 border border-red-800/50 px-3 py-1 rounded font-black uppercase tracking-widest mb-4 inline-block shadow-inner">Master Script Generated</span>
+                        <p id="s-master" class="matrix-text text-sm md:text-base text-gray-100 leading-relaxed font-mono whitespace-pre-line bg-black/40 p-4 rounded-xl border border-white/50"></p>
+                        <button onclick="copyText('s-master')" class="mt-6 w-full bg-red-900/40 hover:bg-red-700/60 border border-red-500/50 text-red-100 text-[11px] px-4 py-3 rounded uppercase tracking-widest font-bold transition-all"><i class="fa-solid fa-copy mr-2"></i>Copy Full Script</button>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -101,27 +252,47 @@
             "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(1).mp4"
         ];
 
+        document.addEventListener("DOMContentLoaded", () => {
+            const vid = document.getElementById('bg-vid');
+            vid.play().catch(e => console.log("Auto-play blocked"));
+        });
+
+        function documentParallax(panel, e) {
+            if(window.innerWidth < 768) return; 
+            const rect = panel.getBoundingClientRect();
+            const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+            const rotateX = ((y - rect.height/2) / (rect.height/2)) * -4; 
+            const rotateY = ((x - rect.width/2) / (rect.width/2)) * 4;
+            panel.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        }
+
         document.querySelectorAll('.parallax-panel').forEach(panel => {
-            panel.addEventListener('mousemove', e => {
-                if(window.innerWidth < 768) return; 
-                const rect = panel.getBoundingClientRect();
-                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-                const rotateX = ((y - rect.height/2) / (rect.height/2)) * -4; 
-                const rotateY = ((x - rect.width/2) / (rect.width/2)) * 4;
-                panel.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-            });
+            panel.addEventListener('mousemove', e => documentParallax(panel, e));
             panel.addEventListener('mouseenter', () => { if(window.innerWidth >= 768) panel.style.transition = 'transform 0.1s ease-out'; });
             panel.addEventListener('mouseleave', () => { if(window.innerWidth >= 768) { panel.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)'; panel.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)'; } });
         });
 
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('tab-hook').className = mode === 'hook' ? 'tab-btn tab-active' : 'tab-btn tab-inactive';
+            document.getElementById('tab-script').className = mode === 'script' ? 'tab-btn tab-active' : 'tab-btn tab-inactive';
+            document.getElementById('inputs-hook').style.display = mode === 'hook' ? 'block' : 'none';
+            document.getElementById('inputs-script').style.display = mode === 'script' ? 'flex' : 'none';
+            document.getElementById('btn-ignite').innerHTML = mode === 'hook' ? '<i class="fa-solid fa-bolt mr-2"></i> Ignite Hook Engine' : '<i class="fa-solid fa-scroll mr-2"></i> Forge Master Script';
+            document.getElementById('empty-state').style.display = 'block';
+            document.getElementById('results-hook').style.display = 'none';
+            document.getElementById('results-script').style.display = 'none';
+            document.getElementById('errorBox').style.display = 'none';
+        }
+
         function matrixDecrypt(elementId, targetText) {
             const el = document.getElementById(elementId);
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*<>?';
-            let iterations = 0; const maxIterations = 25; 
+            let iterations = 0; const maxIterations = 20; 
             const interval = setInterval(() => {
                 el.innerText = targetText.split('').map((char, index) => {
                     if (index < (iterations / maxIterations) * targetText.length) return char;
-                    if (char === ' ' || char === '\\n') return char;
+                    if (char === ' ' || char === '\n') return char;
                     return chars[Math.floor(Math.random() * chars.length)];
                 }).join('');
                 iterations++;
@@ -134,10 +305,11 @@
             const circle = document.createElement('span');
             const d = Math.max(btn.clientWidth, btn.clientHeight);
             circle.style.width = circle.style.height = `${d}px`;
-            circle.style.left = `${e.clientX - btn.getBoundingClientRect().left - d/2}px`;
-            circle.style.top = `${e.clientY - btn.getBoundingClientRect().top - d/2}px`;
+            const rect = btn.getBoundingClientRect();
+            circle.style.left = `${e.clientX - rect.left - d/2}px`;
+            circle.style.top = `${e.clientY - rect.top - d/2}px`;
             circle.classList.add('shockwave');
-            const oldShockwave = btn.getElementsByClassName('shockwave')[0];
+            const oldShockwave = btn.querySelector('.shockwave');
             if (oldShockwave) oldShockwave.remove();
             btn.appendChild(circle);
         }
@@ -168,4 +340,79 @@
             currentAura = (currentAura + 1) % videos.length;
             playWarpTransition(() => {
                 const vid = document.getElementById('bg-vid');
-                vid.src = videos[currentAura]; 
+                vid.src = videos[currentAura]; vid.play();
+                document.body.classList.remove('theme-aura-1', 'theme-aura-2');
+                const btn = document.getElementById('multiverse-btn');
+                if(currentAura === 1) { document.body.classList.add('theme-aura-1'); btn.style.borderColor = 'rgba(59,130,246,0.5)'; btn.style.color = '#3b82f6'; } 
+                else if(currentAura === 2) { document.body.classList.add('theme-aura-2'); btn.style.borderColor = 'rgba(168,85,247,0.5)'; btn.style.color = '#a855f7'; } 
+                else { btn.style.borderColor = 'rgba(239,68,68,0.5)'; btn.style.color = '#ef4444'; }
+            });
+        }
+
+        function toggleDomainExpansion(e) {
+            createShockwave(e); 
+            playWarpTransition(() => {
+                const body = document.body; const icon = document.getElementById('theme-icon'); const themeBtn = document.getElementById('theme-btn');
+                isLuxuryMode = !isLuxuryMode;
+                if (isLuxuryMode) {
+                    body.classList.add('theme-luxury'); icon.className = 'fa-solid fa-eye text-xl';
+                    themeBtn.style.borderColor = 'rgba(255,255,255,0.5)'; themeBtn.style.color = '#fff'; themeBtn.style.boxShadow = '0 0 15px rgba(255,255,255,0.4)';
+                    document.getElementById('empty-icon').className = 'fa-solid fa-crosshairs text-7xl text-white/50 mb-6';
+                } else {
+                    body.classList.remove('theme-luxury'); icon.className = 'fa-solid fa-crown text-xl';
+                    themeBtn.style.borderColor = 'rgba(212,175,55,0.5)'; themeBtn.style.color = '#d4af37'; themeBtn.style.boxShadow = '0 0 15px rgba(212,175,55,0.4)';
+                    document.getElementById('empty-icon').className = 'fa-solid fa-crosshairs text-7xl text-red-500/50 mb-6';
+                    cycleAura({currentTarget: document.getElementById('multiverse-btn'), clientX:0, clientY:0});
+                    currentAura = (currentAura - 1 + videos.length) % videos.length;
+                }
+            });
+        }
+
+        function toggleAudio(e) {
+            createShockwave(e);
+            const vid = document.getElementById('bg-vid'); const icon = document.getElementById('audio-icon');
+            isMuted = !isMuted; vid.muted = isMuted; icon.className = isMuted ? 'fa-solid fa-volume-xmark text-lg' : 'fa-solid fa-volume-high text-lg';
+        }
+
+        function copyText(id) { 
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text);
+            const btn = event.currentTarget;
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-check mr-2"></i>Copied!';
+            setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
+        }
+
+        async function igniteEngine() {
+            document.getElementById('empty-state').style.display = 'none'; 
+            document.getElementById('results-hook').style.display = 'none';
+            document.getElementById('results-script').style.display = 'none'; 
+            document.getElementById('errorBox').style.display = 'none';
+            document.getElementById('loading').style.display = 'flex';
+            try {
+                let endpoint = currentMode === 'hook' ? '/forge_hook' : '/forge_script';
+                let payloadData = currentMode === 'hook' ? { niche: document.getElementById('h-niche').value, audience: document.getElementById('h-audience').value, tone: document.getElementById('h-tone').value, topic: document.getElementById('h-topic').value } : { script: document.getElementById('s-raw').value, url: document.getElementById('s-url').value };
+                const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payloadData) });
+                const data = await res.json();
+                document.getElementById('loading').style.display = 'none';
+                if (data.error) throw new Error(data.error);
+
+                if (currentMode === 'hook') {
+                    document.getElementById('scoreA').innerText = data.hook_a.score; 
+                    document.getElementById('scoreB').innerText = data.hook_b.score;
+                    document.getElementById('results-hook').style.display = 'block';
+                    matrixDecrypt('textA', `"${data.hook_a.text}"`); matrixDecrypt('textB', `"${data.hook_b.text}"`);
+                } else {
+                    document.getElementById('results-script').style.display = 'block';
+                    animateScore(data.retention_score); matrixDecrypt('s-master', data.master_script);
+                }
+            } catch (err) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('errorBox').innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i> <b>System Error:</b> ${err.message}`; 
+                document.getElementById('errorBox').style.display = 'block';
+                document.getElementById('empty-state').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
