@@ -74,7 +74,6 @@ MASTER_HTML = """
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        /* SHARP, CLEAR VIDEO BACKGROUND (No blur, no dark overlay) */
         .bg-video {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: 0; pointer-events: none;
@@ -82,15 +81,14 @@ MASTER_HTML = """
             transform-origin: center;
         }
         .video-switch-anim {
-            opacity: 0 !important; transform: scale(1.05); /* The "Warp Fade" instead of black screen */
+            opacity: 0 !important; transform: scale(1.05); 
         }
         .video-overlay {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.05); z-index: 1; pointer-events: none; /* Almost invisible so video pops */
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.05); z-index: 1; pointer-events: none; 
         }
         
-        /* STRONG GLASS PANEL TO KEEP TEXT READABLE */
         .glass-panel {
-            background: rgba(0, 0, 0, 0.65); /* Darker panel so video behind it doesn't wash out text */
+            background: rgba(0, 0, 0, 0.65); 
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 50, 50, 0.4); border-radius: 24px;
             box-shadow: 0 40px 80px rgba(0,0,0,0.95);
@@ -101,7 +99,6 @@ MASTER_HTML = """
         .crimson-input { background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(220, 38, 38, 0.35); color: #fef3c7; transition: all 0.3s; }
         .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
         
-        /* SHOCKWAVE / BUTTON RIPPLE EFFECT CSS */
         .crimson-btn { 
             position: relative; overflow: hidden;
             background: linear-gradient(45deg, #7f1d1d, #dc2626); border: 1px solid #ef4444; 
@@ -115,7 +112,6 @@ MASTER_HTML = """
         }
         @keyframes ripple { to { transform: scale(4); opacity: 0; } }
 
-        /* DOPAMINE SCORE PULSE ANIMATION */
         @keyframes scoreLock {
             0% { transform: scale(1); text-shadow: 0 0 10px rgba(245,158,11,0.5); }
             50% { transform: scale(1.4); text-shadow: 0 0 40px rgba(245,158,11,1); color: #fff; }
@@ -143,7 +139,7 @@ MASTER_HTML = """
         body.theme-aura-2 .tab-active { background: rgba(168, 85, 247, 0.2); border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
         body.theme-aura-2 #multiverse-btn { border-color: #a855f7; color: #a855f7; box-shadow: 0 0 15px rgba(168,85,247,0.5); }
 
-        /* NEW LUXURY ENTERPRISE MODE (Apple/Vercel Style - Pure Black, White Glow) */
+        /* LUXURY ENTERPRISE MODE */
         body.theme-luxury { background: #050505; color: #fff; font-family: 'Inter', sans-serif; }
         body.theme-luxury .glass-panel { background: #0a0a0a !important; backdrop-filter: none !important; border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: 0 20px 50px rgba(0,0,0,1) !important; }
         body.theme-luxury .anime-title { font-family: 'Inter', sans-serif !important; font-weight: 800 !important; letter-spacing: 0.05em !important; text-shadow: 0 0 20px rgba(255,255,255,0.2) !important; color: #fff !important; }
@@ -157,8 +153,6 @@ MASTER_HTML = """
         body.theme-luxury .video-overlay { background: transparent !important; }
         body.theme-luxury .text-red-400, body.theme-luxury .text-amber-400, body.theme-luxury .text-red-500 { color: #fff !important; }
         body.theme-luxury .border-red-500\/20, body.theme-luxury .border-amber-500\/20 { border-color: rgba(255,255,255,0.1) !important; background: #111 !important; }
-        
-        /* HIDE MULTIVERSE BUTTON IN LUXURY MODE */
         body.theme-luxury #multiverse-btn { opacity: 0; pointer-events: none; }
     </style>
 </head>
@@ -291,7 +285,6 @@ MASTER_HTML = """
             "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(1).mp4"
         ];
 
-        // SHOCKWAVE / RIPPLE LOGIC
         function createShockwave(e) {
             const btn = e.currentTarget;
             const circle = document.createElement('span');
@@ -309,7 +302,6 @@ MASTER_HTML = """
             btn.appendChild(circle);
         }
 
-        // DOPAMINE SLOT MACHINE
         function animateScore(targetValue) {
             const scoreEl = document.getElementById('s-score');
             scoreEl.classList.remove('score-animate'); 
@@ -333,10 +325,9 @@ MASTER_HTML = """
             window.requestAnimationFrame(step);
         }
 
-        // WARP FADE (NO BLACK SCREEN)
         function playWarpTransition(callback) {
             const vid = document.getElementById('bg-vid');
-            vid.classList.add('video-switch-anim'); // Fades video out smoothly
+            vid.classList.add('video-switch-anim'); 
             setTimeout(() => {
                 callback();
                 setTimeout(() => { vid.classList.remove('video-switch-anim'); }, 100);
@@ -497,11 +488,4 @@ def forge_script():
 http://googleusercontent.com/immersive_entry_chip/0
 http://googleusercontent.com/immersive_entry_chip/1
 
-### 💥 Final Checks (Bhai ka naya system):
-* **Video ab ekdum raw & sharp hai** (Blur/Darkness hata diya gaya hai, har frame clear dikhega).
-* **Warp Fade:** Black screen khatam! Ab video smooth scale/zoom hokar dusri video mein cross-fade ho jayegi.
-* **Vercel/Apple Premium Mode:** Jab tu Crown (👑) dabayega, pura app pitch-black `#000` aur pure white glowing borders mein badal jayega. No tacky gold, sirf high-end professional look.
-* **Single Portal Button:** 3 dots gaye! Ab bottom par ek "Infinity (∞)" button hai. Usko click karte ja, animations ke saath sab badal jayega. Uske pichhe ka glow bhi theme ke saath badlega (Red -> Blue -> Purple).
-* **Shockwave + Slot Machine Done:** Button par Shockwave aayega aur Score spinner ekdum lock-pulse karega.
-
-Deploy maar isko aur bata! Ye ab sach mein ek **$100M Enterprise tool** lag raha hoga. 🔥🚀
+**Bhai check kar:** Ekdum aakhiri line `app.run(host='0.0.0.0', port=5000)` aayi kya editor mein paste karne ke baad? Agar haan, toh direct Deploy maar. Sab ek jhatke mein sahi chalega! 🚀🔥
