@@ -237,7 +237,6 @@ MASTER_HTML = """
                 <div id="inputs-script" class="hidden space-y-4 flex-grow flex flex-col">
                     <p class="text-[10px] tracking-widest text-red-300/80 uppercase border-b border-red-900/50 pb-2 mb-2">Transform raw script into highly retained viral content.</p>
                     
-                    <!-- TARGET COMPETITOR SNIPER -->
                     <div>
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-red-500 mb-1"><i class="fa-solid fa-crosshairs mr-1"></i> Target Competitor URL (Optional)</label>
                         <input type="url" id="s-url" class="w-full crimson-input rounded-lg px-4 py-3 text-sm mb-2" placeholder="Paste YouTube/Insta link to snipe structure...">
@@ -265,7 +264,6 @@ MASTER_HTML = """
                     <p id="empty-text" class="text-xs font-mono tracking-widest uppercase">Awaiting Target Parameters...</p>
                 </div>
 
-                <!-- HOOK RESULTS -->
                 <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
                     <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl">
                         <div class="flex justify-between items-center mb-3">
@@ -299,7 +297,6 @@ MASTER_HTML = """
                     </div>
                 </div>
 
-                <!-- SCRIPT RESULTS -->
                 <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
                     <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl flex justify-between items-center">
                         <div>
@@ -380,7 +377,7 @@ MASTER_HTML = """
                 } else {
                     payloadData = {
                         script: document.getElementById('s-raw').value,
-                        url: document.getElementById('s-url').value  // Captured URL
+                        url: document.getElementById('s-url').value
                     };
                 }
 
@@ -470,7 +467,6 @@ def forge_script():
     raw_script = data.get('script', '')
     target_url = data.get('url', '').strip()
     
-    # URL SNIPER LOGIC
     sniper_intel = ""
     if target_url:
         try:
@@ -508,8 +504,7 @@ def forge_script():
         
         if content.startswith("```json"):
             content = content[7:-3].strip()
-        elif content.startswith("
-```"):
+        elif content.startswith("```"):
             content = content[3:-3].strip()
 
         return jsonify(json.loads(content))
