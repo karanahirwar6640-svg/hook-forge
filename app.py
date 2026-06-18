@@ -13,7 +13,7 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 # ==========================================
-# ELITE AI PROMPTS (THE CHATGPT-KILLER UPGRADE)
+# ELITE AI PROMPTS
 # ==========================================
 HOOK_SYSTEM_PROMPT = """
 You are Hook Forge v2.0, an elite 9-figure direct-response copywriter and behavioral psychologist. 
@@ -79,7 +79,7 @@ MASTER_HTML = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hook Forge | Enterprise</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -88,6 +88,7 @@ MASTER_HTML = """
             background-color: #000; color: #fef3c7; 
             display: flex; align-items: center; justify-content: center; flex-direction: column;
             overflow-x: hidden; position: relative;
+            transition: all 0.5s ease; /* Smooth transition for theme change */
         }
         .bg-video {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -103,6 +104,7 @@ MASTER_HTML = """
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 50, 50, 0.4); border-radius: 24px;
             box-shadow: 0 40px 80px rgba(0,0,0,0.95);
+            transition: all 0.5s ease;
         }
         
         @media (max-width: 768px) {
@@ -113,7 +115,7 @@ MASTER_HTML = """
             }
         }
         
-        .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 30px rgba(255, 20, 20, 1); }
+        .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 30px rgba(255, 20, 20, 1); transition: all 0.5s ease; }
         .crimson-input { background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(220, 38, 38, 0.35); color: #fef3c7; transition: all 0.3s; }
         .crimson-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
         select.crimson-input option { background: #000; color: #fef3c7; }
@@ -135,6 +137,20 @@ MASTER_HTML = """
 
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 10px; }
+
+        /* ==========================================
+           THEME: LUXURY PREMIUM (EXECUTIVE MODE)
+           ========================================== */
+        body.theme-luxury { background: radial-gradient(circle at center, #111 0%, #000 100%); color: #e5e7eb; font-family: 'Inter', -apple-system, sans-serif; }
+        body.theme-luxury .glass-panel { background: rgba(15, 15, 15, 0.7) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; border: 1px solid rgba(212, 175, 55, 0.3) !important; box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05) !important; }
+        body.theme-luxury .anime-title { font-family: 'Inter', sans-serif; font-weight: 300; letter-spacing: 0.3em; text-shadow: none; background: linear-gradient(135deg, #fef3c7 0%, #d4af37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body.theme-luxury .crimson-input { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
+        body.theme-luxury .crimson-input:focus { border-color: rgba(212, 175, 55, 0.6); box-shadow: 0 0 15px rgba(212, 175, 55, 0.15); }
+        body.theme-luxury .crimson-btn { background: linear-gradient(135deg, #1f1f1f, #2a2a2a); border: 1px solid rgba(212, 175, 55, 0.4); color: #d4af37; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        body.theme-luxury .crimson-btn:hover { background: linear-gradient(135deg, #2a2a2a, #333); border-color: rgba(212, 175, 55, 0.8); color: #fef3c7; }
+        body.theme-luxury .tab-active { background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; color: #d4af37; box-shadow: none; }
+        body.theme-luxury .bg-video { display: none; } /* Hide video in luxury mode */
+        body.theme-luxury .video-overlay { background: #050505; }
     </style>
 </head>
 <body class="p-4">
