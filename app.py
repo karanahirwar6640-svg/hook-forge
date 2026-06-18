@@ -191,7 +191,7 @@ MASTER_HTML = """
         <div class="w-full flex flex-col md:flex-row justify-between items-center mb-6 px-4">
             <div class="text-center md:text-left mb-4 md:mb-0">
                 <h1 class="anime-title text-3xl font-black text-red-500 mb-1">HOOK FORGE</h1>
-                <p class="text-[9px] tracking-[0.4em] text-red-300 uppercase"><i class="fa-solid fa-user-shield mr-1"></i> <span id="user-display"></span></p>
+                <p class="text-[9px] tracking-[0.4em] text-red-300 uppercase"><i class="fa-solid fa-user-shield mr-1"></i> <span id="user-display">Founder</span></p>
             </div>
             
             <div class="flex space-x-3 bg-black/40 p-1.5 rounded-xl border border-red-900/50 backdrop-blur-sm">
@@ -300,178 +300,149 @@ MASTER_HTML = """
                 </div>
 
                 <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
-                    <div class="bg-black/50 border border-amber-500/30 p-5 rounded-xl relative shadow-[0_0_30px_rgba(245,158,11,0.1)]">
-                        <div class="absolute top-4 right-4 text-center">
-                            <span class="block text-[8px] tracking-[0.3em] text-amber-500/80 uppercase">Retention Score</span>
-                            <span id="s-score" class="text-3xl font-black text-amber-400 font-mono text-shadow-glow"></span><span class="text-sm text-amber-500/50">/100</span>
+                    
+                    <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl flex justify-between items-center">
+                        <div>
+                            <h3 class="text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Viral Retention Score</h3>
+                            <p class="text-[10px] text-red-200/80 font-mono">Based on 3-second hook & pacing</p>
                         </div>
-                        
-                        <h2 class="text-[10px] tracking-widest text-amber-500 font-bold uppercase mb-4 border-b border-amber-900/50 pb-2"><i class="fa-solid fa-bolt mr-2"></i>Optimized Master Script</h2>
-                        
-                        <div class="bg-black/40 p-4 rounded-lg border border-amber-900/30 mb-4">
-                            <span class="text-[9px] bg-red-900 text-red-200 px-2 py-0.5 rounded uppercase tracking-wider mb-2 inline-block">Extracted Hook</span>
-                            <p id="s-hook" class="text-sm font-bold text-red-100 italic mb-1"></p>
+                        <div class="text-4xl font-black text-amber-500 drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]">
+                            <span id="s-score"></span><span class="text-lg text-amber-500/50">/100</span>
                         </div>
-
-                        <div class="text-sm text-amber-50 whitespace-pre-wrap leading-relaxed font-medium mb-4" id="s-master"></div>
-                        
-                        <button onclick="copyText('s-master')" class="w-full bg-amber-950/40 hover:bg-amber-900/60 border border-amber-700/50 py-3 rounded-lg text-[10px] uppercase tracking-widest text-amber-300 hover:text-amber-100 transition-all"><i class="fa-regular fa-copy mr-2"></i> Copy Master Script</button>
                     </div>
 
-                    <div class="text-xs text-amber-200/80 bg-black/40 p-5 rounded-xl border border-amber-900/30 leading-relaxed">
-                        <strong class="uppercase tracking-widest block mb-2 text-amber-500"><i class="fa-solid fa-brain mr-2"></i>Psychology Breakdown</strong>
+                    <div class="bg-black/50 border border-amber-500/20 p-5 rounded-xl">
+                        <span class="text-[10px] bg-amber-950/80 text-amber-300 border border-amber-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider mb-3 inline-block">The Hook</span>
+                        <h3 id="s-hook" class="text-base font-bold text-amber-50 tracking-wide italic"></h3>
+                    </div>
+
+                    <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl relative">
+                        <span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider mb-3 inline-block">Optimized Master Script</span>
+                        <p id="s-master" class="text-sm text-amber-50 leading-relaxed font-mono whitespace-pre-line"></p>
+                        <button onclick="copyText('s-master')" class="mt-4 text-[10px] uppercase tracking-widest text-red-400 hover:text-red-200 transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy Script</button>
+                    </div>
+
+                    <div class="text-xs text-red-300 bg-red-950/20 p-4 rounded border border-red-900/40 font-mono leading-relaxed">
+                        <strong class="uppercase tracking-widest block mb-1 text-red-400"><i class="fa-solid fa-brain mr-2"></i>Psychology Breakdown</strong>
                         <span id="s-psych"></span>
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const vid = document.getElementById('bg-vid');
-        vid.volume = 0.2; 
+        let currentMode = 'hook';
+        let isMuted = true;
+
         function toggleAudio() {
-            if (vid.muted) { vid.muted = false; document.getElementById('audio-icon').className = "fa-solid fa-volume-low text-lg"; } 
-            else { vid.muted = true; document.getElementById('audio-icon').className = "fa-solid fa-volume-xmark text-lg"; }
+            const vid = document.getElementById('bg-vid');
+            const icon = document.getElementById('audio-icon');
+            isMuted = !isMuted;
+            vid.muted = isMuted;
+            icon.className = isMuted ? 'fa-solid fa-volume-xmark text-lg' : 'fa-solid fa-volume-high text-lg';
         }
-        document.addEventListener('DOMContentLoaded', () => { if (vid) { vid.play().catch(e => console.log("Autoplay blocked")); } });
-
-        const sbClient = window.supabase.createClient('{{ supabase_url }}', '{{ supabase_key }}', {
-            auth: { flowType: 'implicit', autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
-        });
-
-        let activeUserEmail = null;
-        let currentMode = 'hook'; 
-
-        function showMsg(type, text) {
-            const box = document.getElementById('msgBox');
-            box.style.display = 'block';
-            box.innerText = text;
-            box.className = type === 'error' 
-                ? "p-3 rounded-xl text-xs font-mono text-center mb-6 border bg-red-950/90 border-red-500/50 text-red-200"
-                : "p-3 rounded-xl text-xs font-mono text-center mb-6 border bg-emerald-950/90 border-emerald-500/50 text-emerald-200";
-        }
-
-        function renderView(session) {
-            const loginVp = document.getElementById('login-viewport');
-            const dashVp = document.getElementById('dashboard-viewport');
-            if (session && session.user) {
-                activeUserEmail = session.user.email || 'Authorized Founder';
-                document.getElementById('user-display').innerText = activeUserEmail;
-                loginVp.style.display = 'none'; dashVp.style.display = 'flex';
-            } else {
-                activeUserEmail = null; dashVp.style.display = 'none'; loginVp.style.display = 'block';
-            }
-        }
-
-        function founderOverride() { renderView({ user: { email: 'founder@hookforge.app' } }); showMsg('success', 'Override Active: Welcome Founder!'); }
-
-        sbClient.auth.getSession().then(({ data, error }) => { if (!error) renderView(data.session); });
-        sbClient.auth.onAuthStateChange((event, session) => { if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') renderView(session); else if (event === 'SIGNED_OUT') renderView(null); });
-
-        async function loginGitHub() {
-            try { document.getElementById('btn-github').innerHTML = '<i class="fa-solid fa-spinner fa-spin text-base"></i> Connecting...';
-                const { error } = await sbClient.auth.signInWithOAuth({ provider: 'github' });
-                if (error) throw error;
-            } catch (error) { showMsg('error', 'Auth Error: ' + error.message); document.getElementById('btn-github').innerHTML = '<i class="fa-brands fa-github text-base"></i> Continue with GitHub'; }
-        }
-
-        async function handleLogout() { await sbClient.auth.signOut(); }
 
         function switchMode(mode) {
             currentMode = mode;
             document.getElementById('tab-hook').className = mode === 'hook' ? 'tab-btn tab-active' : 'tab-btn tab-inactive';
             document.getElementById('tab-script').className = mode === 'script' ? 'tab-btn tab-active' : 'tab-btn tab-inactive';
+            
             document.getElementById('inputs-hook').style.display = mode === 'hook' ? 'block' : 'none';
             document.getElementById('inputs-script').style.display = mode === 'script' ? 'flex' : 'none';
-            const btn = document.getElementById('btn-ignite');
-            if(mode === 'hook'){
-                btn.innerHTML = '<i class="fa-solid fa-fire mr-2"></i> Ignite Hook Engine';
-                document.getElementById('empty-text').innerText = 'Awaiting Target Parameters...';
-            } else {
-                btn.innerHTML = '<i class="fa-solid fa-bolt mr-2"></i> Forge Master Script';
-                document.getElementById('empty-text').innerText = 'Awaiting Raw Script Data...';
-            }
+            
+            document.getElementById('btn-ignite').innerHTML = mode === 'hook' ? '<i class="fa-solid fa-fire mr-2"></i> Ignite Hook Engine' : '<i class="fa-solid fa-scroll mr-2"></i> Forge Master Script';
+            
             document.getElementById('empty-state').style.display = 'block';
             document.getElementById('results-hook').style.display = 'none';
             document.getElementById('results-script').style.display = 'none';
-            document.getElementById('errorBox').style.display = 'none';
+            document.getElementById('empty-text').innerText = mode === 'hook' ? 'Awaiting Target Parameters...' : 'Awaiting Raw Script...';
         }
 
         async function igniteEngine() {
-            if (!activeUserEmail) { alert("Session expired."); return; }
-            
             document.getElementById('empty-state').style.display = 'none';
             document.getElementById('results-hook').style.display = 'none';
             document.getElementById('results-script').style.display = 'none';
             document.getElementById('errorBox').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
-            
-            const endpoint = currentMode === 'hook' ? '/forge_hook' : '/forge_script';
-            document.getElementById('loading-text').innerText = currentMode === 'hook' ? 'Extracting Psychology Matrix...' : 'Forging Elite Script...';
-            
-            let payload = { email: activeUserEmail };
-            if(currentMode === 'hook') {
-                payload.topic = document.getElementById('h-topic').value;
-                payload.niche = document.getElementById('h-niche').value;
-                payload.audience = document.getElementById('h-audience').value;
-                payload.tone = document.getElementById('h-tone').value;
-            } else {
-                const raw = document.getElementById('s-raw').value.trim();
-                if(!raw) { 
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('errorBox').style.display = 'block';
-                    document.getElementById('errorBox').innerText = "Please paste a raw script first.";
-                    return;
-                }
-                payload.script = raw;
-            }
 
             try {
-                const response = await fetch(endpoint, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
-                });
-                
-                const data = await response.json();
-                document.getElementById('loading').style.display = 'none';
-                
-                if (data.error) {
-                    document.getElementById('errorBox').style.display = 'block';
-                    document.getElementById('errorBox').innerText = data.error;
-                    return;
+                let endpoint = currentMode === 'hook' ? '/forge_hook' : '/forge_script';
+                let payloadData = {};
+
+                if (currentMode === 'hook') {
+                    payloadData = {
+                        niche: document.getElementById('h-niche').value,
+                        audience: document.getElementById('h-audience').value,
+                        tone: document.getElementById('h-tone').value,
+                        topic: document.getElementById('h-topic').value
+                    };
+                } else {
+                    payloadData = {
+                        script: document.getElementById('s-raw').value
+                    };
                 }
 
-                if(currentMode === 'hook') {
-                    document.getElementById('textA').innerText = `"` + data.hook_a.text + `"`;
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payloadData)
+                });
+
+                const data = await res.json();
+                document.getElementById('loading').style.display = 'none';
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                if (currentMode === 'hook') {
                     document.getElementById('scoreA').innerText = data.hook_a.score;
+                    document.getElementById('textA').innerText = `"${data.hook_a.text}"`;
                     document.getElementById('psychA').innerText = data.hook_a.psychology;
                     document.getElementById('fixA').innerText = data.hook_a.reasoning;
-                    document.getElementById('textB').innerText = `"` + data.hook_b.text + `"`;
+
                     document.getElementById('scoreB').innerText = data.hook_b.score;
+                    document.getElementById('textB').innerText = `"${data.hook_b.text}"`;
                     document.getElementById('psychB').innerText = data.hook_b.psychology;
                     document.getElementById('fixB').innerText = data.hook_b.reasoning;
+
                     document.getElementById('dna').innerText = data.dna_comparison;
                     document.getElementById('results-hook').style.display = 'block';
                 } else {
+                    // SCRIPT MODE - DISPLAYING THE NEW FEATURE
                     document.getElementById('s-score').innerText = data.retention_score;
-                    document.getElementById('s-hook').innerText = `"` + data.hook_extracted + `"`;
+                    document.getElementById('s-hook').innerText = `"${data.hook_extracted}"`;
                     document.getElementById('s-master').innerText = data.master_script;
                     document.getElementById('s-psych').innerText = data.psychology_breakdown;
                     document.getElementById('results-script').style.display = 'block';
                 }
-            } catch(error) {
+            } catch (err) {
                 document.getElementById('loading').style.display = 'none';
+                document.getElementById('errorBox').innerText = "ERROR: " + err.message;
                 document.getElementById('errorBox').style.display = 'block';
-                document.getElementById('errorBox').innerText = "System Fault: " + error.message;
             }
         }
 
         function copyText(elementId) {
-            const text = document.getElementById(elementId).innerText.replace(/^"|"$/g, '');
+            const text = document.getElementById(elementId).innerText;
             navigator.clipboard.writeText(text);
-            alert("Copied to clipboard! ⚔️");
         }
+
+        function founderOverride() {
+            document.getElementById('login-viewport').style.display = 'none';
+            document.getElementById('dashboard-viewport').style.display = 'flex';
+        }
+
+        function handleLogout() {
+            document.getElementById('login-viewport').style.display = 'block';
+            document.getElementById('dashboard-viewport').style.display = 'none';
+        }
+
+        // Placeholders for auth functions
+        function loginGitHub() { founderOverride(); }
+        function sendMagicLink() { founderOverride(); }
     </script>
 </body>
 </html>
@@ -479,49 +450,43 @@ MASTER_HTML = """
 
 @app.route('/')
 def home():
-    return render_template_string(MASTER_HTML, supabase_url=SUPABASE_URL, supabase_key=SUPABASE_KEY)
-
-def run_sambanova(prompt, system_prompt):
-    payload = {
-        "model": "Meta-Llama-3.3-70B-Instruct", 
-        "messages": [{"role": "system", "content": system_prompt}, {"role": "user", "content": prompt}], 
-        "temperature": 0.7
-    }
-    headers = {"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"}
-    
-    r = requests.post(SAMBANOVA_URL, json=payload, headers=headers, timeout=15)
-    if r.status_code != 200:
-        return {"error": "SambaNova engine offline. Try again shortly."}
-        
-    res_data = r.json()
-    ai_text = res_data['choices'][0]['message']['content'].strip()
-    if ai_text.startswith("```json"):
-        ai_text = ai_text.replace("```json", "", 1).strip()
-        if ai_text.endswith("```"):
-            ai_text = ai_text[:-3].strip()
-            
-    return json.loads(ai_text)
+    return render_template_string(MASTER_HTML)
 
 @app.route('/forge_hook', methods=['POST'])
 def forge_hook():
     data = request.json
-    if not data.get('email'): return jsonify({"error": "Unauthorized."}), 401
-    prompt = f"Topic: {data.get('topic')}\\nNiche: {data.get('niche')}\\nAudience: {data.get('audience')}\\nTone: {data.get('tone')}"
+    user_prompt = f"Topic: {data.get('topic')}\nNiche: {data.get('niche')}\nAudience: {data.get('audience')}\nTone: {data.get('tone')}"
+    payload = {
+        "model": "Meta-Llama-3.3-70B-Instruct", 
+        "messages": [{"role": "system", "content": HOOK_SYSTEM_PROMPT}, {"role": "user", "content": user_prompt}]
+    }
     try:
-        return jsonify(run_sambanova(prompt, HOOK_SYSTEM_PROMPT))
-    except Exception as e: 
-        return jsonify({"error": f"Runtime fault: {str(e)}"})
+        r = requests.post(SAMBANOVA_URL, json=payload, headers={"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"})
+        return jsonify(json.loads(r.json()['choices'][0]['message']['content'].strip()))
+    except Exception as e:
+        return jsonify({"error": "Failed to parse AI output. Try again."})
 
 @app.route('/forge_script', methods=['POST'])
 def forge_script():
     data = request.json
-    if not data.get('email'): return jsonify({"error": "Unauthorized."}), 401
-    prompt = f"Raw Script:\\n{data.get('script')}"
+    payload = {
+        "model": "Meta-Llama-3.3-70B-Instruct", 
+        "messages": [{"role": "system", "content": SCRIPT_SYSTEM_PROMPT}, {"role": "user", "content": data.get('script')}]
+    }
     try:
-        return jsonify(run_sambanova(prompt, SCRIPT_SYSTEM_PROMPT))
-    except Exception as e: 
-        return jsonify({"error": f"Runtime fault: {str(e)}"})
+        r = requests.post(SAMBANOVA_URL, json=payload, headers={"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"})
+        # Extracting the JSON string generated by the AI
+        content = r.json()['choices'][0]['message']['content'].strip()
+        
+        # Sometimes Llama adds markdown code blocks like ```json ... ```, this cleans it up
+        if content.startswith("```json"):
+            content = content[7:-3].strip()
+        elif content.startswith("```"):
+            content = content[3:-3].strip()
+
+        return jsonify(json.loads(content))
+    except Exception as e:
+        return jsonify({"error": "Failed to parse AI output. Ensure input is clear."})
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=5000)
