@@ -140,28 +140,43 @@ MASTER_HTML = """
         ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 10px; }
 
         /* ==========================================
+           AURA 1: COSMIC BLUE ("Your Name" Theme)
+           ========================================== */
+        body.theme-aura-1 .glass-panel { border-color: rgba(50, 150, 255, 0.5); box-shadow: 0 40px 80px rgba(0,0,0,0.95), inset 0 0 20px rgba(50,150,255,0.1); }
+        body.theme-aura-1 .anime-title { color: #60a5fa !important; text-shadow: 0 0 30px rgba(50, 150, 255, 0.8); }
+        body.theme-aura-1 .crimson-btn { background: linear-gradient(45deg, #1e3a8a, #2563eb); border-color: #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+        body.theme-aura-1 .crimson-btn:hover { background: linear-gradient(45deg, #1e40af, #3b82f6); box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+        body.theme-aura-1 .text-red-400, body.theme-aura-1 .text-red-500 { color: #60a5fa !important; }
+        body.theme-aura-1 .border-red-900\/50, body.theme-aura-1 .border-red-500\/50 { border-color: rgba(59, 130, 246, 0.5) !important; }
+        body.theme-aura-1 .bg-red-900\/40 { background-color: rgba(30, 58, 138, 0.4) !important; }
+        body.theme-aura-1 .tab-active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+
+        /* ==========================================
+           AURA 2: AMETHYST PURPLE (Video 3 Theme)
+           ========================================== */
+        body.theme-aura-2 .glass-panel { border-color: rgba(168, 85, 247, 0.5); box-shadow: 0 40px 80px rgba(0,0,0,0.95), inset 0 0 20px rgba(168,85,247,0.1); }
+        body.theme-aura-2 .anime-title { color: #c084fc !important; text-shadow: 0 0 30px rgba(168, 85, 247, 0.8); }
+        body.theme-aura-2 .crimson-btn { background: linear-gradient(45deg, #581c87, #9333ea); border-color: #a855f7; box-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
+        body.theme-aura-2 .crimson-btn:hover { background: linear-gradient(45deg, #6b21a8, #a855f7); box-shadow: 0 0 30px rgba(168, 85, 247, 0.8); }
+        body.theme-aura-2 .text-red-400, body.theme-aura-2 .text-red-500 { color: #c084fc !important; }
+        body.theme-aura-2 .border-red-900\/50, body.theme-aura-2 .border-red-500\/50 { border-color: rgba(168, 85, 247, 0.5) !important; }
+        body.theme-aura-2 .bg-red-900\/40 { background-color: rgba(88, 28, 135, 0.4) !important; }
+        body.theme-aura-2 .tab-active { background: rgba(168, 85, 247, 0.2); border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+
+        /* ==========================================
            THEME: LUXURY PREMIUM (EXECUTIVE MODE)
            ========================================== */
-        body.theme-luxury { 
-            background-color: #050505; color: #e5e7eb; font-family: 'Inter', sans-serif; 
-        }
-        body.theme-luxury .glass-panel { 
-            background: rgba(12, 12, 12, 0.85) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; 
-            border: 1px solid rgba(212, 175, 55, 0.25) !important; 
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05) !important; 
-        }
-        body.theme-luxury .anime-title { 
-            font-family: 'Inter', sans-serif; font-weight: 300; letter-spacing: 0.3em; text-shadow: none; 
-            background: linear-gradient(135deg, #fef3c7 0%, #d4af37 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-        }
-        body.theme-luxury .crimson-input { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.08); color: #fff; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); }
-        body.theme-luxury .crimson-input:focus { border-color: rgba(212, 175, 55, 0.5); box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
-        body.theme-luxury .crimson-btn { background: linear-gradient(135deg, #151515, #222); border: 1px solid rgba(212, 175, 55, 0.3); color: #d4af37; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        body.theme-luxury .crimson-btn:hover { background: linear-gradient(135deg, #222, #2a2a2a); border-color: rgba(212, 175, 55, 0.7); color: #fef3c7; }
-        body.theme-luxury .tab-active { background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.5); color: #d4af37; box-shadow: none; }
-        body.theme-luxury .tab-inactive { border: 1px solid rgba(255, 255, 255, 0.05); }
-        body.theme-luxury .bg-video { opacity: 0; }
-        body.theme-luxury .video-overlay { background: #050505; }
+        body.theme-luxury { background-color: #050505; color: #e5e7eb; font-family: 'Inter', sans-serif; }
+        body.theme-luxury .glass-panel { background: rgba(12, 12, 12, 0.85) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; border: 1px solid rgba(212, 175, 55, 0.25) !important; box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05) !important; }
+        body.theme-luxury .anime-title { font-family: 'Inter', sans-serif !important; font-weight: 300 !important; letter-spacing: 0.3em !important; text-shadow: none !important; background: linear-gradient(135deg, #fef3c7 0%, #d4af37 100%) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; color: transparent !important; }
+        body.theme-luxury .crimson-input { background: rgba(0, 0, 0, 0.5) !important; border: 1px solid rgba(255, 255, 255, 0.08) !important; color: #fff !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5) !important; }
+        body.theme-luxury .crimson-input:focus { border-color: rgba(212, 175, 55, 0.5) !important; box-shadow: 0 0 15px rgba(212, 175, 55, 0.1) !important; }
+        body.theme-luxury .crimson-btn { background: linear-gradient(135deg, #151515, #222) !important; border: 1px solid rgba(212, 175, 55, 0.3) !important; color: #d4af37 !important; box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important; }
+        body.theme-luxury .crimson-btn:hover { background: linear-gradient(135deg, #222, #2a2a2a) !important; border-color: rgba(212, 175, 55, 0.7) !important; color: #fef3c7 !important; }
+        body.theme-luxury .tab-active { background: rgba(212, 175, 55, 0.05) !important; border: 1px solid rgba(212, 175, 55, 0.5) !important; color: #d4af37 !important; box-shadow: none !important; }
+        body.theme-luxury .tab-inactive { border: 1px solid rgba(255, 255, 255, 0.05) !important; }
+        body.theme-luxury .bg-video { opacity: 0 !important; }
+        body.theme-luxury .video-overlay { background: #050505 !important; }
         body.theme-luxury #aura-controls { opacity: 0; pointer-events: none; }
     </style>
 </head>
@@ -176,10 +191,10 @@ MASTER_HTML = """
         <i id="theme-icon" class="fa-solid fa-crown text-xl"></i>
     </button>
 
-    <div id="aura-controls" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[100] flex gap-4 bg-black/50 py-2 px-5 border border-red-900/50 rounded-full backdrop-blur-md transition-all duration-500">
-        <button onclick="switchAura(0)" class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_red] aura-dot transition-all"></button>
-        <button onclick="switchAura(1)" class="w-3 h-3 rounded-full bg-red-900/40 hover:bg-red-500 transition-all aura-dot"></button>
-        <button onclick="switchAura(2)" class="w-3 h-3 rounded-full bg-red-900/40 hover:bg-red-500 transition-all aura-dot"></button>
+    <div id="aura-controls" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[100] flex gap-4 bg-black/50 py-2 px-5 border border-red-900/50 rounded-full backdrop-blur-md transition-all duration-500" style="border-color: inherit;">
+        <button onclick="switchAura(0)" id="dot-0" class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_red] transition-all"></button>
+        <button onclick="switchAura(1)" id="dot-1" class="w-3 h-3 rounded-full bg-white/20 hover:bg-blue-500 transition-all"></button>
+        <button onclick="switchAura(2)" id="dot-2" class="w-3 h-3 rounded-full bg-white/20 hover:bg-purple-500 transition-all"></button>
     </div>
 
     <button onclick="toggleAudio()" class="audio-btn shadow-lg"><i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i></button>
@@ -309,7 +324,7 @@ MASTER_HTML = """
         // MULTIVERSE VIDEOS
         const videos = [
             "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4",
-            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(2).mp4",
+            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/your_name.mp4",
             "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(1).mp4"
         ];
 
@@ -318,21 +333,33 @@ MASTER_HTML = """
             vid.src = videos[index];
             vid.play();
             
-            const dots = document.querySelectorAll('.aura-dot');
-            dots.forEach((dot, i) => {
-                if(i === index) {
-                    dot.className = 'w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_red] aura-dot transition-all';
-                } else {
-                    dot.className = 'w-3 h-3 rounded-full bg-red-900/40 hover:bg-red-500 transition-all aura-dot';
-                }
-            });
+            // Remove old aura classes
+            document.body.classList.remove('theme-aura-1', 'theme-aura-2');
+            
+            // Apply new aura class
+            if(index === 1) document.body.classList.add('theme-aura-1');
+            if(index === 2) document.body.classList.add('theme-aura-2');
+            
+            // Update dots UI
+            const dot0 = document.getElementById('dot-0');
+            const dot1 = document.getElementById('dot-1');
+            const dot2 = document.getElementById('dot-2');
+            
+            // Reset all dots
+            dot0.className = 'w-3 h-3 rounded-full bg-white/20 hover:bg-red-500 transition-all';
+            dot1.className = 'w-3 h-3 rounded-full bg-white/20 hover:bg-blue-500 transition-all';
+            dot2.className = 'w-3 h-3 rounded-full bg-white/20 hover:bg-purple-500 transition-all';
+            
+            // Activate selected dot
+            if(index === 0) dot0.className = 'w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_red] transition-all';
+            if(index === 1) dot1.className = 'w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_blue] transition-all';
+            if(index === 2) dot2.className = 'w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_10px_purple] transition-all';
         }
 
         function toggleDomainExpansion() {
             const body = document.body;
             const icon = document.getElementById('theme-icon');
             const themeBtn = document.getElementById('theme-btn');
-            const title = document.getElementById('main-title');
             
             isLuxuryMode = !isLuxuryMode;
             
@@ -340,12 +367,10 @@ MASTER_HTML = """
                 body.classList.add('theme-luxury');
                 icon.className = 'fa-solid fa-eye text-xl'; // Turns to Eye
                 themeBtn.className = 'fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-red-500/50 text-red-500 shadow-[0_0_15px_rgba(255,0,0,0.4)] transition-all hover:scale-110';
-                title.classList.replace('text-red-500', 'text-[#d4af37]');
             } else {
                 body.classList.remove('theme-luxury');
                 icon.className = 'fa-solid fa-crown text-xl'; // Turns to Crown
                 themeBtn.className = 'fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-yellow-500/50 text-yellow-500 shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all hover:scale-110';
-                title.classList.replace('text-[#d4af37]', 'text-red-500');
             }
         }
 
@@ -379,14 +404,6 @@ MASTER_HTML = """
             document.getElementById('results-script').style.display = 'none';
             document.getElementById('errorBox').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
-
-            if(isLuxuryMode) {
-                document.getElementById('loading-icon').classList.replace('text-red-500', 'text-[#d4af37]');
-                document.getElementById('loading-text').classList.replace('text-red-100', 'text-[#d4af37]');
-            } else {
-                document.getElementById('loading-icon').classList.replace('text-[#d4af37]', 'text-red-500');
-                document.getElementById('loading-text').classList.replace('text-[#d4af37]', 'text-red-100');
-            }
 
             try {
                 let endpoint = currentMode === 'hook' ? '/forge_hook' : '/forge_script';
