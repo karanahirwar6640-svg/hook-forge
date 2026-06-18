@@ -9,9 +9,6 @@ app = Flask(__name__)
 SAMBANOVA_API_KEY = os.environ.get("SAMBANOVA_API_KEY")
 SAMBANOVA_URL = "https://api.sambanova.ai/v1/chat/completions"
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
-
 # ==========================================
 # ELITE AI PROMPTS
 # ==========================================
@@ -79,9 +76,8 @@ MASTER_HTML = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hook Forge | Enterprise</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif;
@@ -90,6 +86,14 @@ MASTER_HTML = """
             overflow-x: hidden; position: relative;
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        
+        /* TRANSITION OVERLAY (The Cinematic Flash) */
+        #cinematic-flash {
+            position: fixed; inset: 0; background-color: #000;
+            z-index: 9999; opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease-in-out;
+        }
+
         .bg-video {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: 0; pointer-events: none;
@@ -97,23 +101,21 @@ MASTER_HTML = """
         }
         .video-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.3); z-index: 1; pointer-events: none;
+            background: rgba(0, 0, 0, 0.35); z-index: 1; pointer-events: none;
             transition: all 0.5s ease;
         }
         
         .glass-panel {
-            background: rgba(5, 0, 0, 0.25);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 50, 50, 0.4); border-radius: 24px;
+            background: rgba(10, 0, 0, 0.3);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 50, 50, 0.3); border-radius: 24px;
             box-shadow: 0 40px 80px rgba(0,0,0,0.95);
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         @media (max-width: 768px) {
             .glass-panel {
-                background: rgba(3, 0, 0, 0.15) !important;
-                backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
-                border: 1px solid rgba(255, 50, 50, 0.5) !important;
+                backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
             }
         }
         
@@ -123,7 +125,7 @@ MASTER_HTML = """
         select.crimson-input option { background: #000; color: #fef3c7; }
         
         .crimson-btn { background: linear-gradient(45deg, #7f1d1d, #dc2626); border: 1px solid #ef4444; box-shadow: 0 0 20px rgba(220, 38, 38, 0.5); transition: all 0.3s ease; }
-        .crimson-btn:hover { background: linear-gradient(45deg, #991b1b, #f87171); box-shadow: 0 0 30px rgba(220, 38, 38, 0.8); }
+        .crimson-btn:hover { background: linear-gradient(45deg, #991b1b, #f87171); box-shadow: 0 0 30px rgba(220, 38, 38, 0.8); transform: translateY(-2px); }
         
         .audio-btn {
             position: fixed; bottom: 20px; right: 20px; z-index: 100;
@@ -142,45 +144,73 @@ MASTER_HTML = """
         /* ==========================================
            AURA 1: COSMIC BLUE ("Your Name" Theme)
            ========================================== */
-        body.theme-aura-1 .glass-panel { border-color: rgba(50, 150, 255, 0.5); box-shadow: 0 40px 80px rgba(0,0,0,0.95), inset 0 0 20px rgba(50,150,255,0.1); }
+        body.theme-aura-1 .glass-panel { border-color: rgba(50, 150, 255, 0.4); box-shadow: 0 40px 80px rgba(0,0,0,0.95), inset 0 0 20px rgba(50,150,255,0.05); }
         body.theme-aura-1 .anime-title { color: #60a5fa !important; text-shadow: 0 0 30px rgba(50, 150, 255, 0.8); }
         body.theme-aura-1 .crimson-btn { background: linear-gradient(45deg, #1e3a8a, #2563eb); border-color: #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
         body.theme-aura-1 .crimson-btn:hover { background: linear-gradient(45deg, #1e40af, #3b82f6); box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
         body.theme-aura-1 .text-red-400, body.theme-aura-1 .text-red-500 { color: #60a5fa !important; }
-        body.theme-aura-1 .border-red-900\/50, body.theme-aura-1 .border-red-500\/50 { border-color: rgba(59, 130, 246, 0.5) !important; }
+        body.theme-aura-1 .border-red-900\/50, body.theme-aura-1 .border-red-500\/50 { border-color: rgba(59, 130, 246, 0.4) !important; }
         body.theme-aura-1 .bg-red-900\/40 { background-color: rgba(30, 58, 138, 0.4) !important; }
         body.theme-aura-1 .tab-active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
 
         /* ==========================================
            AURA 2: AMETHYST PURPLE (Video 3 Theme)
            ========================================== */
-        body.theme-aura-2 .glass-panel { border-color: rgba(168, 85, 247, 0.5); box-shadow: 0 40px 80px rgba(0,0,0,0.95), inset 0 0 20px rgba(168,85,247,0.1); }
+        body.theme-aura-2 .glass-panel { border-color: rgba(168, 85, 247, 0.4); box-shadow: 0 40px 80px rgba(0,0,0,0.95), inset 0 0 20px rgba(168,85,247,0.05); }
         body.theme-aura-2 .anime-title { color: #c084fc !important; text-shadow: 0 0 30px rgba(168, 85, 247, 0.8); }
         body.theme-aura-2 .crimson-btn { background: linear-gradient(45deg, #581c87, #9333ea); border-color: #a855f7; box-shadow: 0 0 20px rgba(168, 85, 247, 0.5); }
         body.theme-aura-2 .crimson-btn:hover { background: linear-gradient(45deg, #6b21a8, #a855f7); box-shadow: 0 0 30px rgba(168, 85, 247, 0.8); }
         body.theme-aura-2 .text-red-400, body.theme-aura-2 .text-red-500 { color: #c084fc !important; }
-        body.theme-aura-2 .border-red-900\/50, body.theme-aura-2 .border-red-500\/50 { border-color: rgba(168, 85, 247, 0.5) !important; }
+        body.theme-aura-2 .border-red-900\/50, body.theme-aura-2 .border-red-500\/50 { border-color: rgba(168, 85, 247, 0.4) !important; }
         body.theme-aura-2 .bg-red-900\/40 { background-color: rgba(88, 28, 135, 0.4) !important; }
         body.theme-aura-2 .tab-active { background: rgba(168, 85, 247, 0.2); border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
 
         /* ==========================================
-           THEME: LUXURY PREMIUM (EXECUTIVE MODE)
+           THEME: ENTERPRISE LUXURY (Next-Gen UI)
            ========================================== */
-        body.theme-luxury { background-color: #050505; color: #e5e7eb; font-family: 'Inter', sans-serif; }
-        body.theme-luxury .glass-panel { background: rgba(12, 12, 12, 0.85) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; border: 1px solid rgba(212, 175, 55, 0.25) !important; box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05) !important; }
-        body.theme-luxury .anime-title { font-family: 'Inter', sans-serif !important; font-weight: 300 !important; letter-spacing: 0.3em !important; text-shadow: none !important; background: linear-gradient(135deg, #fef3c7 0%, #d4af37 100%) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; color: transparent !important; }
-        body.theme-luxury .crimson-input { background: rgba(0, 0, 0, 0.5) !important; border: 1px solid rgba(255, 255, 255, 0.08) !important; color: #fff !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5) !important; }
-        body.theme-luxury .crimson-input:focus { border-color: rgba(212, 175, 55, 0.5) !important; box-shadow: 0 0 15px rgba(212, 175, 55, 0.1) !important; }
-        body.theme-luxury .crimson-btn { background: linear-gradient(135deg, #151515, #222) !important; border: 1px solid rgba(212, 175, 55, 0.3) !important; color: #d4af37 !important; box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important; }
-        body.theme-luxury .crimson-btn:hover { background: linear-gradient(135deg, #222, #2a2a2a) !important; border-color: rgba(212, 175, 55, 0.7) !important; color: #fef3c7 !important; }
-        body.theme-luxury .tab-active { background: rgba(212, 175, 55, 0.05) !important; border: 1px solid rgba(212, 175, 55, 0.5) !important; color: #d4af37 !important; box-shadow: none !important; }
-        body.theme-luxury .tab-inactive { border: 1px solid rgba(255, 255, 255, 0.05) !important; }
-        body.theme-luxury .bg-video { opacity: 0 !important; }
-        body.theme-luxury .video-overlay { background: #050505 !important; }
-        body.theme-luxury #aura-controls { opacity: 0; pointer-events: none; }
+        @keyframes luxuryGradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        body.theme-luxury { 
+            background: linear-gradient(135deg, #020617 0%, #000000 50%, #0f172a 100%);
+            background-size: 200% 200%;
+            animation: luxuryGradient 15s ease infinite;
+            color: #e2e8f0; font-family: 'Inter', sans-serif; 
+        }
+        /* The Subtle Enterprise Tech Grid */
+        body.theme-luxury::before {
+            content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        body.theme-luxury .glass-panel { 
+            background: rgba(15, 15, 20, 0.6) !important; 
+            backdrop-filter: blur(25px) saturate(120%) !important; -webkit-backdrop-filter: blur(25px) saturate(120%) !important; 
+            border: 1px solid rgba(212, 175, 55, 0.15) !important; 
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,1), inset 0 1px 0 rgba(255,255,255,0.05) !important; 
+        }
+        body.theme-luxury .anime-title { 
+            font-family: 'Inter', sans-serif !important; font-weight: 800 !important; letter-spacing: 0.15em !important; text-shadow: none !important; 
+            background: linear-gradient(135deg, #fef3c7 0%, #d4af37 50%, #b45309 100%) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; color: transparent !important; 
+        }
+        body.theme-luxury .crimson-input { background: rgba(0, 0, 0, 0.4) !important; border: 1px solid rgba(255, 255, 255, 0.05) !important; color: #fff !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3) !important; transition: all 0.3s ease; }
+        body.theme-luxury .crimson-input:focus { border-color: rgba(212, 175, 55, 0.4) !important; box-shadow: 0 0 15px rgba(212, 175, 55, 0.05) !important; background: rgba(0,0,0,0.6) !important; }
+        body.theme-luxury .crimson-btn { background: linear-gradient(135deg, #111, #1a1a1a) !important; border: 1px solid rgba(212, 175, 55, 0.3) !important; color: #d4af37 !important; box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important; }
+        body.theme-luxury .crimson-btn:hover { background: linear-gradient(135deg, #1a1a1a, #222) !important; border-color: rgba(212, 175, 55, 0.8) !important; color: #fef3c7 !important; transform: translateY(-2px); }
+        body.theme-luxury .tab-active { background: rgba(212, 175, 55, 0.05) !important; border: 1px solid rgba(212, 175, 55, 0.4) !important; color: #d4af37 !important; box-shadow: none !important; }
+        body.theme-luxury .tab-inactive { border: 1px solid rgba(255, 255, 255, 0.03) !important; }
+        body.theme-luxury .bg-video { opacity: 0 !important; visibility: hidden; }
+        body.theme-luxury .video-overlay { background: transparent !important; }
+        body.theme-luxury #aura-controls { opacity: 0; pointer-events: none; transform: translate(-50%, 20px); }
+        
+        /* Adapting internal text colors for Luxury mode */
+        body.theme-luxury .text-red-400, body.theme-luxury .text-amber-400 { color: #94a3b8 !important; }
+        body.theme-luxury .text-red-500 { color: #d4af37 !important; }
     </style>
 </head>
 <body class="p-4">
+
+    <div id="cinematic-flash"></div>
 
     <video id="bg-vid" autoplay muted loop playsinline class="bg-video">
         <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
@@ -188,29 +218,26 @@ MASTER_HTML = """
     <div class="video-overlay"></div>
 
     <button onclick="toggleDomainExpansion()" id="theme-btn" class="fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-yellow-500/50 text-yellow-500 shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all hover:scale-110">
-        <i id="theme-icon" class="fa-solid fa-crown text-xl"></i>
+        <i id="theme-icon" class="fa-solid fa-crown text-xl transition-all"></i>
     </button>
 
     <div id="aura-controls" class="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[100] flex gap-4 bg-black/50 py-2 px-5 border border-red-900/50 rounded-full backdrop-blur-md transition-all duration-500" style="border-color: inherit;">
-        <button onclick="switchAura(0)" id="dot-0" class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_red] transition-all"></button>
-        <button onclick="switchAura(1)" id="dot-1" class="w-3 h-3 rounded-full bg-white/20 hover:bg-blue-500 transition-all"></button>
-        <button onclick="switchAura(2)" id="dot-2" class="w-3 h-3 rounded-full bg-white/20 hover:bg-purple-500 transition-all"></button>
+        <button onclick="switchAura(0)" id="dot-0" class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_red] transition-all hover:scale-125"></button>
+        <button onclick="switchAura(1)" id="dot-1" class="w-3 h-3 rounded-full bg-white/20 hover:bg-blue-500 transition-all hover:scale-125"></button>
+        <button onclick="switchAura(2)" id="dot-2" class="w-3 h-3 rounded-full bg-white/20 hover:bg-purple-500 transition-all hover:scale-125"></button>
     </div>
 
-    <button onclick="toggleAudio()" class="audio-btn shadow-lg"><i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i></button>
+    <button onclick="toggleAudio()" class="audio-btn shadow-lg hover:scale-110"><i id="audio-icon" class="fa-solid fa-volume-xmark text-lg"></i></button>
 
-    <div id="login-viewport" class="hidden w-full max-w-[410px] p-8 md:p-10 glass-panel relative z-10">
-        </div>
-
-    <div id="dashboard-viewport" class="w-full max-w-6xl flex-col relative z-10 flex">
+    <div id="dashboard-viewport" class="w-full max-w-6xl flex-col relative z-10 flex mt-4 md:mt-0">
         
         <div class="w-full flex flex-col md:flex-row justify-between items-center mb-6 px-4">
             <div class="text-center md:text-left mb-4 md:mb-0">
-                <h1 class="anime-title text-3xl font-black text-red-500 mb-1" id="main-title">HOOK FORGE</h1>
+                <h1 class="anime-title text-3xl md:text-4xl font-black text-red-500 mb-1" id="main-title">HOOK FORGE</h1>
                 <p class="text-[9px] tracking-[0.4em] text-red-300 uppercase"><i class="fa-solid fa-user-shield mr-1"></i> <span id="user-display">Founder</span></p>
             </div>
             
-            <div class="flex space-x-3 bg-black/40 p-1.5 rounded-xl border border-red-900/50 backdrop-blur-sm" id="tab-container">
+            <div class="flex space-x-3 bg-black/40 p-1.5 rounded-xl border border-red-900/50 backdrop-blur-sm transition-colors" id="tab-container">
                 <button id="tab-hook" onclick="switchMode('hook')" class="tab-btn tab-active"><i class="fa-solid fa-fire mr-1"></i> Hook Forge</button>
                 <button id="tab-script" onclick="switchMode('script')" class="tab-btn tab-inactive"><i class="fa-solid fa-scroll mr-1"></i> Script Forge</button>
             </div>
@@ -247,7 +274,7 @@ MASTER_HTML = """
                 </div>
 
                 <div id="inputs-script" class="hidden space-y-4 flex-grow flex flex-col">
-                    <p class="text-[10px] tracking-widest text-red-300/80 uppercase border-b border-red-900/50 pb-2 mb-2" id="lbl-transform">Transform raw script into highly retained viral content.</p>
+                    <p class="text-[10px] tracking-widest text-red-300/80 uppercase border-b border-red-900/50 pb-2 mb-2 transition-colors" id="lbl-transform">Transform raw script into highly retained viral content.</p>
                     
                     <div>
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-red-500 mb-1" id="lbl-url"><i class="fa-solid fa-crosshairs mr-1"></i> Target Competitor URL (Optional)</label>
@@ -268,48 +295,48 @@ MASTER_HTML = """
             <div class="glass-panel flex-grow p-6 flex flex-col justify-center min-h-[500px]">
                 <div id="loading" class="hidden text-center">
                     <i id="loading-icon" class="fa-solid fa-spinner fa-spin text-5xl text-red-500 mb-4 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]"></i>
-                    <h2 id="loading-text" class="anime-title text-2xl text-red-100">Extracting Matrix...</h2>
+                    <h2 id="loading-text" class="anime-title text-2xl text-red-100 transition-colors">Extracting Matrix...</h2>
                 </div>
 
                 <div id="empty-state" class="text-center opacity-50">
-                    <i class="fa-solid fa-crosshairs text-6xl text-red-500/50 mb-4"></i>
+                    <i class="fa-solid fa-crosshairs text-6xl text-red-500/50 mb-4 transition-colors" id="empty-icon"></i>
                     <p id="empty-text" class="text-xs font-mono tracking-widest uppercase">Awaiting Target Parameters...</p>
                 </div>
 
                 <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
-                    <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl">
+                    <div class="bg-black/40 border border-red-500/20 p-5 rounded-xl transition-colors">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Option A</span>
-                            <span class="text-[10px] text-red-400 font-black tracking-widest">SCORE: <span id="scoreA" class="text-red-500 text-base"></span></span>
+                            <span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider transition-colors">Option A</span>
+                            <span class="text-[10px] text-red-400 font-black tracking-widest transition-colors">SCORE: <span id="scoreA" class="text-red-500 text-base"></span></span>
                         </div>
-                        <h3 id="textA" class="text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide"></h3>
-                        <button onclick="copyText('textA')" class="mt-3 text-[10px] uppercase tracking-widest text-red-400 hover:text-red-200 transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
+                        <h3 id="textA" class="text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide transition-colors"></h3>
+                        <button onclick="copyText('textA')" class="mt-3 text-[10px] uppercase tracking-widest text-red-400 hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
                     </div>
 
-                    <div class="bg-black/50 border border-amber-500/20 p-5 rounded-xl">
+                    <div class="bg-black/40 border border-amber-500/20 p-5 rounded-xl transition-colors">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-[10px] bg-amber-950/80 text-amber-300 border border-amber-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Option B</span>
-                            <span class="text-[10px] text-amber-400 font-black tracking-widest">SCORE: <span id="scoreB" class="text-amber-500 text-base"></span></span>
+                            <span class="text-[10px] bg-amber-950/80 text-amber-300 border border-amber-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider transition-colors">Option B</span>
+                            <span class="text-[10px] text-amber-400 font-black tracking-widest transition-colors">SCORE: <span id="scoreB" class="text-amber-500 text-base"></span></span>
                         </div>
-                        <h3 id="textB" class="text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide"></h3>
-                        <button onclick="copyText('textB')" class="mt-3 text-[10px] uppercase tracking-widest text-amber-400 hover:text-amber-200 transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
+                        <h3 id="textB" class="text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide transition-colors"></h3>
+                        <button onclick="copyText('textB')" class="mt-3 text-[10px] uppercase tracking-widest text-amber-400 hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
                     </div>
                 </div>
 
                 <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[620px] pr-2">
-                    <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl flex justify-between items-center">
+                    <div class="bg-black/40 border border-red-500/20 p-5 rounded-xl flex justify-between items-center transition-colors">
                         <div>
-                            <h3 class="text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Viral Retention Score</h3>
+                            <h3 class="text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1 transition-colors">Viral Retention Score</h3>
                         </div>
-                        <div class="text-4xl font-black text-amber-500 drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]">
+                        <div class="text-4xl font-black text-amber-500 drop-shadow-[0_0_10px_rgba(245,158,11,0.5)] transition-colors">
                             <span id="s-score"></span><span class="text-lg text-amber-500/50">/100</span>
                         </div>
                     </div>
 
-                    <div class="bg-black/50 border border-red-500/20 p-5 rounded-xl relative">
-                        <span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider mb-3 inline-block">Master Script</span>
-                        <p id="s-master" class="text-sm text-amber-50 leading-relaxed font-mono whitespace-pre-line"></p>
-                        <button onclick="copyText('s-master')" class="mt-4 text-[10px] uppercase tracking-widest text-red-400 hover:text-red-200 transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy Script</button>
+                    <div class="bg-black/40 border border-red-500/20 p-5 rounded-xl relative transition-colors">
+                        <span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider mb-3 inline-block transition-colors">Master Script</span>
+                        <p id="s-master" class="text-sm text-amber-50 leading-relaxed font-mono whitespace-pre-line transition-colors"></p>
+                        <button onclick="copyText('s-master')" class="mt-4 text-[10px] uppercase tracking-widest text-red-400 hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy Script</button>
                     </div>
                 </div>
             </div>
@@ -328,50 +355,74 @@ MASTER_HTML = """
             "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(1).mp4"
         ];
 
+        function playCinematicTransition(callback) {
+            const flash = document.getElementById('cinematic-flash');
+            // Fade to black
+            flash.style.opacity = '1';
+            
+            setTimeout(() => {
+                // Execute the UI changes while screen is black
+                callback();
+                
+                // Wait a tiny bit for video to buffer the first frame, then fade back in
+                setTimeout(() => {
+                    flash.style.opacity = '0';
+                }, 150);
+            }, 400); // 400ms is the duration of the fade-out
+        }
+
         function switchAura(index) {
-            const vid = document.getElementById('bg-vid');
-            vid.src = videos[index];
-            vid.play();
+            if (isLuxuryMode) return; // Disable aura switch if in luxury mode
             
-            // Remove old aura classes
-            document.body.classList.remove('theme-aura-1', 'theme-aura-2');
-            
-            // Apply new aura class
-            if(index === 1) document.body.classList.add('theme-aura-1');
-            if(index === 2) document.body.classList.add('theme-aura-2');
-            
-            // Update dots UI
-            const dot0 = document.getElementById('dot-0');
-            const dot1 = document.getElementById('dot-1');
-            const dot2 = document.getElementById('dot-2');
-            
-            // Reset all dots
-            dot0.className = 'w-3 h-3 rounded-full bg-white/20 hover:bg-red-500 transition-all';
-            dot1.className = 'w-3 h-3 rounded-full bg-white/20 hover:bg-blue-500 transition-all';
-            dot2.className = 'w-3 h-3 rounded-full bg-white/20 hover:bg-purple-500 transition-all';
-            
-            // Activate selected dot
-            if(index === 0) dot0.className = 'w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_red] transition-all';
-            if(index === 1) dot1.className = 'w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_blue] transition-all';
-            if(index === 2) dot2.className = 'w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_10px_purple] transition-all';
+            playCinematicTransition(() => {
+                const vid = document.getElementById('bg-vid');
+                vid.src = videos[index];
+                vid.play();
+                
+                // Remove old aura classes
+                document.body.classList.remove('theme-aura-1', 'theme-aura-2');
+                
+                // Apply new aura class
+                if(index === 1) document.body.classList.add('theme-aura-1');
+                if(index === 2) document.body.classList.add('theme-aura-2');
+                
+                // Update dots UI
+                const dot0 = document.getElementById('dot-0');
+                const dot1 = document.getElementById('dot-1');
+                const dot2 = document.getElementById('dot-2');
+                
+                // Reset all dots
+                dot0.className = 'w-3 h-3 rounded-full bg-white/20 hover:bg-red-500 transition-all hover:scale-125';
+                dot1.className = 'w-3 h-3 rounded-full bg-white/20 hover:bg-blue-500 transition-all hover:scale-125';
+                dot2.className = 'w-3 h-3 rounded-full bg-white/20 hover:bg-purple-500 transition-all hover:scale-125';
+                
+                // Activate selected dot
+                if(index === 0) dot0.className = 'w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_red] transition-all hover:scale-125';
+                if(index === 1) dot1.className = 'w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_10px_blue] transition-all hover:scale-125';
+                if(index === 2) dot2.className = 'w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_10px_purple] transition-all hover:scale-125';
+            });
         }
 
         function toggleDomainExpansion() {
-            const body = document.body;
-            const icon = document.getElementById('theme-icon');
-            const themeBtn = document.getElementById('theme-btn');
-            
-            isLuxuryMode = !isLuxuryMode;
-            
-            if (isLuxuryMode) {
-                body.classList.add('theme-luxury');
-                icon.className = 'fa-solid fa-eye text-xl'; // Turns to Eye
-                themeBtn.className = 'fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-red-500/50 text-red-500 shadow-[0_0_15px_rgba(255,0,0,0.4)] transition-all hover:scale-110';
-            } else {
-                body.classList.remove('theme-luxury');
-                icon.className = 'fa-solid fa-crown text-xl'; // Turns to Crown
-                themeBtn.className = 'fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-yellow-500/50 text-yellow-500 shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all hover:scale-110';
-            }
+            playCinematicTransition(() => {
+                const body = document.body;
+                const icon = document.getElementById('theme-icon');
+                const themeBtn = document.getElementById('theme-btn');
+                
+                isLuxuryMode = !isLuxuryMode;
+                
+                if (isLuxuryMode) {
+                    body.classList.add('theme-luxury');
+                    icon.className = 'fa-solid fa-eye text-xl'; // Turns to Eye
+                    themeBtn.className = 'fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-red-500/50 text-red-500 shadow-[0_0_15px_rgba(255,0,0,0.4)] transition-all hover:scale-110';
+                    document.getElementById('empty-icon').classList.replace('text-red-500/50', 'text-[#d4af37]');
+                } else {
+                    body.classList.remove('theme-luxury');
+                    icon.className = 'fa-solid fa-crown text-xl'; // Turns to Crown
+                    themeBtn.className = 'fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-yellow-500/50 text-yellow-500 shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all hover:scale-110';
+                    document.getElementById('empty-icon').classList.replace('text-[#d4af37]', 'text-red-500/50');
+                }
+            });
         }
 
         function toggleAudio() {
@@ -404,6 +455,14 @@ MASTER_HTML = """
             document.getElementById('results-script').style.display = 'none';
             document.getElementById('errorBox').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
+
+            if(isLuxuryMode) {
+                document.getElementById('loading-icon').classList.replace('text-red-500', 'text-[#d4af37]');
+                document.getElementById('loading-text').classList.replace('text-red-100', 'text-[#d4af37]');
+            } else {
+                document.getElementById('loading-icon').classList.replace('text-[#d4af37]', 'text-red-500');
+                document.getElementById('loading-text').classList.replace('text-[#d4af37]', 'text-red-100');
+            }
 
             try {
                 let endpoint = currentMode === 'hook' ? '/forge_hook' : '/forge_script';
