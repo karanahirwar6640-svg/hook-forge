@@ -72,6 +72,7 @@ MASTER_HTML = """
             display: flex; align-items: center; justify-content: center; flex-direction: column;
             overflow-x: hidden; position: relative;
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            perspective: 1500px; /* Base for 3D Parallax */
         }
         
         .bg-video {
@@ -80,19 +81,18 @@ MASTER_HTML = """
             transition: opacity 0.3s ease-in-out, transform 0.5s ease-out;
             transform-origin: center;
         }
-        .video-switch-anim {
-            opacity: 0 !important; transform: scale(1.05); 
-        }
-        .video-overlay {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.05); z-index: 1; pointer-events: none; 
-        }
+        .video-switch-anim { opacity: 0 !important; transform: scale(1.05); }
+        .video-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.05); z-index: 1; pointer-events: none; }
         
+        /* 3D PARALLAX GLASS PANELS */
         .glass-panel {
             background: rgba(0, 0, 0, 0.65); 
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 50, 50, 0.4); border-radius: 24px;
             box-shadow: 0 40px 80px rgba(0,0,0,0.95);
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d; /* For Parallax */
+            will-change: transform;
         }
         
         .anime-title { font-family: 'Cinzel', serif; text-shadow: 0 0 30px rgba(255, 20, 20, 1); transition: all 0.5s ease; }
@@ -154,6 +154,9 @@ MASTER_HTML = """
         body.theme-luxury .text-red-400, body.theme-luxury .text-amber-400, body.theme-luxury .text-red-500 { color: #fff !important; }
         body.theme-luxury .border-red-500\/20, body.theme-luxury .border-amber-500\/20 { border-color: rgba(255,255,255,0.1) !important; background: #111 !important; }
         body.theme-luxury #multiverse-btn { opacity: 0; pointer-events: none; }
+        
+        /* Utility for Matrix text effect */
+        .matrix-text { white-space: pre-line; word-break: break-word; }
     </style>
 </head>
 <body class="p-4">
@@ -191,7 +194,7 @@ MASTER_HTML = """
 
         <div class="flex flex-col lg:flex-row gap-6 w-full items-stretch">
             
-            <div class="glass-panel w-full lg:max-w-md p-6 flex flex-col justify-between">
+            <div class="glass-panel parallax-panel w-full lg:max-w-md p-6 flex flex-col justify-between">
                 <div id="inputs-hook" class="space-y-4">
                     <div>
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-red-400 mb-1">Niche</label>
@@ -231,7 +234,7 @@ MASTER_HTML = """
                 </button>
             </div>
 
-            <div class="glass-panel flex-grow p-6 flex flex-col justify-center min-h-[500px]">
+            <div class="glass-panel parallax-panel flex-grow p-6 flex flex-col justify-center min-h-[500px]">
                 <div id="loading" class="hidden text-center">
                     <i id="loading-icon" class="fa-solid fa-spinner fa-spin text-5xl text-red-500 mb-4 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]"></i>
                     <h2 id="loading-text" class="anime-title text-2xl text-red-100">Extracting Matrix...</h2>
@@ -248,8 +251,17 @@ MASTER_HTML = """
                             <span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Option A</span>
                             <span class="text-[10px] text-red-400 font-black tracking-widest">SCORE: <span id="scoreA" class="text-red-500 text-base"></span></span>
                         </div>
-                        <h3 id="textA" class="text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide"></h3>
+                        <h3 id="textA" class="matrix-text text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide"></h3>
                         <button onclick="copyText('textA')" class="mt-3 text-[10px] uppercase tracking-widest text-red-400 hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
+                    </div>
+
+                    <div class="bg-black/40 border border-amber-500/20 p-5 rounded-xl">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] bg-amber-950/80 text-amber-300 border border-amber-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Option B</span>
+                            <span class="text-[10px] text-amber-400 font-black tracking-widest">SCORE: <span id="scoreB" class="text-amber-500 text-base"></span></span>
+                        </div>
+                        <h3 id="textB" class="matrix-text text-base md:text-lg font-bold text-amber-50 mb-3 tracking-wide"></h3>
+                        <button onclick="copyText('textB')" class="mt-3 text-[10px] uppercase tracking-widest text-amber-400 hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
                     </div>
                 </div>
 
@@ -265,7 +277,7 @@ MASTER_HTML = """
 
                     <div class="bg-black/40 border border-red-500/20 p-5 rounded-xl relative">
                         <span class="text-[10px] bg-red-950/80 text-red-300 border border-red-800 px-2 py-0.5 rounded font-bold uppercase tracking-wider mb-3 inline-block">Master Script</span>
-                        <p id="s-master" class="text-sm text-amber-50 leading-relaxed font-mono whitespace-pre-line"></p>
+                        <p id="s-master" class="matrix-text text-sm text-amber-50 leading-relaxed font-mono whitespace-pre-line"></p>
                         <button onclick="copyText('s-master')" class="mt-4 text-[10px] uppercase tracking-widest text-red-400 hover:text-white transition-all"><i class="fa-regular fa-copy mr-1"></i> Copy Script</button>
                     </div>
                 </div>
@@ -285,42 +297,84 @@ MASTER_HTML = """
             "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(1).mp4"
         ];
 
+        // 3D MAGNETIC PARALLAX LOGIC
+        document.querySelectorAll('.parallax-panel').forEach(panel => {
+            panel.addEventListener('mousemove', e => {
+                if(window.innerWidth < 768) return; // Ignore on mobile touch screens
+                const rect = panel.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Calculate tilt angles (max 4 degrees so it's subtle)
+                const rotateX = ((y - centerY) / centerY) * -4; 
+                const rotateY = ((x - centerX) / centerX) * 4;
+                
+                panel.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            
+            panel.addEventListener('mouseenter', () => {
+                if(window.innerWidth >= 768) panel.style.transition = 'transform 0.1s ease-out';
+            });
+            
+            panel.addEventListener('mouseleave', () => {
+                if(window.innerWidth >= 768) {
+                    panel.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                    panel.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+                }
+            });
+        });
+
+        // MATRIX DECRYPTION EFFECT
+        function matrixDecrypt(elementId, targetText) {
+            const el = document.getElementById(elementId);
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*<>?';
+            let iterations = 0;
+            const maxIterations = 25; // How many frames it scrambles
+            
+            const interval = setInterval(() => {
+                el.innerText = targetText.split('').map((char, index) => {
+                    // Lock letters smoothly from left to right
+                    if (index < (iterations / maxIterations) * targetText.length) {
+                        return char;
+                    }
+                    if (char === ' ' || char === '\\n') return char;
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join('');
+                
+                iterations++;
+                if (iterations >= maxIterations) {
+                    clearInterval(interval);
+                    el.innerText = targetText;
+                }
+            }, 30); // 30ms per frame = super fast and smooth hacker feel
+        }
+
         function createShockwave(e) {
             const btn = e.currentTarget;
             const circle = document.createElement('span');
             const diameter = Math.max(btn.clientWidth, btn.clientHeight);
             const radius = diameter / 2;
-            
             circle.style.width = circle.style.height = `${diameter}px`;
             circle.style.left = `${e.clientX - btn.getBoundingClientRect().left - radius}px`;
             circle.style.top = `${e.clientY - btn.getBoundingClientRect().top - radius}px`;
             circle.classList.add('shockwave');
-            
             const oldShockwave = btn.getElementsByClassName('shockwave')[0];
             if (oldShockwave) oldShockwave.remove();
-            
             btn.appendChild(circle);
         }
 
         function animateScore(targetValue) {
             const scoreEl = document.getElementById('s-score');
             scoreEl.classList.remove('score-animate'); 
-            let startValue = 0;
-            let duration = 1200; 
-            let startTime = null;
-
+            let startValue = 0; let duration = 1200; let startTime = null;
             function step(timestamp) {
                 if (!startTime) startTime = timestamp;
                 const progress = Math.min((timestamp - startTime) / duration, 1);
-                const currentScore = Math.floor(progress * (targetValue - startValue) + startValue);
-                scoreEl.innerText = currentScore;
-                
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                } else {
-                    scoreEl.innerText = targetValue;
-                    scoreEl.classList.add('score-animate'); 
-                }
+                scoreEl.innerText = Math.floor(progress * (targetValue - startValue) + startValue);
+                if (progress < 1) window.requestAnimationFrame(step);
+                else { scoreEl.innerText = targetValue; scoreEl.classList.add('score-animate'); }
             }
             window.requestAnimationFrame(step);
         }
@@ -328,26 +382,19 @@ MASTER_HTML = """
         function playWarpTransition(callback) {
             const vid = document.getElementById('bg-vid');
             vid.classList.add('video-switch-anim'); 
-            setTimeout(() => {
-                callback();
-                setTimeout(() => { vid.classList.remove('video-switch-anim'); }, 100);
-            }, 300);
+            setTimeout(() => { callback(); setTimeout(() => { vid.classList.remove('video-switch-anim'); }, 100); }, 300);
         }
 
         function cycleAura(e) {
             if (isLuxuryMode) return;
             createShockwave(e);
-            
             currentAura = (currentAura + 1) % videos.length;
-            
             playWarpTransition(() => {
                 const vid = document.getElementById('bg-vid');
                 vid.src = videos[currentAura];
                 vid.play();
-                
                 document.body.classList.remove('theme-aura-1', 'theme-aura-2');
                 const btn = document.getElementById('multiverse-btn');
-                
                 if(currentAura === 1) {
                     document.body.classList.add('theme-aura-1');
                     btn.className = 'fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[100] bg-black/60 p-4 rounded-full border border-blue-500 text-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all hover:scale-110 overflow-hidden';
@@ -363,20 +410,14 @@ MASTER_HTML = """
         function toggleDomainExpansion(e) {
             createShockwave(e); 
             playWarpTransition(() => {
-                const body = document.body;
-                const icon = document.getElementById('theme-icon');
-                const themeBtn = document.getElementById('theme-btn');
-                
+                const body = document.body; const icon = document.getElementById('theme-icon'); const themeBtn = document.getElementById('theme-btn');
                 isLuxuryMode = !isLuxuryMode;
-                
                 if (isLuxuryMode) {
-                    body.classList.add('theme-luxury');
-                    icon.className = 'fa-solid fa-eye text-xl';
+                    body.classList.add('theme-luxury'); icon.className = 'fa-solid fa-eye text-xl';
                     themeBtn.className = 'fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-white/50 text-white shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all hover:scale-110 overflow-hidden';
                     document.getElementById('empty-icon').classList.replace('text-red-500/50', 'text-white/50');
                 } else {
-                    body.classList.remove('theme-luxury');
-                    icon.className = 'fa-solid fa-crown text-xl';
+                    body.classList.remove('theme-luxury'); icon.className = 'fa-solid fa-crown text-xl';
                     themeBtn.className = 'fixed top-5 right-5 md:top-8 md:right-8 z-[100] bg-black/60 p-4 rounded-full border border-yellow-500/50 text-yellow-500 shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all hover:scale-110 overflow-hidden';
                     document.getElementById('empty-icon').classList.replace('text-white/50', 'text-red-500/50');
                 }
@@ -384,10 +425,8 @@ MASTER_HTML = """
         }
 
         function toggleAudio() {
-            const vid = document.getElementById('bg-vid');
-            const icon = document.getElementById('audio-icon');
-            isMuted = !isMuted;
-            vid.muted = isMuted;
+            const vid = document.getElementById('bg-vid'); const icon = document.getElementById('audio-icon');
+            isMuted = !isMuted; vid.muted = isMuted;
             icon.className = isMuted ? 'fa-solid fa-volume-xmark text-lg' : 'fa-solid fa-volume-high text-lg';
         }
 
@@ -395,21 +434,16 @@ MASTER_HTML = """
             currentMode = mode;
             document.getElementById('tab-hook').className = mode === 'hook' ? 'tab-btn tab-active' : 'tab-btn tab-inactive';
             document.getElementById('tab-script').className = mode === 'script' ? 'tab-btn tab-active' : 'tab-btn tab-inactive';
-            
             document.getElementById('inputs-hook').style.display = mode === 'hook' ? 'block' : 'none';
             document.getElementById('inputs-script').style.display = mode === 'script' ? 'flex' : 'none';
             document.getElementById('btn-ignite').innerHTML = mode === 'hook' ? '<i class="fa-solid fa-fire mr-2"></i> Ignite Hook Engine' : '<i class="fa-solid fa-scroll mr-2"></i> Forge Master Script';
-            
             document.getElementById('empty-state').style.display = 'block';
-            document.getElementById('results-hook').style.display = 'none';
-            document.getElementById('results-script').style.display = 'none';
+            document.getElementById('results-hook').style.display = 'none'; document.getElementById('results-script').style.display = 'none';
         }
 
         async function igniteEngine() {
-            document.getElementById('empty-state').style.display = 'none';
-            document.getElementById('results-hook').style.display = 'none';
-            document.getElementById('results-script').style.display = 'none';
-            document.getElementById('errorBox').style.display = 'none';
+            document.getElementById('empty-state').style.display = 'none'; document.getElementById('results-hook').style.display = 'none';
+            document.getElementById('results-script').style.display = 'none'; document.getElementById('errorBox').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
 
             try {
@@ -417,26 +451,27 @@ MASTER_HTML = """
                 let payloadData = currentMode === 'hook' ? {
                     niche: document.getElementById('h-niche').value, audience: document.getElementById('h-audience').value,
                     tone: document.getElementById('h-tone').value, topic: document.getElementById('h-topic').value
-                } : {
-                    script: document.getElementById('s-raw').value, url: document.getElementById('s-url').value
-                };
+                } : { script: document.getElementById('s-raw').value, url: document.getElementById('s-url').value };
 
-                const res = await fetch(endpoint, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payloadData)
-                });
-
+                const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payloadData) });
                 const data = await res.json();
                 document.getElementById('loading').style.display = 'none';
-
                 if (data.error) throw new Error(data.error);
 
                 if (currentMode === 'hook') {
-                    document.getElementById('scoreA').innerText = data.hook_a.score; document.getElementById('textA').innerText = `"${data.hook_a.text}"`;
+                    document.getElementById('scoreA').innerText = data.hook_a.score; 
+                    document.getElementById('scoreB').innerText = data.hook_b.score;
                     document.getElementById('results-hook').style.display = 'block';
+                    
+                    // Call the Matrix Decryptor!
+                    matrixDecrypt('textA', `"${data.hook_a.text}"`);
+                    matrixDecrypt('textB', `"${data.hook_b.text}"`);
                 } else {
                     document.getElementById('results-script').style.display = 'block';
                     animateScore(data.retention_score);
-                    document.getElementById('s-master').innerText = data.master_script;
+                    
+                    // Call the Matrix Decryptor!
+                    matrixDecrypt('s-master', data.master_script);
                 }
             } catch (err) {
                 document.getElementById('loading').style.display = 'none';
@@ -488,4 +523,4 @@ def forge_script():
 http://googleusercontent.com/immersive_entry_chip/0
 http://googleusercontent.com/immersive_entry_chip/1
 
-**Bhai check kar:** Ekdum aakhiri line `app.run(host='0.0.0.0', port=5000)` aayi kya editor mein paste karne ke baad? Agar haan, toh direct Deploy maar. Sab ek jhatke mein sahi chalega! 🚀🔥
+Aaram se "Copy" button se uthana, aur end check karke deploy maarna. Uske baad PC pe chalakar dekhna, maza na aaye toh bolna! 🚀🔥
