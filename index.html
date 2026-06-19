@@ -8,44 +8,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@300;400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ONLY PREMIUM ORANGE THEME - NO MORE BLUE/PURPLE TRASH */
+        /* PREMIUM ORANGE THEME */
         :root {
             --c1: #ea580c; 
             --c2: #f97316; 
             --border: rgba(249,115,22,0.5); 
             --glow: rgba(249,115,22, 0.5); 
+            --bg-glow: rgba(249,115,22, 0.15);
         }
         
         body.theme-luxury {
             --c1: #ffffff; --c2: #ffffff; --border: rgba(255,255,255,0.2); 
-            --glow: rgba(255,255,255,0.1); background-color: #050505 !important;
+            --glow: rgba(255,255,255,0.1); --bg-glow: transparent; background-color: #050505 !important;
         }
 
         html, body { margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; }
         
-        /* FIXED VIDEO BACKGROUND - NO BLACK GAPS */
-        .bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -2; transition: opacity 0.5s ease; opacity: 0.9; }
-        .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.25); z-index: -1; pointer-events: none; }
+        /* 🛠️ VIDEO ISSUE FIXED (Z-Index is now 0) */
+        .bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; transition: opacity 0.5s ease; opacity: 1; }
+        .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.2); z-index: 1; pointer-events: none; }
         
-        /* 💎 TRUE CRYSTAL GLASS - NO MUDDY COLORS */
+        /* 💎 TRUE CRYSTAL GLASS PANEL */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.03) !important; /* Just 3% white tint */
-            backdrop-filter: blur(12px) !important; 
-            -webkit-backdrop-filter: blur(12px) !important; 
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.3) !important; /* Top light reflection */
-            border-left: 1px solid rgba(255, 255, 255, 0.2) !important; /* Left light reflection */
+            background: rgba(255, 255, 255, 0.05) !important; /* Extremely light tint */
+            backdrop-filter: blur(16px) saturate(120%) !important; 
+            -webkit-backdrop-filter: blur(16px) saturate(120%) !important; 
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.3) !important; 
+            border-left: 1px solid rgba(255, 255, 255, 0.2) !important; 
             border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Simple soft shadow */
-            z-index: 10;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); 
+            z-index: 10; position: relative;
         }
         
         .anime-title { font-family: 'Cinzel', serif; color: var(--c2); text-shadow: 0 0 15px var(--glow); transition: color 0.3s;}
         .text-theme { color: var(--c2) !important; transition: color 0.3s; }
         
-        /* CLEAN GLASS INPUTS */
         .glass-input { 
             background: rgba(0, 0, 0, 0.3) !important; 
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(255,255,255,0.1) !important; 
             color: #fff; transition: all 0.3s; 
             border-radius: 8px;
@@ -61,17 +62,17 @@
         @keyframes electricRipple { 0% { transform: scale(0); opacity: 1; border-width: 3px; } 100% { transform: scale(4); opacity: 0; border-width: 0px; } }
 
         .tab-btn { padding: 10px 20px; font-size: 11px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 8px; transition: all 0.3s; cursor: pointer; }
-        .tab-active { background: rgba(249,115,22, 0.2); border: 1px solid var(--c2); color: #fff; box-shadow: 0 0 10px var(--glow); }
+        .tab-active { background: var(--bg-glow); border: 1px solid var(--c2); color: #fff; box-shadow: 0 0 10px var(--glow); }
         .tab-inactive { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.05); color: rgba(255, 255, 255, 0.5); }
 
         .floating-btn { cursor: pointer; z-index: 9000 !important; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 12px; border-radius: 50%; transition: all 0.3s; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border: 1px solid rgba(255,255,255,0.1); color: var(--c2); position: fixed; }
-        .floating-btn:hover { transform: scale(1.1); background: rgba(249,115,22,0.1); border-color: var(--c2); }
+        .floating-btn:hover { transform: scale(1.1); background: var(--bg-glow); border-color: var(--c2); }
 
-        /* 👑 PURE GLASS SAAS PROFILE DROPDOWN */
+        /* 👑 SAAS PROFILE MENU */
         .profile-menu {
             position: absolute; top: 110%; right: 0; width: 220px;
-            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255,255,255,0.3); border-radius: 16px;
+            background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255,255,255,0.2); border-radius: 16px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
             opacity: 0; visibility: hidden; transform: translateY(-10px);
             transition: all 0.3s ease; z-index: 9999;
@@ -96,12 +97,13 @@
 </head>
 <body class="p-4 md:p-8 pb-32 flex flex-col items-center">
 
-    <!-- FULL SCREEN VIDEO -->
+    <!-- VIDEO BACKGROUND IS BACK -->
     <video id="bg-vid" autoplay muted loop playsinline class="bg-video">
         <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
 
+    <!-- UI CONTROLS -->
     <div id="multiverse-btn" class="floating-btn" style="top: 20px; left: 20px;" onclick="cycleAura(event)">
         <i class="fa-solid fa-infinity text-xl"></i>
     </div>
@@ -123,15 +125,16 @@
             </div>
             
             <div class="relative" id="profile-wrapper">
-                <button onclick="toggleProfileMenu(event)" class="flex items-center gap-2 bg-black/40 p-1.5 pr-3 rounded-full border border-white/10 backdrop-blur-md cursor-pointer hover:bg-black/60 transition">
-                    <div class="flex items-center justify-center bg-black/40 w-8 h-8 rounded-full border border-white/20">
+                <button onclick="toggleProfileMenu(event)" class="flex items-center gap-2 bg-black/50 p-1.5 pr-3 rounded-full border border-white/10 backdrop-blur-md cursor-pointer hover:bg-black/70 transition">
+                    <div class="flex items-center justify-center bg-black/50 w-8 h-8 rounded-full border border-white/20">
                         <span class="text-[10px] font-bold text-white tracking-wider">SC</span>
                     </div>
                     <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform duration-300" id="profile-arrow"></i>
                 </button>
 
+                <!-- SAAS MENU -->
                 <div id="profile-menu" class="profile-menu">
-                    <div class="px-4 py-4 border-b border-white/10 bg-black/20 rounded-t-[16px]">
+                    <div class="px-4 py-4 border-b border-white/10 bg-black/40 rounded-t-[16px]">
                         <p class="text-[13px] font-bold text-white tracking-wide">Santosh Choudhary</p>
                         <p class="text-[10px] text-theme mt-1 uppercase tracking-widest font-bold"><i class="fa-solid fa-shield-halved mr-1"></i> Founder Plan</p>
                     </div>
@@ -205,7 +208,7 @@
             <!-- RIGHT OUTPUT PANEL (PURE GLASS) -->
             <div class="glass-panel flex-grow p-6 flex flex-col justify-center min-h-[500px] relative">
                 
-                <div id="loading" class="hidden text-center absolute inset-0 flex flex-col items-center justify-center bg-black/30 rounded-[24px] backdrop-blur-md z-20">
+                <div id="loading" class="hidden text-center absolute inset-0 flex flex-col items-center justify-center bg-black/40 rounded-[24px] backdrop-blur-md z-20">
                     <i class="fa-solid fa-circle-notch fa-spin text-5xl text-theme mb-4"></i>
                     <h2 class="anime-title text-xl tracking-widest uppercase text-white font-bold">Extracting Matrix...</h2>
                 </div>
@@ -252,6 +255,8 @@
 
     <script>
         let currentMode = 'hook'; let isMuted = true; let isLuxuryMode = false; let currentAura = 0;
+        
+        // VIDEO ARRAY IS INTACT
         const videos = [
             "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4", 
             "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/your_name.mp4", 
@@ -324,13 +329,14 @@
             window.requestAnimationFrame(step);
         }
 
-        /* ONLY CHANGES VIDEO NOW - THEMES ARE REMOVED */
         function cycleAura(e) {
             if (isLuxuryMode) return; createShockwave(e);
             const vid = document.getElementById('bg-vid'); vid.style.opacity = 0; 
             setTimeout(() => { 
-                currentAura = (currentAura + 1) % videos.length; vid.src = videos[currentAura]; vid.play();
-                vid.style.opacity = 0.9; 
+                currentAura = (currentAura + 1) % videos.length; 
+                vid.src = videos[currentAura]; 
+                vid.play();
+                vid.style.opacity = 1; /* Reset opacity so video is perfectly visible */
             }, 300);
         }
 
