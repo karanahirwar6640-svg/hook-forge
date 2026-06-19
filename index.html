@@ -8,94 +8,95 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@300;400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* DYNAMIC THEMES */
+        /* ONLY PREMIUM ORANGE THEME - NO MORE BLUE/PURPLE TRASH */
         :root {
-            --c1: #ea580c; --c2: #f97316; --border: #fdba74; 
-            --glow: rgba(249,115,22, 0.5); --bg-glow: rgba(249,115,22, 0.15);
+            --c1: #ea580c; 
+            --c2: #f97316; 
+            --border: rgba(249,115,22,0.5); 
+            --glow: rgba(249,115,22, 0.5); 
         }
-        body.theme-blue {
-            --c1: #1d4ed8; --c2: #3b82f6; --border: #93c5fd; 
-            --glow: rgba(59,130,246, 0.5); --bg-glow: rgba(59,130,246, 0.15);
-        }
-        body.theme-purple {
-            --c1: #7e22ce; --c2: #a855f7; --border: #d8b4fe; 
-            --glow: rgba(168,85,247, 0.5); --bg-glow: rgba(168,85,247, 0.15);
-        }
+        
         body.theme-luxury {
             --c1: #ffffff; --c2: #ffffff; --border: rgba(255,255,255,0.2); 
-            --glow: rgba(255,255,255,0.1); --bg-glow: transparent; background-color: #050505 !important;
+            --glow: rgba(255,255,255,0.1); background-color: #050505 !important;
         }
 
-        body { margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif; background-color: #000; color: #fff; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; position: relative; }
+        html, body { margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; }
         
-        .bg-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none; transition: opacity 0.5s ease; opacity: 0.85; }
-        .video-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.1); z-index: 1; pointer-events: none; }
+        /* FIXED VIDEO BACKGROUND - NO BLACK GAPS */
+        .bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: -2; transition: opacity 0.5s ease; opacity: 0.9; }
+        .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.25); z-index: -1; pointer-events: none; }
         
-        /* 💎 TRUE CRYSTAL GLASS FIX FOR MOBILE */
+        /* 💎 TRUE CRYSTAL GLASS - NO MUDDY COLORS */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.02) !important;
-            backdrop-filter: blur(20px) saturate(120%) !important; 
-            -webkit-backdrop-filter: blur(20px) saturate(120%) !important; 
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.35) !important; 
-            border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+            background: rgba(255, 255, 255, 0.03) !important; /* Just 3% white tint */
+            backdrop-filter: blur(12px) !important; 
+            -webkit-backdrop-filter: blur(12px) !important; 
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.3) !important; /* Top light reflection */
+            border-left: 1px solid rgba(255, 255, 255, 0.2) !important; /* Left light reflection */
             border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-            z-index: 10; transition: all 0.5s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Simple soft shadow */
+            z-index: 10;
         }
         
-        .anime-title { font-family: 'Cinzel', serif; color: var(--c2); text-shadow: 0 0 20px var(--glow); transition: color 0.5s, text-shadow 0.5s;}
-        .text-theme { color: var(--c2) !important; transition: color 0.5s; }
+        .anime-title { font-family: 'Cinzel', serif; color: var(--c2); text-shadow: 0 0 15px var(--glow); transition: color 0.3s;}
+        .text-theme { color: var(--c2) !important; transition: color 0.3s; }
         
-        .glass-input { background: rgba(0, 0, 0, 0.25) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1) !important; color: #fff; transition: all 0.3s; }
-        .glass-input:focus { outline: none; border-color: var(--c2) !important; box-shadow: 0 0 15px var(--glow) !important; background: rgba(0,0,0,0.5) !important; }
+        /* CLEAN GLASS INPUTS */
+        .glass-input { 
+            background: rgba(0, 0, 0, 0.3) !important; 
+            border: 1px solid rgba(255,255,255,0.1) !important; 
+            color: #fff; transition: all 0.3s; 
+            border-radius: 8px;
+        }
+        .glass-input:focus { outline: none; border-color: var(--c2) !important; box-shadow: 0 0 10px var(--glow) !important; background: rgba(0,0,0,0.6) !important; }
         select.glass-input option { background: #111; color: #fff; }
         
         .premium-btn { position: relative; overflow: hidden; cursor: pointer; background: linear-gradient(45deg, var(--c1), var(--c2)); border: 1px solid var(--border); box-shadow: 0 0 15px var(--glow); transition: all 0.3s ease; color: white; }
-        .premium-btn:hover { transform: translateY(-2px); box-shadow: 0 0 25px var(--c2); filter: brightness(1.2); }
+        .premium-btn:hover { transform: translateY(-2px); box-shadow: 0 0 25px var(--c2); filter: brightness(1.1); }
         
-        /* ⚡ TRUE ELECTRIC SHOCKWAVE */
-        .shockwave { position: absolute; background: transparent; border: 2px solid var(--c2); border-radius: 50%; box-shadow: 0 0 15px var(--glow), inset 0 0 15px var(--glow); transform: scale(0); animation: electricRipple 0.6s ease-out; pointer-events: none; }
-        @keyframes electricRipple { 0% { transform: scale(0); opacity: 1; border-width: 4px; } 100% { transform: scale(4.5); opacity: 0; border-width: 0px; } }
+        /* ⚡ SHOCKWAVE */
+        .shockwave { position: absolute; background: transparent; border: 2px solid var(--c2); border-radius: 50%; box-shadow: 0 0 10px var(--glow); transform: scale(0); animation: electricRipple 0.6s ease-out; pointer-events: none; }
+        @keyframes electricRipple { 0% { transform: scale(0); opacity: 1; border-width: 3px; } 100% { transform: scale(4); opacity: 0; border-width: 0px; } }
 
         .tab-btn { padding: 10px 20px; font-size: 11px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 8px; transition: all 0.3s; cursor: pointer; }
-        .tab-active { background: var(--bg-glow); border: 1px solid var(--c2); color: #fff; box-shadow: 0 0 10px var(--glow); }
-        .tab-inactive { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.05); color: rgba(255, 255, 255, 0.4); }
+        .tab-active { background: rgba(249,115,22, 0.2); border: 1px solid var(--c2); color: #fff; box-shadow: 0 0 10px var(--glow); }
+        .tab-inactive { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.05); color: rgba(255, 255, 255, 0.5); }
 
-        .floating-btn { cursor: pointer; z-index: 9000 !important; background: rgba(0,0,0,0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 12px; border-radius: 50%; transition: all 0.3s; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border: 1px solid var(--glow); color: var(--c2); position: fixed; }
-        .floating-btn:hover { transform: scale(1.1); background: var(--bg-glow); }
+        .floating-btn { cursor: pointer; z-index: 9000 !important; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 12px; border-radius: 50%; transition: all 0.3s; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border: 1px solid rgba(255,255,255,0.1); color: var(--c2); position: fixed; }
+        .floating-btn:hover { transform: scale(1.1); background: rgba(249,115,22,0.1); border-color: var(--c2); }
 
-        /* 👑 SAAS PROFILE DROPDOWN MENU */
+        /* 👑 PURE GLASS SAAS PROFILE DROPDOWN */
         .profile-menu {
             position: absolute; top: 110%; right: 0; width: 220px;
-            background: rgba(10, 10, 10, 0.6); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), 0 0 20px var(--bg-glow);
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255,255,255,0.3); border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
             opacity: 0; visibility: hidden; transform: translateY(-10px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 9999;
+            transition: all 0.3s ease; z-index: 9999;
         }
         .profile-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
         .profile-item { padding: 12px 16px; display: flex; align-items: center; gap: 12px; color: #e5e5e5; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s; }
-        .profile-item:hover { background: rgba(255, 255, 255, 0.05); color: #fff; padding-left: 20px; }
+        .profile-item:hover { background: rgba(255, 255, 255, 0.1); color: #fff; padding-left: 20px; }
         .profile-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 4px 0; }
 
-        @keyframes scoreLock { 0% { transform: scale(1); text-shadow: 0 0 5px var(--glow); } 50% { transform: scale(1.4); text-shadow: 0 0 30px var(--c2); color: #fff; } 100% { transform: scale(1); text-shadow: 0 0 10px var(--glow); } }
+        @keyframes scoreLock { 0% { transform: scale(1); text-shadow: 0 0 5px var(--glow); } 50% { transform: scale(1.4); text-shadow: 0 0 20px var(--c2); color: #fff; } 100% { transform: scale(1); text-shadow: 0 0 10px var(--glow); } }
         .score-animate { animation: scoreLock 0.5s ease-out; }
 
         body.theme-luxury .glass-panel, body.theme-luxury .profile-menu { background: #0a0a0a !important; backdrop-filter: none !important; border: 1px solid rgba(255,255,255,0.1) !important;}
         body.theme-luxury .anime-title { color: #fff !important; text-shadow: none !important;}
-        body.theme-luxury .premium-btn { background: #fff !important; color: #000 !important; font-weight: 800 !important; }
-        body.theme-luxury .tab-active { background: #fff !important; color: #000 !important; border: none; }
+        body.theme-luxury .premium-btn { background: #fff !important; color: #000 !important; font-weight: 800 !important; box-shadow: none; }
+        body.theme-luxury .tab-active { background: #fff !important; color: #000 !important; border: none; box-shadow: none; }
         body.theme-luxury .bg-video, body.theme-luxury .video-overlay { opacity: 0 !important; visibility: hidden; }
         body.theme-luxury .text-theme { color: #fff !important; }
         
         .matrix-text { white-space: pre-line; word-break: break-word; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--glow); border-radius: 4px; }
     </style>
 </head>
-<body class="p-4 md:p-8 pb-32">
+<body class="p-4 md:p-8 pb-32 flex flex-col items-center">
 
+    <!-- FULL SCREEN VIDEO -->
     <video id="bg-vid" autoplay muted loop playsinline class="bg-video">
         <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
     </video>
@@ -114,23 +115,23 @@
     <!-- MAIN DASHBOARD -->
     <div id="dashboard-viewport" class="w-full max-w-6xl flex-col relative z-10 flex mt-20 mb-10 px-2">
         
-        <!-- TOP HEADER: TITLE (LEFT) & PROFILE (RIGHT) -->
+        <!-- HEADER WITH SC PROFILE -->
         <div class="w-full flex justify-between items-center mb-6">
             <div class="text-left">
                 <h1 class="anime-title text-3xl md:text-4xl font-black mb-1 tracking-wide" id="main-title">HOOK FORGE</h1>
                 <p class="text-[9px] md:text-[10px] tracking-[0.3em] text-gray-300 font-bold uppercase"><i class="fa-solid fa-bolt mr-1 text-theme"></i> Premium Edition</p>
             </div>
             
-            <!-- THE SAAS PROFILE DROPDOWN -->
             <div class="relative" id="profile-wrapper">
-                <button onclick="toggleProfileMenu(event)" class="flex items-center gap-2 bg-black/40 p-1.5 pr-3 rounded-full border border-theme backdrop-blur-md shadow-[0_0_15px_var(--bg-glow)] cursor-pointer hover:bg-black/60 transition">
-                    <img src="https://ui-avatars.com/api/?name=Santosh+Choudhary&background=000&color=fff" alt="Profile" class="w-8 h-8 rounded-full border border-white/20">
+                <button onclick="toggleProfileMenu(event)" class="flex items-center gap-2 bg-black/40 p-1.5 pr-3 rounded-full border border-white/10 backdrop-blur-md cursor-pointer hover:bg-black/60 transition">
+                    <div class="flex items-center justify-center bg-black/40 w-8 h-8 rounded-full border border-white/20">
+                        <span class="text-[10px] font-bold text-white tracking-wider">SC</span>
+                    </div>
                     <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform duration-300" id="profile-arrow"></i>
                 </button>
 
-                <!-- DROPDOWN MENU UI -->
                 <div id="profile-menu" class="profile-menu">
-                    <div class="px-4 py-4 border-b border-white/10 bg-black/40 rounded-t-[16px]">
+                    <div class="px-4 py-4 border-b border-white/10 bg-black/20 rounded-t-[16px]">
                         <p class="text-[13px] font-bold text-white tracking-wide">Santosh Choudhary</p>
                         <p class="text-[10px] text-theme mt-1 uppercase tracking-widest font-bold"><i class="fa-solid fa-shield-halved mr-1"></i> Founder Plan</p>
                     </div>
@@ -147,7 +148,6 @@
             </div>
         </div>
 
-        <!-- TABS (MOVED BELOW FOR CLEAN MOBILE LAYOUT) -->
         <div class="flex space-x-2 bg-black/30 p-1.5 rounded-xl border border-white/10 backdrop-blur-md mb-6 w-full md:w-max justify-center md:justify-start">
             <button id="tab-hook" onclick="switchMode('hook')" class="tab-btn tab-active flex-1 md:flex-none"><i class="fa-solid fa-fire mr-1"></i> Hook Forge</button>
             <button id="tab-script" onclick="switchMode('script')" class="tab-btn tab-inactive flex-1 md:flex-none"><i class="fa-solid fa-scroll mr-1"></i> Script Forge</button>
@@ -157,20 +157,20 @@
 
         <div class="flex flex-col lg:flex-row gap-6 w-full items-stretch">
             
-            <!-- LEFT INPUT PANEL (CRYSTAL GLASS) -->
+            <!-- LEFT INPUT PANEL (PURE GLASS) -->
             <div class="glass-panel w-full lg:w-1/3 p-6 flex flex-col justify-between">
                 <div id="inputs-hook" class="space-y-4">
                     <div>
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Target Niche</label>
-                        <input type="text" id="h-niche" value="Anime & Tech" class="w-full glass-input rounded-lg px-4 py-3 text-sm">
+                        <input type="text" id="h-niche" value="Anime & Tech" class="w-full glass-input px-4 py-3 text-sm">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Target Audience</label>
-                        <input type="text" id="h-audience" value="Content Creators" class="w-full glass-input rounded-lg px-4 py-3 text-sm">
+                        <input type="text" id="h-audience" value="Content Creators" class="w-full glass-input px-4 py-3 text-sm">
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Tone Matrix</label>
-                        <select id="h-tone" class="w-full glass-input rounded-lg px-4 py-3 text-sm">
+                        <select id="h-tone" class="w-full glass-input px-4 py-3 text-sm">
                             <option value="Aggressive & Brutally Honest">Aggressive & Brutally Honest</option>
                             <option value="Curiosity Gap (Hold a secret)">Curiosity Gap (Hold a secret)</option>
                             <option value="Contrarian (Challenge the norm)">Contrarian (Challenge the norm)</option>
@@ -182,30 +182,30 @@
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Core Topic</label>
-                        <textarea id="h-topic" rows="3" class="w-full glass-input rounded-lg px-4 py-3 text-sm resize-none" placeholder="Enter core concept..."></textarea>
+                        <textarea id="h-topic" rows="3" class="w-full glass-input px-4 py-3 text-sm resize-none" placeholder="Enter core concept..."></textarea>
                     </div>
                 </div>
 
                 <div id="inputs-script" class="hidden space-y-4 flex-grow flex flex-col">
                     <div>
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1"><i class="fa-solid fa-crosshairs mr-1"></i> Target URL</label>
-                        <input type="url" id="s-url" class="w-full glass-input rounded-lg px-4 py-3 text-sm" placeholder="Paste link to crush...">
+                        <input type="url" id="s-url" class="w-full glass-input px-4 py-3 text-sm" placeholder="Paste link to crush...">
                     </div>
                     <div class="flex-grow flex flex-col">
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1 mt-2"><i class="fa-solid fa-code mr-1"></i> Raw Script Input</label>
-                        <textarea id="s-raw" class="w-full flex-grow min-h-[180px] glass-input rounded-lg px-4 py-3 text-sm resize-none" placeholder="Paste script or notes..."></textarea>
+                        <textarea id="s-raw" class="w-full flex-grow min-h-[180px] glass-input px-4 py-3 text-sm resize-none" placeholder="Paste script or notes..."></textarea>
                     </div>
                 </div>
 
-                <button onclick="createShockwave(event); igniteEngine();" id="btn-ignite" class="w-full premium-btn py-4 rounded-xl font-black tracking-widest uppercase text-xs mt-6 shadow-xl">
+                <button onclick="createShockwave(event); igniteEngine();" id="btn-ignite" class="w-full premium-btn py-4 rounded-xl font-black tracking-widest uppercase text-xs mt-6 shadow-lg">
                     <i class="fa-solid fa-bolt mr-2"></i> Ignite Engine
                 </button>
             </div>
 
-            <!-- RIGHT OUTPUT PANEL (CRYSTAL GLASS) -->
+            <!-- RIGHT OUTPUT PANEL (PURE GLASS) -->
             <div class="glass-panel flex-grow p-6 flex flex-col justify-center min-h-[500px] relative">
                 
-                <div id="loading" class="hidden text-center absolute inset-0 flex flex-col items-center justify-center bg-black/40 rounded-[20px] backdrop-blur-md z-20">
+                <div id="loading" class="hidden text-center absolute inset-0 flex flex-col items-center justify-center bg-black/30 rounded-[24px] backdrop-blur-md z-20">
                     <i class="fa-solid fa-circle-notch fa-spin text-5xl text-theme mb-4"></i>
                     <h2 class="anime-title text-xl tracking-widest uppercase text-white font-bold">Extracting Matrix...</h2>
                 </div>
@@ -215,10 +215,10 @@
                     <p class="text-xs font-mono tracking-[0.2em] uppercase text-gray-300">Awaiting Target</p>
                 </div>
 
-                <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
+                <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2">
                     <div class="bg-black/20 border border-white/10 p-5 rounded-2xl relative">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest">Alpha</span>
+                            <span class="text-[10px] bg-orange-900/60 text-white px-2 py-1 rounded font-black uppercase tracking-widest">Alpha</span>
                             <span class="text-[10px] text-theme font-black tracking-widest">SCORE: <span id="scoreA" class="text-theme text-lg font-black inline-block">0</span><span class="text-xs text-gray-400">/100</span></span>
                         </div>
                         <h3 id="textA" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
@@ -227,7 +227,7 @@
 
                     <div class="bg-black/20 border border-white/10 p-5 rounded-2xl relative">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest">Beta</span>
+                            <span class="text-[10px] bg-orange-900/60 text-white px-2 py-1 rounded font-black uppercase tracking-widest">Beta</span>
                             <span class="text-[10px] text-theme font-black tracking-widest">SCORE: <span id="scoreB" class="text-theme text-lg font-black inline-block">0</span><span class="text-xs text-gray-400">/100</span></span>
                         </div>
                         <h3 id="textB" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
@@ -235,13 +235,13 @@
                     </div>
                 </div>
 
-                <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
+                <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2">
                     <div class="bg-black/20 border border-white/10 p-5 rounded-2xl flex justify-between items-center">
                         <div><h3 class="text-[11px] font-black tracking-widest uppercase text-theme mb-1">Retention Score</h3></div>
                         <div class="text-4xl font-black text-theme"><span id="s-score" class="inline-block">0</span><span class="text-lg opacity-40">/100</span></div>
                     </div>
                     <div class="bg-black/20 border border-white/10 p-5 rounded-2xl">
-                        <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest mb-3 inline-block">Master Script</span>
+                        <span class="text-[10px] bg-orange-900/60 text-white px-2 py-1 rounded font-black uppercase tracking-widest mb-3 inline-block">Master Script</span>
                         <p id="s-master" class="matrix-text text-sm text-gray-100 leading-relaxed font-mono whitespace-pre-line"></p>
                         <button onclick="copyText('s-master')" class="mt-4 w-full bg-white/10 hover:bg-white/20 border border-white/10 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy Script</button>
                     </div>
@@ -252,27 +252,25 @@
 
     <script>
         let currentMode = 'hook'; let isMuted = true; let isLuxuryMode = false; let currentAura = 0;
-        const videos = ["https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4", "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/your_name.mp4", "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(1).mp4"];
-        const themes = ['', 'theme-blue', 'theme-purple'];
+        const videos = [
+            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4", 
+            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/your_name.mp4", 
+            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(1).mp4"
+        ];
 
         document.addEventListener("DOMContentLoaded", () => { document.getElementById('bg-vid').play().catch(e => console.log("Auto-play blocked")); });
 
-        // PROFILE MENU LOGIC
         function toggleProfileMenu(e) {
             e.stopPropagation();
-            const menu = document.getElementById('profile-menu');
-            const arrow = document.getElementById('profile-arrow');
+            const menu = document.getElementById('profile-menu'); const arrow = document.getElementById('profile-arrow');
             menu.classList.toggle('active');
             arrow.style.transform = menu.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
         }
 
         document.addEventListener('click', function(e) {
-            const menu = document.getElementById('profile-menu');
-            const wrapper = document.getElementById('profile-wrapper');
-            const arrow = document.getElementById('profile-arrow');
+            const menu = document.getElementById('profile-menu'); const wrapper = document.getElementById('profile-wrapper'); const arrow = document.getElementById('profile-arrow');
             if (menu && menu.classList.contains('active') && !wrapper.contains(e.target)) {
-                menu.classList.remove('active');
-                arrow.style.transform = 'rotate(0deg)';
+                menu.classList.remove('active'); arrow.style.transform = 'rotate(0deg)';
             }
         });
 
@@ -326,20 +324,21 @@
             window.requestAnimationFrame(step);
         }
 
+        /* ONLY CHANGES VIDEO NOW - THEMES ARE REMOVED */
         function cycleAura(e) {
             if (isLuxuryMode) return; createShockwave(e);
             const vid = document.getElementById('bg-vid'); vid.style.opacity = 0; 
             setTimeout(() => { 
                 currentAura = (currentAura + 1) % videos.length; vid.src = videos[currentAura]; vid.play();
-                document.body.className = `p-4 md:p-8 pb-32 ${themes[currentAura]}`; vid.style.opacity = 0.85; 
+                vid.style.opacity = 0.9; 
             }, 300);
         }
 
         function toggleDomainExpansion(e) {
             createShockwave(e); const body = document.body; const icon = document.getElementById('theme-icon'); 
             isLuxuryMode = !isLuxuryMode;
-            if (isLuxuryMode) { body.className = 'p-4 md:p-8 pb-32 theme-luxury'; icon.className = 'fa-solid fa-eye text-lg'; } 
-            else { body.className = `p-4 md:p-8 pb-32 ${themes[currentAura]}`; icon.className = 'fa-solid fa-crown text-lg'; }
+            if (isLuxuryMode) { body.classList.add('theme-luxury'); icon.className = 'fa-solid fa-eye text-lg'; } 
+            else { body.classList.remove('theme-luxury'); icon.className = 'fa-solid fa-crown text-lg'; }
         }
 
         function toggleAudio(e) {
