@@ -7,43 +7,38 @@ from flask import Flask, render_template_string, request, jsonify
 app = Flask(__name__)
 
 SAMBANOVA_API_KEY = os.environ.get("SAMBANOVA_API_KEY")
-SAMBANOVA_URL = "[https://api.sambanova.ai/v1/chat/completions](https://api.sambanova.ai/v1/chat/completions)"
+SAMBANOVA_URL = "https://api.sambanova.ai/v1/chat/completions"
 
 HOOK_SYSTEM_PROMPT = """
-You are Hook Forge v2.0, an elite 9-figure direct-response copywriter and behavioral psychologist. 
-Your singular goal is to craft hooks that paralyze the user's thumb and force them to watch. You despise polite, boring "AI-sounding" text.
-STRICT RULES:
-1. NO AI-SPEAK: Never use words like "Unlock", "Delve", "Discover", "Elevate", "In today's world", "Embark", "Hey guys". If you use these, you fail.
-2. BE HUMAN & RUTHLESS: Write like a slightly aggressive, highly authoritative expert speaking directly to a friend. Start mid-thought.
-3. PSYCHOLOGICAL TRIGGERS: Use 'The Curiosity Gap', 'Fear of Missing Out (FOMO)', 'Contrarian Truths', or 'Negativity Bias'.
-4. EXTREME BREVITY: Keep hooks under 15 words. Punchy. Visceral.
-The user will provide: Topic, Niche, Audience, and Tone.
-You must output exactly this JSON structure:
+You are Hook Forge v2.0. Write short, punchy hooks (under 15 words).
+OUTPUT STRICTLY IN JSON FORMAT ONLY. Do not write any introduction or conclusion text.
 {
-  "hook_a": { "text": "High-tension hook text", "score": 95, "reasoning": "Actionable tactical fix", "psychology": "Deep psychological breakdown" },
-  "hook_b": { "text": "Contrarian hook text", "score": 98, "reasoning": "Actionable tactical fix", "psychology": "Deep psychological breakdown" },
-  "dna_comparison": "Direct ruthless comparison of Hook A vs Hook B."
+  "hook_a": { "text": "High-tension hook text", "score": 95, "reasoning": "Reason", "psychology": "Psychology" },
+  "hook_b": { "text": "Contrarian hook text", "score": 98, "reasoning": "Reason", "psychology": "Psychology" },
+  "dna_comparison": "Comparison text"
 }
 """
 
 SCRIPT_SYSTEM_PROMPT = """
-You are Script Forge, an elite 9-figure Short-Form Content Strategist and Behavioral Psychologist. 
-Your only objective is to maximize AUDIENCE RETENTION. You transform weak, boring inputs into highly aggressive, fast-paced, and dopamine-driven viral scripts.
-YOUR TRAINING & CONDITIONING:
-❌ THE BANNED "AI" DICTIONARY: "Unlock", "Delve", "Discover", "Crucial", "Game-changer", "Hey guys". 
-✅ THE "RETENTION" RULES:
-1. THE 3-SECOND RULE: Trigger an immediate emotional response. 
-2. EXTREME BREVITY: No sentence longer than 12 words. Cut adjectives. 
-3. CONVERSATIONAL TONE: Write exactly how a fast-talking YouTuber speaks.
-YOUR TASK:
-Rewrite the user's raw script. Output strictly in JSON format:
+You are Script Forge. Rewrite the script to maximize retention.
+OUTPUT STRICTLY IN JSON FORMAT ONLY. Do not write any introduction or conclusion text.
 {
   "retention_score": 98,
-  "hook_extracted": "The explosive 1-2 sentence hook",
-  "master_script": "The FULL upgraded, fast-paced script",
-  "psychology_breakdown": "Explain exactly which psychological triggers you used"
+  "hook_extracted": "The explosive hook",
+  "master_script": "The FULL upgraded script",
+  "psychology_breakdown": "Explanation"
 }
 """
+
+def clean_json_output(text):
+    """Smart regex function to extract JSON even if AI adds extra text"""
+    try:
+        match = re.search(r'\{.*\}', text, re.DOTALL)
+        if match:
+            return json.loads(match.group(0))
+        return json.loads(text)
+    except:
+        return None
 
 @app.route('/')
 def home():
@@ -55,38 +50,31 @@ def forge_hook():
     d = request.json
     p = f"Topic: {d.get('topic')}\nNiche: {d.get('niche')}\nAudience: {d.get('audience')}\nTone: {d.get('tone')}"
     try:
-        r = requests.post(SAMBANOVA_URL, json={"model": "Meta-Llama-3.3-70B-Instruct", "messages": [{"role": "system", "content": HOOK_SYSTEM_PROMPT}, {"role": "user", "content": p}]}, headers={"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"})
-        return jsonify(json.loads(r.json()['choices'][0]['message']['content'].strip()))
+        r = requests.post(SAMBANOVA_URL, json={"model": "Meta-Llama-3.3-70B-Instruct", "messages": [{"role": "system", "content": HOOK_SYSTEM_PROMPT}, {"role": "user", "content": p}], "temperature": 0.4}, headers={"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"})
+        raw_text = r.json()['choices'][0]['message']['content']
+        parsed_json = clean_json_output(raw_text)
+        
+        if parsed_json:
+            return jsonify(parsed_json)
+        return jsonify({"error": "AI response was unstructured. Click Ignite again."})
     except Exception as e:
-        return jsonify({"error": "Failed to parse AI output."})
+        return jsonify({"error": str(e)})
 
 @app.route('/forge_script', methods=['POST'])
 def forge_script():
     d = request.json
     s = d.get('script', '')
     u = d.get('url', '').strip()
-    i = ""
-    if u:
-        try:
-            res = requests.get(u, headers={"User-Agent": "Mozilla/5.0"}, timeout=5)
-            t = re.search(r'<title>(.*?)</title>', res.text, re.IGNORECASE)
-            i = f"\n\n🚨 TARGET: Crush competitor video '{t.group(1)}'." if t else f"\n\n🚨 TARGET URL: {u}."
-        except: 
-            i = f"\n\n🚨 TARGET URL: {u}."
     try:
-        r = requests.post(SAMBANOVA_URL, json={"model": "Meta-Llama-3.3-70B-Instruct", "messages": [{"role": "system", "content": SCRIPT_SYSTEM_PROMPT}, {"role": "user", "content": s + i}]}, headers={"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"})
-        c = r.json()['choices'][0]['message']['content'].strip()
+        r = requests.post(SAMBANOVA_URL, json={"model": "Meta-Llama-3.3-70B-Instruct", "messages": [{"role": "system", "content": SCRIPT_SYSTEM_PROMPT}, {"role": "user", "content": s + " Target URL: " + u}], "temperature": 0.4}, headers={"Authorization": f"Bearer {SAMBANOVA_API_KEY}", "Content-Type": "application/json"})
+        raw_text = r.json()['choices'][0]['message']['content']
+        parsed_json = clean_json_output(raw_text)
         
-        # FIXED CLIPBOARD BUG HERE: No more direct backticks!
-        backticks = chr(96) * 3
-        if c.startswith(backticks + "json"): 
-            c = c[7:-3].strip()
-        elif c.startswith(backticks): 
-            c = c[3:-3].strip()
-            
-        return jsonify(json.loads(c))
+        if parsed_json:
+            return jsonify(parsed_json)
+        return jsonify({"error": "AI response was unstructured. Click Ignite again."})
     except Exception as e:
-        return jsonify({"error": "Failed to parse AI output."})
+        return jsonify({"error": str(e)})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
