@@ -10,8 +10,8 @@
     <style>
         /* 🎨 DYNAMIC THEMES */
         :root {
-            --c1: #dc2626; /* Crimson Red */
-            --c2: #f97316; /* Bright Orange */
+            --c1: #dc2626; 
+            --c2: #f97316; 
             --border: rgba(239, 68, 68, 0.4); 
             --glow: rgba(239, 68, 68, 0.5); 
             --bg-glow: rgba(239, 68, 68, 0.15);
@@ -37,36 +37,38 @@
 
         html, body { margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; position: relative; }
         
-        /* 🌟 Z-INDEX STACKING STRICTLY LOCKED */
+        /* 🌟 VIDEO BACKGROUND Z-INDEX FIXED */
         .bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 1; opacity: 1; transition: opacity 0.5s ease; }
-        .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.35); z-index: 2; pointer-events: none; }
+        .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.2); z-index: 2; pointer-events: none; }
         #dashboard-viewport { z-index: 10; position: relative; }
         
-        /* 💎 EXACT DARK CRYSTAL GLASS FROM YOUR FAVORITE SCREENSHOT */
+        /* 💎 ZERO BLUR CRYSTAL CLEAR PANEL */
         .glass-panel {
-            background: rgba(15, 15, 15, 0.4) !important;
-            backdrop-filter: blur(8px) !important; 
-            -webkit-backdrop-filter: blur(8px) !important; 
-            border: 1px solid var(--border) !important;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); 
+            background: rgba(0, 0, 0, 0.45) !important; /* Sirf dark tint taaki white text padha ja sake */
+            backdrop-filter: none !important; /* ZERO BLUR - POORA CLEAR */
+            -webkit-backdrop-filter: none !important; 
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.4) !important; /* Glass top reflection */
+            border-left: 1px solid rgba(255, 255, 255, 0.25) !important; 
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6); 
             transition: all 0.4s ease;
         }
         
         .anime-title { font-family: 'Cinzel', serif; color: var(--c2); text-shadow: 0 0 15px var(--glow); transition: color 0.4s, text-shadow 0.4s;}
         .text-theme { color: var(--c2) !important; transition: color 0.4s; }
         
-        /* SHARP INPUTS */
+        /* CLEAR INPUTS */
         .glass-input { 
             background: rgba(0, 0, 0, 0.5) !important; 
-            border: 1px solid rgba(255,255,255,0.08) !important; 
+            backdrop-filter: none !important;
+            border: 1px solid rgba(255,255,255,0.15) !important; 
             color: #fff; transition: all 0.3s; 
             border-radius: 8px;
         }
         .glass-input:focus { outline: none; border-color: var(--c2) !important; box-shadow: 0 0 10px var(--glow) !important; background: rgba(0,0,0,0.8) !important; }
         select.glass-input option { background: #111; color: #fff; }
         
-        /* PREMIUM BUTTON */
         .premium-btn { position: relative; overflow: hidden; cursor: pointer; background: linear-gradient(45deg, var(--c1), var(--c2)); border: 1px solid var(--border); box-shadow: 0 0 15px var(--glow); transition: all 0.4s ease; color: white; }
         .premium-btn:hover { transform: translateY(-2px); box-shadow: 0 0 25px var(--c2); filter: brightness(1.1); }
         
@@ -110,7 +112,7 @@
 </head>
 <body class="p-4 md:p-8 pb-32 flex flex-col items-center">
 
-    <!-- Z-INDEX 1: VIDEO WILL 100% BE VISIBLE -->
+    <!-- Z-INDEX 1: VIDEO WILL PLAY CRYSTAL CLEAR -->
     <video id="bg-vid" autoplay muted loop playsinline class="bg-video">
         <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
     </video>
@@ -128,7 +130,7 @@
         <i id="audio-icon" class="fa-solid fa-volume-xmark text-sm"></i>
     </div>
 
-    <!-- Z-INDEX 10: MAIN DASHBOARD SITS ON TOP -->
+    <!-- Z-INDEX 10: MAIN DASHBOARD -->
     <div id="dashboard-viewport" class="w-full max-w-6xl flex-col flex mt-20 mb-10 px-2">
         
         <!-- HEADER WITH SC PROFILE -->
@@ -174,7 +176,7 @@
 
         <div class="flex flex-col lg:flex-row gap-6 w-full items-stretch">
             
-            <!-- LEFT INPUT PANEL (DARK CRYSTAL GLASS) -->
+            <!-- LEFT INPUT PANEL (ZERO BLUR CRYSTAL GLASS) -->
             <div class="glass-panel w-full lg:w-1/3 p-6 flex flex-col justify-between">
                 <div id="inputs-hook" class="space-y-4">
                     <div>
@@ -219,10 +221,10 @@
                 </button>
             </div>
 
-            <!-- RIGHT OUTPUT PANEL (DARK CRYSTAL GLASS) -->
+            <!-- RIGHT OUTPUT PANEL (ZERO BLUR CRYSTAL GLASS) -->
             <div class="glass-panel flex-grow p-6 flex flex-col justify-center min-h-[500px] relative">
                 
-                <div id="loading" class="hidden text-center absolute inset-0 flex flex-col items-center justify-center bg-black/60 rounded-[20px] backdrop-blur-md z-20">
+                <div id="loading" class="hidden text-center absolute inset-0 flex flex-col items-center justify-center bg-black/60 rounded-[20px] z-20">
                     <i class="fa-solid fa-circle-notch fa-spin text-5xl text-theme mb-4"></i>
                     <h2 class="anime-title text-xl tracking-widest uppercase text-white font-bold">Extracting Matrix...</h2>
                 </div>
@@ -345,7 +347,6 @@
             window.requestAnimationFrame(step);
         }
 
-        /* 🌟 JS THEME BUG FIXED: Safely adds/removes classes without destroying layout */
         function cycleAura(e) {
             if (isLuxuryMode) return; createShockwave(e);
             const vid = document.getElementById('bg-vid'); vid.style.opacity = 0; 
