@@ -11,15 +11,15 @@
         /* DYNAMIC THEMES */
         :root {
             --c1: #ea580c; --c2: #f97316; --border: #fdba74; 
-            --glow: rgba(249,115,22, 0.4); --bg-glow: rgba(249,115,22, 0.15);
+            --glow: rgba(249,115,22, 0.5); --bg-glow: rgba(249,115,22, 0.15);
         }
         body.theme-blue {
             --c1: #1d4ed8; --c2: #3b82f6; --border: #93c5fd; 
-            --glow: rgba(59,130,246, 0.4); --bg-glow: rgba(59,130,246, 0.15);
+            --glow: rgba(59,130,246, 0.5); --bg-glow: rgba(59,130,246, 0.15);
         }
         body.theme-purple {
             --c1: #7e22ce; --c2: #a855f7; --border: #d8b4fe; 
-            --glow: rgba(168,85,247, 0.4); --bg-glow: rgba(168,85,247, 0.15);
+            --glow: rgba(168,85,247, 0.5); --bg-glow: rgba(168,85,247, 0.15);
         }
         body.theme-luxury {
             --c1: #ffffff; --c2: #ffffff; --border: rgba(255,255,255,0.2); 
@@ -28,42 +28,50 @@
 
         body { margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif; background-color: #000; color: #fff; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; position: relative; }
         
-        .bg-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none; transition: opacity 0.5s ease; opacity: 0.8; }
-        .video-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.2); z-index: 1; pointer-events: none; }
+        .bg-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none; transition: opacity 0.5s ease; opacity: 0.85; }
+        .video-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.15); z-index: 1; pointer-events: none; }
         
-        /* PURE FROSTED GLASS EFFECT */
+        /* 💎 CRYSTAL CLEAR FROSTED GLASS EFFECT */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.02); 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.1); /* Super low opacity for max video visibility */
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); /* Heavy blur */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.3); /* Glass Edge Reflection */
+            border-left: 1px solid rgba(255, 255, 255, 0.2); /* Glass Edge Reflection */
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
             z-index: 10; transition: all 0.5s ease;
         }
         
         .anime-title { font-family: 'Cinzel', serif; color: var(--c2); text-shadow: 0 0 20px var(--glow); transition: color 0.5s, text-shadow 0.5s;}
         .text-theme { color: var(--c2) !important; transition: color 0.5s; }
         
-        .glass-input { background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; transition: all 0.3s; }
-        .glass-input:focus { outline: none; border-color: var(--c2); box-shadow: 0 0 10px var(--glow); background: rgba(0,0,0,0.8); }
+        .glass-input { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.1); color: #fff; transition: all 0.3s; }
+        .glass-input:focus { outline: none; border-color: var(--c2); box-shadow: 0 0 10px var(--glow); background: rgba(0,0,0,0.7); }
         select.glass-input option { background: #111; color: #fff; }
         
         .premium-btn { position: relative; overflow: hidden; cursor: pointer; background: linear-gradient(45deg, var(--c1), var(--c2)); border: 1px solid var(--border); box-shadow: 0 0 15px var(--glow); transition: all 0.3s ease; color: white; }
         .premium-btn:hover { transform: translateY(-2px); box-shadow: 0 0 25px var(--c2); filter: brightness(1.2); }
         
-        /* CRAZY FEATURE 1: SHOCKWAVE */
-        .shockwave { position: absolute; background: rgba(255, 255, 255, 0.7); border-radius: 50%; transform: scale(0); animation: ripple 0.5s cubic-bezier(0.1, 0.8, 0.3, 1); pointer-events: none; }
-        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+        /* ⚡ TRUE ELECTRIC SHOCKWAVE */
+        .shockwave { 
+            position: absolute; background: transparent; 
+            border: 2px solid var(--c2); border-radius: 50%; 
+            box-shadow: 0 0 15px var(--glow), inset 0 0 15px var(--glow);
+            transform: scale(0); animation: electricRipple 0.6s ease-out; pointer-events: none; 
+        }
+        @keyframes electricRipple { 
+            0% { transform: scale(0); opacity: 1; border-width: 4px; } 
+            100% { transform: scale(4.5); opacity: 0; border-width: 0px; } 
+        }
 
         .tab-btn { padding: 10px 20px; font-size: 11px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 8px; transition: all 0.3s; cursor: pointer; }
         .tab-active { background: var(--bg-glow); border: 1px solid var(--c2); color: #fff; box-shadow: 0 0 10px var(--glow); }
         .tab-inactive { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.05); color: rgba(255, 255, 255, 0.4); }
 
-        /* FIXED FLOATING BUTTONS (Absolute Top Corners) */
         .floating-btn { cursor: pointer; z-index: 9999 !important; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); padding: 12px; border-radius: 50%; transition: all 0.3s; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border: 1px solid var(--glow); color: var(--c2); position: fixed; }
         .floating-btn:hover { transform: scale(1.1); background: var(--bg-glow); }
 
-        /* CRAZY FEATURE 2: SLOT MACHINE */
         @keyframes scoreLock { 0% { transform: scale(1); text-shadow: 0 0 5px var(--glow); } 50% { transform: scale(1.4); text-shadow: 0 0 30px var(--c2); color: #fff; } 100% { transform: scale(1); text-shadow: 0 0 10px var(--glow); } }
         .score-animate { animation: scoreLock 0.5s ease-out; }
 
@@ -74,20 +82,18 @@
         body.theme-luxury .bg-video, body.theme-luxury .video-overlay { opacity: 0 !important; visibility: hidden; }
         body.theme-luxury .text-theme { color: #fff !important; }
         
-        /* CRAZY FEATURE 3: MATRIX TEXT */
         .matrix-text { white-space: pre-line; word-break: break-word; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--glow); border-radius: 4px; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-8 pb-32">
 
     <video id="bg-vid" autoplay muted loop playsinline class="bg-video">
         <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
 
-    <!-- CRAZY FEATURE 4: MULTIVERSE / THEME TOGGLES -->
     <div id="multiverse-btn" class="floating-btn" style="top: 20px; left: 20px;" onclick="cycleAura(event)">
         <i class="fa-solid fa-infinity text-xl"></i>
     </div>
@@ -98,18 +104,31 @@
         <i id="audio-icon" class="fa-solid fa-volume-xmark text-sm"></i>
     </div>
 
-    <!-- OVERLAP FIX: mt-28 gives breathing room from the top buttons -->
-    <div id="dashboard-viewport" class="w-full max-w-6xl flex-col relative z-10 flex mt-24 mb-10 px-2">
+    <div id="dashboard-viewport" class="w-full max-w-6xl flex-col relative z-10 flex mt-20 mb-10 px-2">
         
         <div class="w-full flex flex-col md:flex-row justify-between items-center mb-6">
-            <div class="text-center md:text-left mb-4 md:mb-0">
-                <h1 class="anime-title text-4xl font-black mb-1 tracking-wide" id="main-title">HOOK FORGE</h1>
-                <p class="text-[10px] tracking-[0.3em] text-gray-300 font-bold uppercase"><i class="fa-solid fa-bolt mr-1 text-theme"></i> Premium Edition</p>
+            
+            <div class="flex justify-between w-full md:w-auto items-center mb-5 md:mb-0">
+                <div class="text-left">
+                    <h1 class="anime-title text-4xl font-black mb-1 tracking-wide" id="main-title">HOOK FORGE</h1>
+                    <p class="text-[10px] tracking-[0.3em] text-gray-300 font-bold uppercase"><i class="fa-solid fa-bolt mr-1 text-theme"></i> Premium Edition</p>
+                </div>
+                
+                <div class="flex md:hidden items-center bg-black/40 p-1 rounded-full border border-white/10 backdrop-blur-md cursor-pointer hover:bg-white/10 transition shadow-lg border-theme">
+                    <img src="https://ui-avatars.com/api/?name=Santosh+Choudhary&background=000&color=fff" alt="Profile" class="w-8 h-8 rounded-full border border-theme">
+                </div>
             </div>
             
-            <div class="flex space-x-2 bg-black/40 p-1.5 rounded-xl border border-white/10 backdrop-blur-md">
-                <button id="tab-hook" onclick="switchMode('hook')" class="tab-btn tab-active"><i class="fa-solid fa-fire mr-1"></i> Hook Forge</button>
-                <button id="tab-script" onclick="switchMode('script')" class="tab-btn tab-inactive"><i class="fa-solid fa-scroll mr-1"></i> Script Forge</button>
+            <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+                <div class="flex space-x-2 bg-black/40 p-1.5 rounded-xl border border-white/10 backdrop-blur-md w-full md:w-auto justify-center">
+                    <button id="tab-hook" onclick="switchMode('hook')" class="tab-btn tab-active"><i class="fa-solid fa-fire mr-1"></i> Hook Forge</button>
+                    <button id="tab-script" onclick="switchMode('script')" class="tab-btn tab-inactive"><i class="fa-solid fa-scroll mr-1"></i> Script Forge</button>
+                </div>
+
+                <div class="hidden md:flex items-center gap-2 bg-black/40 p-1 pr-4 rounded-full border border-white/10 backdrop-blur-md cursor-pointer hover:bg-white/10 transition shadow-lg border-theme">
+                    <img src="https://ui-avatars.com/api/?name=Santosh+Choudhary&background=000&color=fff" alt="Profile" class="w-8 h-8 rounded-full border border-theme">
+                    <span class="text-[10px] font-bold tracking-widest uppercase text-white">Santosh</span>
+                </div>
             </div>
         </div>
 
@@ -128,7 +147,7 @@
                         <input type="text" id="h-audience" value="Content Creators" class="w-full glass-input rounded-lg px-4 py-3 text-sm">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Psychological Tone Matrix</label>
+                        <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Tone Matrix</label>
                         <select id="h-tone" class="w-full glass-input rounded-lg px-4 py-3 text-sm">
                             <option value="Aggressive & Brutally Honest">Aggressive & Brutally Honest</option>
                             <option value="Curiosity Gap (Hold a secret)">Curiosity Gap (Hold a secret)</option>
@@ -176,25 +195,25 @@
                     <h2 class="anime-title text-xl tracking-widest uppercase text-white font-bold">Extracting Matrix...</h2>
                 </div>
 
-                <div id="empty-state" class="text-center opacity-60">
+                <div id="empty-state" class="text-center opacity-70">
                     <i class="fa-solid fa-crosshairs text-6xl text-theme opacity-50 mb-4" id="empty-icon"></i>
                     <p class="text-xs font-mono tracking-[0.2em] uppercase text-gray-300">Awaiting Target</p>
                 </div>
 
                 <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
-                    <div class="bg-black/40 border border-white/10 p-5 rounded-2xl relative">
+                    <div class="bg-black/30 border border-white/10 p-5 rounded-2xl relative">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest">Alpha Variant</span>
-                            <span class="text-[10px] text-theme font-black tracking-widest">SCORE: <span id="scoreA" class="text-theme text-xl font-black inline-block">0</span><span class="text-xs text-gray-500">/100</span></span>
+                            <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest">Alpha</span>
+                            <span class="text-[10px] text-theme font-black tracking-widest">SCORE: <span id="scoreA" class="text-theme text-lg font-black inline-block">0</span><span class="text-xs text-gray-500">/100</span></span>
                         </div>
                         <h3 id="textA" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
                         <button onclick="copyText('textA')" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] px-3 py-1.5 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
                     </div>
 
-                    <div class="bg-black/40 border border-white/10 p-5 rounded-2xl relative">
+                    <div class="bg-black/30 border border-white/10 p-5 rounded-2xl relative">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest">Beta Variant</span>
-                            <span class="text-[10px] text-theme font-black tracking-widest">SCORE: <span id="scoreB" class="text-theme text-xl font-black inline-block">0</span><span class="text-xs text-gray-500">/100</span></span>
+                            <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest">Beta</span>
+                            <span class="text-[10px] text-theme font-black tracking-widest">SCORE: <span id="scoreB" class="text-theme text-lg font-black inline-block">0</span><span class="text-xs text-gray-500">/100</span></span>
                         </div>
                         <h3 id="textB" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
                         <button onclick="copyText('textB')" class="bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] px-3 py-1.5 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
@@ -202,11 +221,11 @@
                 </div>
 
                 <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
-                    <div class="bg-black/40 border border-white/10 p-5 rounded-2xl flex justify-between items-center">
+                    <div class="bg-black/30 border border-white/10 p-5 rounded-2xl flex justify-between items-center">
                         <div><h3 class="text-[11px] font-black tracking-widest uppercase text-theme mb-1">Retention Score</h3></div>
                         <div class="text-4xl font-black text-theme"><span id="s-score" class="inline-block">0</span><span class="text-lg opacity-40">/100</span></div>
                     </div>
-                    <div class="bg-black/40 border border-white/10 p-5 rounded-2xl">
+                    <div class="bg-black/30 border border-white/10 p-5 rounded-2xl">
                         <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest mb-3 inline-block">Master Script</span>
                         <p id="s-master" class="matrix-text text-sm text-gray-200 leading-relaxed font-mono whitespace-pre-line"></p>
                         <button onclick="copyText('s-master')" class="mt-4 w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy Script</button>
@@ -278,15 +297,15 @@
             const vid = document.getElementById('bg-vid'); vid.style.opacity = 0; 
             setTimeout(() => { 
                 currentAura = (currentAura + 1) % videos.length; vid.src = videos[currentAura]; vid.play();
-                document.body.className = `p-4 md:p-8 ${themes[currentAura]}`; vid.style.opacity = 0.8; 
+                document.body.className = `p-4 md:p-8 pb-32 ${themes[currentAura]}`; vid.style.opacity = 0.85; 
             }, 300);
         }
 
         function toggleDomainExpansion(e) {
             createShockwave(e); const body = document.body; const icon = document.getElementById('theme-icon'); 
             isLuxuryMode = !isLuxuryMode;
-            if (isLuxuryMode) { body.className = 'p-4 md:p-8 theme-luxury'; icon.className = 'fa-solid fa-eye text-lg'; } 
-            else { body.className = `p-4 md:p-8 ${themes[currentAura]}`; icon.className = 'fa-solid fa-crown text-lg'; }
+            if (isLuxuryMode) { body.className = 'p-4 md:p-8 pb-32 theme-luxury'; icon.className = 'fa-solid fa-eye text-lg'; } 
+            else { body.className = `p-4 md:p-8 pb-32 ${themes[currentAura]}`; icon.className = 'fa-solid fa-crown text-lg'; }
         }
 
         function toggleAudio(e) {
