@@ -37,6 +37,7 @@
 
         html, body { margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; position: relative; }
         
+        /* 🌟 VIDEO BACKGROUND Z-INDEX FIXED */
         .bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 1; opacity: 1; transition: opacity 0.5s ease; }
         .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.2); z-index: 2; pointer-events: none; }
         #dashboard-viewport { z-index: 10; position: relative; }
@@ -57,6 +58,7 @@
         .anime-title { font-family: 'Cinzel', serif; color: var(--c2); text-shadow: 0 0 15px var(--glow); transition: color 0.4s, text-shadow 0.4s;}
         .text-theme { color: var(--c2) !important; transition: color 0.4s; }
         
+        /* CLEAR INPUTS */
         .glass-input { background: rgba(0, 0, 0, 0.5) !important; backdrop-filter: none !important; border: 1px solid rgba(255,255,255,0.15) !important; color: #fff; transition: all 0.3s; border-radius: 8px; }
         .glass-input:focus { outline: none; border-color: var(--c2) !important; box-shadow: 0 0 10px var(--glow) !important; background: rgba(0,0,0,0.8) !important; }
         select.glass-input option { background: #111; color: #fff; }
@@ -122,6 +124,7 @@
 
     <div id="dashboard-viewport" class="w-full max-w-6xl flex-col flex mt-20 mb-10 px-2">
         
+        <!-- HEADER WITH DYNAMIC PROFILE -->
         <div class="w-full flex justify-between items-center mb-6">
             <div class="text-left">
                 <h1 class="anime-title text-3xl md:text-4xl font-black mb-1 tracking-wide" id="main-title">HOOK FORGE</h1>
@@ -137,6 +140,7 @@
                     <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform duration-300" id="profile-arrow"></i>
                 </button>
 
+                <!-- SAAS MENU -->
                 <div id="profile-menu" class="profile-menu">
                     <div class="px-4 py-4 border-b border-white/10 bg-black/60 rounded-t-[16px]">
                         <p id="menu-name-text" class="text-[13px] font-bold text-white tracking-wide truncate">Santosh Choudhary</p>
@@ -206,7 +210,7 @@
 
             <div class="glass-panel flex-grow p-6 flex flex-col justify-center min-h-[500px] relative">
                 
-                <div id="loading" class="hidden text-center absolute inset-0 flex flex-col items-center justify-center bg-black/60 rounded-[20px] z-20">
+                <div id="loading" class="hidden text-center absolute inset-0 flex flex-col items-center justify-center bg-black/60 rounded-[24px] z-20">
                     <i class="fa-solid fa-circle-notch fa-spin text-5xl text-theme mb-4"></i>
                     <h2 class="anime-title text-xl tracking-widest uppercase text-white font-bold">Extracting Matrix...</h2>
                 </div>
@@ -223,7 +227,7 @@
                             <span class="text-[10px] text-theme font-black tracking-widest">SCORE: <span id="scoreA" class="text-theme text-lg font-black inline-block">0</span><span class="text-xs text-gray-500">/100</span></span>
                         </div>
                         <h3 id="textA" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
-                        <button onclick="copyText('textA')" class="bg-white/10 hover:bg-white/20 border border-white/10 text-white text-[10px] px-3 py-1.5 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+                        <button onclick="copyText('textA')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-1.5 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
                     </div>
 
                     <div class="bg-black/40 border border-theme p-5 rounded-2xl relative">
@@ -232,7 +236,7 @@
                             <span class="text-[10px] text-theme font-black tracking-widest">SCORE: <span id="scoreB" class="text-theme text-lg font-black inline-block">0</span><span class="text-xs text-gray-500">/100</span></span>
                         </div>
                         <h3 id="textB" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
-                        <button onclick="copyText('textB')" class="bg-white/10 hover:bg-white/20 border border-white/10 text-white text-[10px] px-3 py-1.5 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+                        <button onclick="copyText('textB')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-1.5 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
                     </div>
                 </div>
 
@@ -244,13 +248,14 @@
                     <div class="bg-black/40 border border-theme p-5 rounded-2xl">
                         <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest mb-3 inline-block border border-theme">Master Script</span>
                         <p id="s-master" class="matrix-text text-sm text-gray-100 leading-relaxed font-mono whitespace-pre-line"></p>
-                        <button onclick="copyText('s-master')" class="mt-4 w-full bg-white/10 hover:bg-white/20 border border-white/10 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy Script</button>
+                        <button onclick="copyText('s-master')" class="mt-4 w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy Script</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ⚙️ PROFILE SETTINGS MODAL WITH YOUR SUPABASE IMAGES -->
     <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[10000] hidden items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 relative bg-black/90">
             <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -272,11 +277,12 @@
                 <div>
                     <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-3 text-center">Choose Premium Avatar</label>
                     <div class="flex gap-2 justify-center flex-wrap">
-                        <img src="https://pin.it/55DNmtWNp" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 1">
-                        <img src="https://pin.it/39RnjHu9L" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 2">
-                        <img src="https://pin.it/6sXlTrmq7" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 3">
-                        <img src="https://pin.it/4nL1pgXRN" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 4">
-                        <img src="https://pin.it/5mnnY53uM" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 5">
+                        <!-- TERE SUPABASE LINKS -->
+                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/a5f8a6d6c02976d90365c20c3cfb8a9c.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 1">
+                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/18b74f95f922675a4a35c8b9717dbf64.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 2">
+                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/pic2%20(1).jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 3">
+                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/c884012da9a7dc5ad426f4c1c8c36be8.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 4">
+                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/6e574195d99db9e244f4fe12b45b1759.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 5">
                     </div>
                 </div>
 
@@ -470,8 +476,10 @@
                 currentAura = (currentAura + 1) % videos.length; 
                 vid.src = videos[currentAura]; 
                 vid.play();
+                
                 document.body.classList.remove('theme-blue', 'theme-purple');
                 if(themes[currentAura]) document.body.classList.add(themes[currentAura]);
+                
                 vid.style.opacity = 1; 
             }, 300);
         }
@@ -479,8 +487,8 @@
         function toggleDomainExpansion(e) {
             createShockwave(e); const body = document.body; const icon = document.getElementById('theme-icon'); 
             isLuxuryMode = !isLuxuryMode;
-            if (isLuxuryMode) { body.className = 'p-4 md:p-8 pb-32 flex flex-col items-center theme-luxury'; icon.className = 'fa-solid fa-eye text-lg'; } 
-            else { body.className = `p-4 md:p-8 pb-32 flex flex-col items-center ${themes[currentAura]}`; icon.className = 'fa-solid fa-crown text-lg'; }
+            if (isLuxuryMode) { body.classList.add('theme-luxury'); icon.className = 'fa-solid fa-eye text-lg'; } 
+            else { body.classList.remove('theme-luxury'); icon.className = 'fa-solid fa-crown text-lg'; }
         }
 
         function toggleAudio(e) {
