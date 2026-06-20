@@ -35,13 +35,14 @@
             --glow: rgba(255,255,255,0.1); --bg-glow: transparent; background-color: #050505 !important;
         }
 
-        html, body { margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; position: relative; }
+        html, body { margin: 0; min-height: 100vh; font-family: 'Inter', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; position: relative; }
         
-        /* 🌟 VIDEO BACKGROUND - PERFECTLY CLEAR */
+        /* 🌟 MAIN VIDEO BACKGROUND - Dashboard & Core Entry share background video but are layered */
         .bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 1; opacity: 1; transition: opacity 0.5s ease; filter: brightness(1.1); }
         .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.2); z-index: 2; pointer-events: none; }
-        #dashboard-viewport { z-index: 10; position: relative; }
         
+        #core-view-viewport, #dashboard-viewport { z-index: 10; position: relative; width: 100vw; height: 100vh; top: 0; left: 0; display: flex; flex-direction: column; align-items: center; }
+
         /* 💎 ZERO BLUR CRYSTAL CLEAR PANEL */
         .glass-panel {
             background: rgba(0, 0, 0, 0.5) !important; 
@@ -105,207 +106,294 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--glow); border-radius: 4px; }
 
         /* TOAST NOTIFICATION */
-        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--c1); color: white; padding: 10px 20px; border-radius: 30px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; box-shadow: 0 5px 15px rgba(0,0,0,0.5); opacity: 0; transition: all 0.4s ease; z-index: 10000; }
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: #22c55e; color: white; padding: 10px 20px; border-radius: 30px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; box-shadow: 0 5px 15px rgba(0,0,0,0.5); opacity: 0; transition: all 0.4s ease; z-index: 20000; }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* CONFIRMATION POPUP */
+        #confirm-modal { position: fixed; inset: 0; bg-black/70 backdrop-blur-sm z-[15000] hidden items-center justify-center p-4; }
+        #confirm-box { w-full max-w-sm glass-panel p-8 bg-black/90 text-center; }
     </style>
 </head>
-<body class="p-4 md:p-8 pb-32 flex flex-col items-center">
+<body>
 
+    <!-- VIDEO BACKGROUND IS GLOBAL -->
     <video id="bg-vid" autoplay muted loop playsinline class="bg-video">
         <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
 
-    <div id="multiverse-btn" class="floating-btn" style="top: 20px; left: 20px;" onclick="cycleAura(event)">
+    <div id="multiverse-btn" class="floating-btn hidden" style="top: 20px; left: 20px;" onclick="cycleAura(event)">
         <i class="fa-solid fa-infinity text-xl"></i>
     </div>
-    <div id="theme-btn" class="floating-btn" style="top: 20px; right: 20px;" onclick="toggleDomainExpansion(event)">
+    <div id="theme-btn" class="floating-btn hidden" style="top: 20px; right: 20px;" onclick="toggleDomainExpansion(event)">
         <i id="theme-icon" class="fa-solid fa-crown text-lg"></i>
     </div>
-    <div id="audio-btn" class="floating-btn" style="bottom: 20px; right: 20px;" onclick="toggleAudio(event)">
+    <div id="audio-btn" class="floating-btn hidden" style="bottom: 20px; right: 20px;" onclick="toggleAudio(event)">
         <i id="audio-icon" class="fa-solid fa-volume-xmark text-sm"></i>
     </div>
 
     <!-- TOAST ALERT -->
     <div id="toast"><i class="fa-solid fa-check mr-2"></i> Action Completed</div>
 
-    <div id="dashboard-viewport" class="w-full max-w-6xl flex-col flex mt-20 mb-10 px-2">
+    <!-- 🚪 CONFIRM SIGN OUT MODAL -->
+    <div id="confirm-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[15000] hidden items-center justify-center p-4">
+        <div id="confirm-box" class="w-full max-w-sm glass-panel p-8 bg-black/90 text-center relative border border-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.3)]">
+            <i class="fa-solid fa-right-from-bracket text-6xl text-orange-500 mb-5 opacity-80 shadow-[0_0_15px_var(--glow)]"></i>
+            <h2 class="anime-title text-2xl mb-3 text-white">CORE DISCONNECT PROTOCOL</h2>
+            <p class="text-xs text-gray-300 font-mono tracking-wide leading-relaxed mb-8">Signing out will terminate current active session. User Matrix Data and Saved Vault (⭐) will remain safe. Disconnect Core Matrix?</p>
+            <div class="flex gap-4">
+                <button onclick="closeConfirmModal()" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-3 rounded uppercase font-bold transition-all">Cancel</button>
+                <button onclick="performSignOut()" class="flex-1 premium-btn py-3 rounded-xl font-black tracking-widest uppercase text-xs">Yes, Disconnect</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ⚙️ NEW IMMERSIVE SAAS ENTRY CORE SCREEN (Simulates Login Screen) -->
+    <div id="core-view-viewport" class="w-full h-full p-4 md:p-8 flex items-center justify-center">
+        <!-- Panel needs to be large like previous signup gate but as a dedicated view -->
+        <div class="glass-panel w-full max-w-lg p-10 flex flex-col items-center border border-theme shadow-[0_0_50px_var(--bg-glow)] relative">
+            <div class="text-left w-full border-b border-theme/30 pb-6 mb-10">
+                <h1 class="anime-title text-5xl font-black mb-3 tracking-wide">CORE ACCESS</h1>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em]"><i class="fa-solid fa-shield-halved mr-2 text-theme"></i> premium edition core matrix</p>
+            </div>
+            
+            <div id="entry-flow-data" class="w-full">
+                <!-- Data collection needs large preview -->
+                <div class="flex flex-col md:flex-row items-center gap-8 w-full mb-10">
+                    <div class="relative group">
+                        <img id="entry-avatar-preview" src="" class="w-32 h-32 rounded-full border-4 border-theme object-cover shadow-[0_0_30px_var(--glow)] hidden">
+                        <div id="entry-initial-wrapper" class="flex items-center justify-center bg-black/80 w-32 h-32 rounded-full border-4 border-theme shadow-[0_0_30px_var(--glow)]">
+                            <span id="entry-initial-text" class="text-5xl font-black text-white tracking-widest">SC</span>
+                        </div>
+                    </div>
+                    <div class="flex-grow space-y-5 w-full text-left">
+                        <h2 class="text-xl font-black text-white uppercase tracking-wider">Initialize Protocol</h2>
+                        <p id="entry-flow-p" class="text-xs text-gray-300 font-mono leading-relaxed h-[60px]">Entry parameters required. Provide User Identification Matrix and Profile Interface Array to forge core connection.</p>
+                    </div>
+                </div>
+
+                <div id="input-container-gate" class="space-y-4 mb-10 text-left">
+                    <div>
+                        <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">User Identification Matrix (Username)</label>
+                        <input type="text" id="gate-username" class="w-full glass-input px-4 py-3 text-sm font-bold tracking-wide" placeholder="Enter username..." maxlength="20">
+                    </div>
+                    <!-- Hidden unless new user -->
+                    <div id="gate-pic-container" class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">Profile Interface Array (Upload image)</label>
+                            <input type="file" id="gate-upload-pic" accept="image/*" class="w-full glass-input p-2 text-xs cursor-pointer" onchange="handleGateUpload(event)">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-3 text-center">Or Use Premium Avatar</label>
+                            <div class="flex gap-3 justify-center flex-wrap">
+                                <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/a5f8a6d6c02976d90365c20c3cfb8a9c.jpg" onclick="selectGatePic(this.src)" class="w-14 h-14 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
+                                <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/18b74f95f922675a4a35c8b9717dbf64.jpg" onclick="selectGatePic(this.src)" class="w-14 h-14 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
+                                <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/pic2%20(1).jpg" onclick="selectGatePic(this.src)" class="w-14 h-14 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
+                                <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/c884012da9a7dc5ad426f4c1c8c36be8.jpg" onclick="selectGatePic(this.src)" class="w-14 h-14 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
+                                <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/6e574195d99db9e244f4fe12b45b1759.jpg" onclick="selectGatePic(this.src)" class="w-14 h-14 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="handleCoreLogin()" class="w-full premium-btn py-5 rounded-2xl font-black tracking-widest uppercase text-xs shadow-[0_0_30px_var(--glow)]">
+                    <span id="gate-btn-span">Initialize Core Matrix</span> <i class="fa-solid fa-right-to-bracket ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD CONTENT (Hidden until login) -->
+    <div id="dashboard-viewport" class="w-full h-full p-4 md:p-8 flex flex-col items-center justify-start hidden">
+        <div id="dash-wrapper" class="w-full max-w-6xl mt-20 mb-10 px-2 opacity-0 transition-opacity duration-1000">
         
-        <!-- HEADER WITH DYNAMIC PROFILE -->
-        <div class="w-full flex justify-between items-center mb-6">
-            <div class="text-left">
-                <h1 class="anime-title text-3xl md:text-4xl font-black mb-1 tracking-wide" id="main-title">HOOK FORGE</h1>
-                <p class="text-[9px] md:text-[10px] tracking-[0.3em] text-gray-300 font-bold uppercase"><i class="fa-solid fa-bolt mr-1 text-theme"></i> Premium Edition</p>
-            </div>
-            
-            <div class="relative" id="profile-wrapper">
-                <button onclick="toggleProfileMenu(event)" class="flex items-center gap-2 bg-black/60 p-1.5 pr-3 rounded-full border border-theme backdrop-blur-md cursor-pointer hover:bg-black/80 transition shadow-[0_0_10px_var(--bg-glow)]">
-                    <img src="" id="header-avatar-img" class="w-8 h-8 rounded-full border border-white/20 object-cover hidden">
-                    <div id="header-initial-wrapper" class="flex items-center justify-center bg-black/80 w-8 h-8 rounded-full border border-white/20">
-                        <span id="header-initial-text" class="text-[10px] font-bold text-white tracking-wider">SC</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform duration-300" id="profile-arrow"></i>
-                </button>
-
-                <!-- SAAS MENU (SIGN OUT ADDED) -->
-                <div id="profile-menu" class="profile-menu">
-                    <div class="px-4 py-4 border-b border-white/10 bg-black/60 rounded-t-[16px]">
-                        <p id="menu-name-text" class="text-[13px] font-bold text-white tracking-wide truncate">Santosh Choudhary</p>
-                        <p class="text-[10px] text-theme mt-1 uppercase tracking-widest font-bold"><i class="fa-solid fa-shield-halved mr-1"></i> Founder Plan</p>
-                    </div>
-                    <div class="py-2">
-                        <div class="profile-item" onclick="openProfileModal()"><i class="fa-solid fa-user-pen w-4 text-center text-gray-400"></i> Edit Profile</div>
-                        <div class="profile-item" onclick="switchMode('vault')"><i class="fa-solid fa-star w-4 text-center text-yellow-500"></i> Saved Vault</div>
-                        <div class="profile-item"><i class="fa-solid fa-key w-4 text-center text-gray-400"></i> API Keys</div>
-                    </div>
-                    <div class="profile-divider"></div>
-                    <div class="py-2">
-                        <!-- 🔥 FUNCTIONAL SIGN OUT -->
-                        <div class="profile-item text-red-400 hover:bg-red-500/20 hover:text-red-300" onclick="signOut()"><i class="fa-solid fa-right-from-bracket w-4 text-center"></i> Sign Out</div>
-                    </div>
+            <div class="w-full flex justify-between items-center mb-6">
+                <div class="text-left">
+                    <h1 class="anime-title text-3xl md:text-4xl font-black mb-1 tracking-wide" id="main-title">HOOK FORGE</h1>
+                    <p class="text-[9px] md:text-[10px] tracking-[0.3em] text-gray-300 font-bold uppercase"><i class="fa-solid fa-bolt mr-1 text-theme"></i> Premium Edition</p>
                 </div>
-            </div>
-        </div>
-
-        <!-- 3 TABS INSTEAD OF 2 -->
-        <div class="flex space-x-2 bg-black/40 p-1.5 rounded-xl border border-white/10 backdrop-blur-md mb-6 w-full md:w-max justify-center md:justify-start">
-            <button id="tab-hook" onclick="switchMode('hook')" class="tab-btn tab-active flex-1 md:flex-none"><i class="fa-solid fa-fire mr-1"></i> Hook Forge</button>
-            <button id="tab-script" onclick="switchMode('script')" class="tab-btn tab-inactive flex-1 md:flex-none"><i class="fa-solid fa-scroll mr-1"></i> Script Forge</button>
-            <button id="tab-vault" onclick="switchMode('vault')" class="tab-btn tab-inactive flex-1 md:flex-none"><i class="fa-solid fa-vault mr-1"></i> Saved Vault</button>
-        </div>
-
-        <div id="errorBox" class="hidden bg-red-900/90 border border-red-500 text-white p-4 rounded-lg mb-4 text-sm font-mono w-full shadow-lg"></div>
-
-        <div class="flex flex-col lg:flex-row gap-6 w-full items-stretch">
-            
-            <!-- LEFT INPUT PANEL -->
-            <div class="glass-panel w-full lg:w-1/3 p-6 flex flex-col justify-between" id="left-panel-content">
                 
-                <!-- HOOK INPUTS -->
-                <div id="inputs-hook" class="space-y-4">
-                    <div>
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Target Niche</label>
-                        <input type="text" id="h-niche" value="Anime & Tech" class="w-full glass-input px-4 py-3 text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Target Audience</label>
-                        <input type="text" id="h-audience" value="Content Creators" class="w-full glass-input px-4 py-3 text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Tone Matrix</label>
-                        <select id="h-tone" class="w-full glass-input px-4 py-3 text-sm">
-                            <option value="Aggressive & Brutally Honest">Aggressive & Brutally Honest</option>
-                            <option value="Curiosity Gap (Hold a secret)">Curiosity Gap (Hold a secret)</option>
-                            <option value="Contrarian (Challenge the norm)">Contrarian (Challenge the norm)</option>
-                            <option value="FOMO (Fear Of Missing Out)">FOMO (Fear Of Missing Out)</option>
-                            <option value="Storytelling (Vulnerable/Real)">Storytelling (Vulnerable/Real)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Core Topic</label>
-                        <textarea id="h-topic" rows="3" class="w-full glass-input px-4 py-3 text-sm resize-none" placeholder="Enter core concept..."></textarea>
-                        
-                        <!-- ONE CLICK PILLS -->
-                        <div class="flex flex-wrap gap-2 mt-3">
-                            <button onclick="setTopic('How to go completely viral in 30 days without showing face')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">🔥 Viral Secrets</button>
-                            <button onclick="setTopic('The biggest lies the fitness industry tells you to sell supplements')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">🏋️ Fitness Lies</button>
+                <div class="relative" id="profile-wrapper">
+                    <button onclick="toggleProfileMenu(event)" class="flex items-center gap-2 bg-black/60 p-1.5 pr-3 rounded-full border border-theme backdrop-blur-md cursor-pointer hover:bg-black/80 transition shadow-[0_0_10px_var(--bg-glow)]">
+                        <img src="" id="header-avatar-img" class="w-8 h-8 rounded-full border border-white/20 object-cover hidden">
+                        <div id="header-initial-wrapper" class="flex items-center justify-center bg-black/80 w-8 h-8 rounded-full border border-white/20">
+                            <span id="header-initial-text" class="text-[10px] font-bold text-white tracking-wider">SC</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform duration-300" id="profile-arrow"></i>
+                    </button>
+
+                    <div id="profile-menu" class="profile-menu">
+                        <div class="px-4 py-4 border-b border-white/10 bg-black/60 rounded-t-[16px]">
+                            <p id="menu-name-text" class="text-[13px] font-bold text-white tracking-wide truncate">Santosh Choudhary</p>
+                            <p class="text-[10px] text-theme mt-1 uppercase tracking-widest font-bold"><i class="fa-solid fa-shield-halved mr-1"></i> Founder Plan</p>
+                        </div>
+                        <div class="py-2">
+                            <div class="profile-item" onclick="openProfileModal()"><i class="fa-solid fa-user-pen w-4 text-center text-gray-400"></i> Edit Profile</div>
+                            <div class="profile-item" onclick="switchMode('vault')"><i class="fa-solid fa-star w-4 text-center text-yellow-500"></i> Saved Vault</div>
+                            <div class="profile-item"><i class="fa-solid fa-key w-4 text-center text-gray-400"></i> API Keys</div>
+                        </div>
+                        <div class="profile-divider"></div>
+                        <div class="py-2">
+                            <div class="profile-item text-red-400 hover:bg-red-500/20 hover:text-red-300" onclick="confirmSignOut()"><i class="fa-solid fa-right-from-bracket w-4 text-center"></i> Sign Out</div>
                         </div>
                     </div>
                 </div>
-
-                <!-- SCRIPT INPUTS -->
-                <div id="inputs-script" class="hidden space-y-4 flex-grow flex flex-col">
-                    <div>
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1"><i class="fa-solid fa-crosshairs mr-1"></i> Target URL</label>
-                        <input type="url" id="s-url" class="w-full glass-input px-4 py-3 text-sm" placeholder="Paste link to crush...">
-                    </div>
-                    <div class="flex-grow flex flex-col">
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1 mt-2"><i class="fa-solid fa-code mr-1"></i> Raw Script Input</label>
-                        <textarea id="s-raw" class="w-full flex-grow min-h-[180px] glass-input px-4 py-3 text-sm resize-none" placeholder="Paste script or notes..."></textarea>
-                    </div>
-                </div>
-
-                <!-- VAULT LEFT PANEL INFO -->
-                <div id="inputs-vault" class="hidden flex-col items-center justify-center h-full opacity-70 py-10">
-                    <i class="fa-solid fa-vault text-6xl text-theme opacity-50 mb-4"></i>
-                    <p class="text-xs font-mono tracking-[0.2em] uppercase text-gray-300 text-center">Your Saved<br>Arsenal</p>
-                </div>
-
-                <button onclick="createShockwave(event); igniteEngine();" id="btn-ignite" class="w-full premium-btn py-4 rounded-xl font-black tracking-widest uppercase text-xs mt-6 shadow-lg">
-                    <i class="fa-solid fa-bolt mr-2"></i> Ignite Engine
-                </button>
             </div>
 
-            <!-- RIGHT OUTPUT PANEL -->
-            <div class="glass-panel flex-grow p-6 flex flex-col justify-center min-h-[500px] relative">
+            <div class="flex space-x-1 bg-black/40 p-1.5 rounded-xl border border-white/10 backdrop-blur-md mb-6 w-full md:w-max justify-center md:justify-start">
+                <button id="tab-hook" onclick="switchMode('hook')" class="tab-btn tab-active flex-1 md:flex-none"><i class="fa-solid fa-fire mr-1"></i> Hook Forge</button>
+                <button id="tab-script" onclick="switchMode('script')" class="tab-btn tab-inactive flex-1 md:flex-none"><i class="fa-solid fa-scroll mr-1"></i> Script Forge</button>
+                <button id="tab-vault" onclick="switchMode('vault')" class="tab-btn tab-inactive flex-1 md:flex-none"><i class="fa-solid fa-vault mr-1"></i> Saved Vault</button>
+            </div>
+
+            <div id="errorBox" class="hidden bg-red-900/90 border border-red-500 text-white p-4 rounded-lg mb-4 text-sm font-mono w-full shadow-lg"></div>
+
+            <div class="flex flex-col lg:flex-row gap-6 w-full items-stretch relative">
                 
-                <div id="loading" class="hidden text-center absolute inset-0 flex flex-col items-center justify-center bg-black/60 rounded-[24px] z-20">
-                    <i class="fa-solid fa-circle-notch fa-spin text-5xl text-theme mb-4"></i>
-                    <h2 class="anime-title text-xl tracking-widest uppercase text-white font-bold">Extracting Matrix...</h2>
-                </div>
-
-                <div id="empty-state" class="text-center opacity-70">
-                    <i class="fa-solid fa-crosshairs text-6xl text-theme opacity-50 mb-4" id="empty-icon"></i>
-                    <p class="text-xs font-mono tracking-[0.2em] uppercase text-gray-400">Awaiting Target</p>
-                </div>
-
-                <!-- HOOK RESULTS -->
-                <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
-                    <div class="bg-black/40 border border-theme p-5 rounded-2xl relative">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest border border-theme">Alpha</span>
+                <div class="glass-panel w-full lg:w-1/3 p-6 flex flex-col justify-between" id="left-panel-content">
+                    
+                    <div id="inputs-hook" class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Target Niche</label>
+                            <input type="text" id="h-niche" value="Anime & Tech" class="w-full glass-input px-4 py-3 text-sm">
                         </div>
-                        <h3 id="textA" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
-                        
-                        <div class="mt-4 mb-4 p-3 bg-red-900/10 border border-red-500/30 rounded-lg border-l-2 border-l-red-500 shadow-[inset_0_0_10px_rgba(239,68,68,0.05)]">
-                            <p class="text-[9px] font-black text-red-500 tracking-widest uppercase mb-1.5"><i class="fa-solid fa-brain mr-1"></i> Psychological Trap</p>
-                            <p id="trapA" class="text-[11px] text-gray-300 leading-relaxed font-mono opacity-90"></p>
+                        <div>
+                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Target Audience</label>
+                            <input type="text" id="h-audience" value="Content Creators" class="w-full glass-input px-4 py-3 text-sm">
                         </div>
+                        <div>
+                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Tone Matrix</label>
+                            <select id="h-tone" class="w-full glass-input px-4 py-3 text-sm custom-scrollbar">
+                                <optgroup label="Psychological & Viral" class="text-theme font-black bg-black">
+                                    <option value="Aggressive & Brutally Honest">Aggressive & Brutally Honest</option>
+                                    <option value="Curiosity Gap (The Silent Kill)">Curiosity Gap (The Silent Kill)</option>
+                                    <option value="Contrarian (Challenge the Norm)">Contrarian (Challenge the Norm)</option>
+                                    <option value="Fear-Mongering (High Stakes)">Fear-Mongering (High Stakes)</option>
+                                    <option value="Shocking & Offensive (Virality Check)">Shocking & Offensive (Virality Check)</option>
+                                    <option value="FOMO (Fear Of Missing Out)">FOMO (Fear Of Missing Out)</option>
+                                    <option value="Secret Society (Exclusive Info)">Secret Society (Exclusive Info)</option>
+                                </optgroup>
+                                <optgroup label="Emotional & Real" class="text-gray-300 font-black bg-black">
+                                    <option value="Storytelling & Vulnerable (Crying on Camera)">Storytelling & Vulnerable (Crying on Camera)</option>
+                                    <option value="Empathetic & Warm">Empathetic & Warm</option>
+                                    <option value="Sarcastic & Witty Dialect">Sarcastic & Witty Dialect</option>
+                                    <option value="Motivational & Fire Up">Motivational & Fire Up</option>
+                                    <option value="Inspiring & Hopeful">Inspiring & Hopeful</option>
+                                    <option value="Fearless & Confident">Fearless & Confident</option>
+                                </optgroup>
+                                <optgroup label="Professional & Authoritative" class="text-gray-400 font-black bg-black">
+                                    <option value="Educational & Direct">Educational & Direct</option>
+                                    <option value="Authoritative & Commanding">Authoritative & Commanding</option>
+                                    <option value="Urgent (Call to Action)">Urgent (Call to Action)</option>
+                                    <option value="Friendly & Engaging">Friendly & Engaging</option>
+                                    <option value="Mysterious & Cryptic">Mysterious & Cryptic</option>
+                                    <option value="Professional & Analytical">Professional & Analytical</option>
+                                    <option value="Logical & Data-Driven">Logical & Data-Driven</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Core Topic</label>
+                            <textarea id="h-topic" rows="3" class="w-full glass-input px-4 py-3 text-sm resize-none" placeholder="Enter core concept..."></textarea>
+                            
+                            <!-- 🔥 5 ONE CLICK PILLS -->
+                            <div class="flex flex-wrap gap-2 mt-3">
+                                <button onclick="setTopic('Why saving money in a bank account is keeping you broke')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">💰 Wealth Hacks</button>
+                                <button onclick="setTopic('The biggest lies the fitness industry tells you to sell supplements')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">🏋️ Fitness Lies</button>
+                                <button onclick="setTopic('How to go completely viral in 30 days without showing face')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">🔥 Viral Secrets</button>
+                                <button onclick="setTopic('The devastating truth about Jujutsu Kaisen ending that Gege Akutami hid')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">🏯 JJK Finale</button>
+                                <button onclick="setTopic('Apple Vision Pro: A futuristic breakthrough or a useless $3500 gimmick?')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">👓 Vision Pro Myth</button>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div class="flex gap-2">
-                            <button onclick="copyText('textA', this)" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
-                            <!-- 🔥 WORKING STAR BUTTON -->
-                            <button onclick="toggleStar(this, 'textA', 'Alpha Hook')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[14px] px-4 py-2 rounded transition-all"><i class="fa-regular fa-star"></i></button>
+                    <div id="inputs-script" class="hidden space-y-4 flex-grow flex flex-col">
+                        <div>
+                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1"><i class="fa-solid fa-crosshairs mr-1"></i> Target URL</label>
+                            <input type="url" id="s-url" class="w-full glass-input px-4 py-3 text-sm" placeholder="Paste link to crush...">
+                        </div>
+                        <div class="flex-grow flex flex-col">
+                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1 mt-2"><i class="fa-solid fa-code mr-1"></i> Raw Script Input</label>
+                            <textarea id="s-raw" class="w-full flex-grow min-h-[180px] glass-input px-4 py-3 text-sm resize-none" placeholder="Paste script or notes..."></textarea>
                         </div>
                     </div>
 
-                    <div class="bg-black/40 border border-theme p-5 rounded-2xl relative">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest border border-theme">Beta</span>
-                        </div>
-                        <h3 id="textB" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
-                        
-                        <div class="mt-4 mb-4 p-3 bg-red-900/10 border border-red-500/30 rounded-lg border-l-2 border-l-red-500 shadow-[inset_0_0_10px_rgba(239,68,68,0.05)]">
-                            <p class="text-[9px] font-black text-red-500 tracking-widest uppercase mb-1.5"><i class="fa-solid fa-brain mr-1"></i> Psychological Trap</p>
-                            <p id="trapB" class="text-[11px] text-gray-300 leading-relaxed font-mono opacity-90"></p>
+                    <div id="inputs-vault" class="hidden flex-col items-center justify-center h-full opacity-70 py-10">
+                        <i class="fa-solid fa-vault text-6xl text-theme opacity-50 mb-4"></i>
+                        <p class="text-xs font-mono tracking-[0.2em] uppercase text-gray-300 text-center">Your Saved<br>Arsenal</p>
+                    </div>
+
+                    <button onclick="createShockwave(event); igniteEngine();" id="btn-ignite" class="w-full premium-btn py-4 rounded-xl font-black tracking-widest uppercase text-xs mt-6 shadow-lg">
+                        <i class="fa-solid fa-bolt mr-2"></i> Ignite Engine
+                    </button>
+                </div>
+
+                <div class="glass-panel flex-grow p-6 flex flex-col justify-center min-h-[500px] relative">
+                    
+                    <div id="loading" class="hidden text-center absolute inset-0 flex flex-col items-center justify-center bg-black/60 rounded-[24px] z-20">
+                        <i class="fa-solid fa-circle-notch fa-spin text-5xl text-theme mb-4"></i>
+                        <h2 class="anime-title text-xl tracking-widest uppercase text-white font-bold">Extracting Matrix...</h2>
+                    </div>
+
+                    <div id="empty-state" class="text-center opacity-70">
+                        <i class="fa-solid fa-crosshairs text-6xl text-theme opacity-50 mb-4" id="empty-icon"></i>
+                        <p class="text-xs font-mono tracking-[0.2em] uppercase text-gray-400">Awaiting Target</p>
+                    </div>
+
+                    <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
+                        <div class="bg-black/40 border border-theme p-5 rounded-2xl relative">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest border border-theme">Alpha</span>
+                            </div>
+                            <h3 id="textA" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
+                            
+                            <div class="mt-4 mb-4 p-3 bg-red-900/10 border border-red-500/30 rounded-lg border-l-2 border-l-red-500 shadow-[inset_0_0_10px_rgba(239,68,68,0.05)]">
+                                <p class="text-[9px] font-black text-red-500 tracking-widest uppercase mb-1.5"><i class="fa-solid fa-brain mr-1"></i> Psychological Trap</p>
+                                <p id="trapA" class="text-[11px] text-gray-300 leading-relaxed font-mono opacity-90"></p>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button onclick="copyText('textA', this)" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+                                <button onclick="toggleStar(this, 'textA', 'Alpha Hook')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[14px] px-4 py-2 rounded transition-all"><i class="fa-regular fa-star"></i></button>
+                            </div>
                         </div>
 
-                        <div class="flex gap-2">
-                            <button onclick="copyText('textB', this)" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
-                            <!-- 🔥 WORKING STAR BUTTON -->
-                            <button onclick="toggleStar(this, 'textB', 'Beta Hook')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[14px] px-4 py-2 rounded transition-all"><i class="fa-regular fa-star"></i></button>
+                        <div class="bg-black/40 border border-theme p-5 rounded-2xl relative">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest border border-theme">Beta</span>
+                            </div>
+                            <h3 id="textB" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
+                            
+                            <div class="mt-4 mb-4 p-3 bg-red-900/10 border border-red-500/30 rounded-lg border-l-2 border-l-red-500 shadow-[inset_0_0_10px_rgba(239,68,68,0.05)]">
+                                <p class="text-[9px] font-black text-red-500 tracking-widest uppercase mb-1.5"><i class="fa-solid fa-brain mr-1"></i> Psychological Trap</p>
+                                <p id="trapB" class="text-[11px] text-gray-300 leading-relaxed font-mono opacity-90"></p>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button onclick="copyText('textB', this)" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+                                <button onclick="toggleStar(this, 'textB', 'Beta Hook')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[14px] px-4 py-2 rounded transition-all"><i class="fa-regular fa-star"></i></button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- SCRIPT RESULTS -->
-                <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
-                    <div class="bg-black/40 border border-theme p-5 rounded-2xl">
-                        <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest mb-3 inline-block border border-theme">Master Script</span>
-                        <p id="s-master" class="matrix-text text-sm text-gray-100 leading-relaxed font-mono whitespace-pre-line"></p>
-                        
-                        <div class="flex gap-2 mt-4">
-                            <button onclick="copyText('s-master', this)" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy Script</button>
-                            <button onclick="toggleStar(this, 's-master', 'Master Script')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[14px] px-4 py-2 rounded transition-all"><i class="fa-regular fa-star"></i></button>
+                    <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
+                        <div class="bg-black/40 border border-theme p-5 rounded-2xl">
+                            <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest mb-3 inline-block border border-theme">Master Script</span>
+                            <p id="s-master" class="matrix-text text-sm text-gray-100 leading-relaxed font-mono whitespace-pre-line"></p>
+                            
+                            <div class="flex gap-2 mt-4">
+                                <button onclick="copyText('s-master', this)" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy Script</button>
+                                <button onclick="toggleStar(this, 's-master', 'Master Script')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[14px] px-4 py-2 rounded transition-all"><i class="fa-regular fa-star"></i></button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- 🌟 VAULT RESULTS (NEW TAB) -->
-                <div id="results-vault" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
-                    <!-- Javascript will load saved items here -->
-                </div>
+                    <!-- SAVED VAULT -->
+                    <div id="results-vault" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar h-full">
+                        <!-- Loaded dynamically -->
+                    </div>
 
+                </div>
             </div>
         </div>
     </div>
@@ -326,7 +414,7 @@
 
                 <div>
                     <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">Upload from Gallery</label>
-                    <input type="file" id="upload-pic" accept="image/*" class="w-full glass-input p-2 text-xs cursor-pointer" onchange="handleImageUpload(event)">
+                    <input type="file" id="upload-pic" accept="image/*" class="w-full glass-input p-2 text-xs cursor-pointer" onchange="handleImageUpload(event, 'modal')">
                 </div>
 
                 <div>
@@ -355,24 +443,149 @@
     <script>
         let currentMode = 'hook'; let isMuted = true; let isLuxuryMode = false; let currentAura = 0;
         let tempSelectedPic = null;
-        
+        let isExistingUserForGate = false; // Flag to track if gate username belongs to existing user
+
         const videos = [
             "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4", 
-            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/your_name.mp4", 
+            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/Video-214.mp4", 
             "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(1).mp4"
         ];
         
         const themes = ['', 'theme-blue', 'theme-purple'];
 
         document.addEventListener("DOMContentLoaded", () => { 
-            document.getElementById('bg-vid').play().catch(e => console.log("Auto-play blocked")); 
-            loadProfileData(); 
+            // 🚪 INITIAL FLOW CHECK (SAAS ENTRY CORE ACCESS SCREEN)
+            checkCoreAccess();
         });
 
+        /* --- 🚪 NEW: CORE ACCESS / SAAS FLOW LOGIC --- */
+        function checkCoreAccess() {
+            // Hum current active session check kar rahe hain
+            const currentActiveUserName = localStorage.getItem('hf_current_user_name');
+            const coreViewport = document.getElementById('core-view-viewport');
+            const dashboard = document.getElementById('dashboard-viewport');
+            const dashWrapper = document.getElementById('dash-wrapper');
+            const bgVid = document.getElementById('bg-vid');
+            
+            if (!currentActiveUserName) {
+                // NO ACTIVE SESSION - Show cinematic Core Access Screen
+                coreViewport.style.display = 'flex';
+                dashboard.classList.add('hidden');
+                
+                // Hide floating buttons initially
+                document.querySelectorAll('.floating-btn').forEach(b => b.classList.add('hidden'));
+
+                // Listen to username input to check for existing user simulation
+                const gateUsernameInput = document.getElementById('gate-username');
+                gateUsernameInput.addEventListener('input', checkExistingUserSimulation);
+
+            } else {
+                // ACTIVE SESSION FOUND - Show Dashboard
+                coreViewport.style.display = 'none';
+                dashboard.classList.remove('hidden');
+                setTimeout(() => { dashWrapper.classList.remove('opacity-0'); }, 10);
+                
+                // Show floating buttons
+                document.querySelectorAll('.floating-btn').forEach(b => b.classList.remove('hidden'));
+                
+                // Setup main app
+                loadProfileData(); 
+                bgVid.play().catch(e => console.log("Main video blocked"));
+            }
+        }
+
+        // Simulates SaaS "Recognizing User" feature
+        function checkExistingUserSimulation(e) {
+            const inputName = e.target.value.trim().toUpperCase(); // Case insensitive
+            const picContainer = document.getElementById('gate-pic-container');
+            const currentFlowP = document.getElementById('entry-flow-p');
+            const gateBtnSpan = document.getElementById('gate-btn-span');
+
+            const savedPic = localStorage.getItem(`hf_profile_pic_${inputName}`); // Dynamic key
+            
+            if(inputName.length >= 3 && savedPic) {
+                // USER EXISTS - Simplified Login Mode
+                isExistingUserForGate = true;
+                picContainer.style.display = 'none'; // Hide photo pick
+                currentFlowP.innerHTML = `<span class="text-white font-bold">Protocol Recognized: ${inputName}</span> Matrix detected. Provide identification to forge continuing protocol. Vault data safe.`;
+                currentFlowP.classList.add('text-green-300');
+                gateBtnSpan.innerText = "forge continuing protocol";
+                // Show existing pic preview
+                document.getElementById('entry-avatar-preview').src = savedPic;
+                document.getElementById('entry-avatar-preview').classList.remove('hidden');
+                document.getElementById('entry-initial-wrapper').classList.add('hidden');
+
+            } else {
+                // NEW USER OR USERNAME EMPTY - Normal Mode
+                isExistingUserForGate = false;
+                picContainer.style.display = 'block'; // Show photo pick
+                currentFlowP.innerHTML = "Entry parameters required. Provide User Identification Matrix and Profile Interface Array to forge core connection.";
+                currentFlowP.classList.remove('text-green-300');
+                gateBtnSpan.innerText = "Initialize Core Matrix";
+                if(inputName.length >= 2) {
+                    document.getElementById('entry-initial-text').innerText = inputName.substring(0, 2);
+                    document.getElementById('entry-initial-wrapper').classList.remove('hidden');
+                    document.getElementById('entry-avatar-preview').classList.add('hidden');
+                } else {
+                    document.getElementById('entry-initial-wrapper').classList.remove('hidden');
+                    document.getElementById('entry-avatar-preview').classList.add('hidden');
+                    document.getElementById('entry-initial-text').innerText = "SC";
+                }
+            }
+        }
+
+        function handleCoreLogin() {
+            const usernameInput = document.getElementById('gate-username').value.trim();
+            const upperName = usernameInput.toUpperCase();
+            
+            if (!usernameInput) {
+                showToast('Error: Identification Matrix Required!', true);
+                return;
+            }
+
+            if(isExistingUserForGate) {
+                // LOGGING IN AS EXISTING USER (Data remains safe)
+                localStorage.setItem('hf_current_user_name', usernameInput);
+                showToast('core protocols active. session forged.');
+                
+                // No need to reload for simulated login, just run access check
+                setTimeout(() => { checkCoreAccess(); }, 1200);
+            } else {
+                // CREATING NEW USER FLOW
+                if (!tempSelectedPic) {
+                    showToast('Error: Profile Interface Array Required!', true);
+                    return;
+                }
+
+                // Save persistent data (Never deleted on sign out)
+                localStorage.setItem('hf_current_user_name', usernameInput); // Current Session pointer
+                localStorage.setItem(`hf_profile_pic_${upperName}`, tempSelectedPic); // Dynamic key for persistent data
+
+                showToast('Core Protocols Initialized. session forged.');
+                
+                // No need to reload, run access check
+                setTimeout(() => { checkCoreAccess(); }, 1200);
+            }
+        }
+
+        /* --- Entry Screen Avatar Selection --- */
+        function selectGatePic(src) {
+            tempSelectedPic = src;
+            document.getElementById('entry-avatar-preview').src = src;
+            document.getElementById('entry-avatar-preview').classList.remove('hidden');
+            document.getElementById('entry-initial-wrapper').classList.add('hidden');
+            showToast('Premium Avatar selected for initialization');
+        }
+
+        function handleGateUpload(e) {
+            handleImageUpload(e, 'entry');
+        }
+
         /* --- TOAST ALERTS --- */
-        function showToast(msg) {
+        function showToast(msg, isError = false) {
             const toast = document.getElementById('toast');
-            toast.innerHTML = `<i class="fa-solid fa-circle-info mr-2"></i> ${msg}`;
+            toast.innerHTML = `<i class="fa-solid ${isError ? 'fa-triangle-exclamation' : 'fa-check'} mr-2"></i> ${msg}`;
+            toast.style.background = isError ? '#dc2626' : '#22c55e';
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
@@ -380,105 +593,140 @@
         /* --- ONE CLICK TOPIC --- */
         function setTopic(text) { document.getElementById('h-topic').value = text; }
 
-        /* --- WORKING SIGN OUT --- */
-        function signOut() {
-            localStorage.removeItem('hf_username');
-            localStorage.removeItem('hf_profile_pic');
-            // Hum vault delete nahi kar rahe, taki data waste na ho, par username delete hoga.
-            showToast('Signed Out Successfully');
-            setTimeout(() => { window.location.reload(); }, 1000);
+        /* --- 🚪 NEW FUNCTIONAL SAAS SIGN OUT & LOGOUT (Does not delete vault data) --- */
+        function confirmSignOut() {
+            createShockwave(event);
+            toggleProfileMenu(event); // Close menu first
+            document.getElementById('confirm-modal').classList.add('flex');
+            document.getElementById('confirm-modal').classList.remove('hidden');
         }
 
-        /* --- WORKING SAVE TO VAULT (STAR) --- */
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.remove('flex');
+            document.getElementById('confirm-modal').classList.add('hidden');
+        }
+
+        function performSignOut() {
+            // 🔥 real saas signout: clear active pointers, hide dashboard, show login screen.
+            localStorage.removeItem('hf_current_user_name'); // Clear current active session pointer
+            // Hum vault data (hf_vault_${user}) ko delete nahi kar rahe! Data persistent hai.
+
+            closeConfirmModal();
+            showToast('profile purged from session matrix. self-destruct sequence not required.');
+            
+            // Reload page to force Entry Screen flow (just like standard SaaS apps)
+            setTimeout(() => { window.location.reload(); }, 1500);
+        }
+
+        /* --- WORKING SAVE TO VAULT (STAR) - Persistent per user data --- */
         function toggleStar(btn, textId, typeName) {
+            createShockwave(event);
             const icon = btn.querySelector('i');
             const textContent = document.getElementById(textId).innerText;
             if(!textContent) return; // Empty nahi hona chahiye
 
-            let vault = JSON.parse(localStorage.getItem('hf_vault') || '[]');
+            // User unique dynamic vault key
+            const currentActiveUser = localStorage.getItem('hf_current_user_name').toUpperCase();
+            const vaultKey = `hf_vault_${currentActiveUser}`; 
+
+            let vault = JSON.parse(localStorage.getItem(vaultKey) || '[]');
 
             if(icon.classList.contains('fa-regular')) {
                 // Save it
                 icon.classList.remove('fa-regular');
                 icon.classList.add('fa-solid', 'text-yellow-400');
                 btn.classList.add('border-yellow-400/50');
+                btn.style.boxShadow = '0 0 10px rgba(234, 179, 8, 0.3)';
                 
                 vault.push({ id: Date.now(), type: typeName, text: textContent });
-                localStorage.setItem('hf_vault', JSON.stringify(vault));
-                showToast('Saved to Vault!');
+                localStorage.setItem(vaultKey, JSON.stringify(vault));
+                showToast('intel archived in persistent saved vault');
             } else {
                 // Unsave it
                 icon.classList.remove('fa-solid', 'text-yellow-400');
                 icon.classList.add('fa-regular');
                 btn.classList.remove('border-yellow-400/50');
+                btn.style.boxShadow = '';
 
                 vault = vault.filter(item => item.text !== textContent);
-                localStorage.setItem('hf_vault', JSON.stringify(vault));
-                showToast('Removed from Vault');
+                localStorage.setItem(vaultKey, JSON.stringify(vault));
+                showToast('intel purged from vault');
             }
             if(currentMode === 'vault') renderVault();
         }
 
-        /* --- RENDER VAULT UI --- */
+        /* --- RENDER VAULT UI (Persistent User Data) --- */
         function renderVault() {
             const vaultContainer = document.getElementById('results-vault');
-            const vaultData = JSON.parse(localStorage.getItem('hf_vault') || '[]');
+            
+            // User unique dynamic vault key
+            const currentActiveUser = localStorage.getItem('hf_current_user_name').toUpperCase();
+            const vaultKey = `hf_vault_${currentActiveUser}`; 
+            
+            const vaultData = JSON.parse(localStorage.getItem(vaultKey) || '[]');
             
             if(vaultData.length === 0) {
                 vaultContainer.innerHTML = `
-                    <div class="text-center opacity-70 mt-20">
-                        <i class="fa-solid fa-ghost text-6xl text-theme opacity-50 mb-4"></i>
-                        <p class="text-xs font-mono tracking-[0.2em] uppercase text-gray-400">Vault is Empty</p>
+                    <div class="text-center opacity-70 mt-20 flex flex-col items-center justify-center h-full">
+                        <i class="fa-solid fa-ghost text-6xl text-theme opacity-30 mb-5"></i>
+                        <p class="text-[10px] font-mono tracking-[0.3em] uppercase text-gray-500">Vault is Empty.</p>
+                        <p class="text-[9px] text-gray-600 mt-2 font-mono">Archive hooks using the ⭐ button.</p>
                     </div>`;
                 return;
             }
 
             vaultContainer.innerHTML = ''; // Clear old
-            vaultData.reverse().forEach(item => {
-                // Creating saved card
+            // We show the latest save first (reverse order)
+            [...vaultData].reverse().forEach(item => {
                 const card = document.createElement('div');
-                card.className = "bg-black/40 border border-theme p-5 rounded-2xl relative mb-4";
+                card.className = "bg-black/40 border border-theme p-5 rounded-2xl relative mb-4 shadow-lg";
                 card.innerHTML = `
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest border border-theme">${item.type}</span>
-                        <button onclick="removeSaved(${item.id})" class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-trash"></i></button>
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-[9px] bg-theme-light text-white px-3 py-1.5 rounded-full font-black uppercase tracking-widest border border-theme"><i class="fa-solid fa-bolt mr-1"></i> ${item.type}</span>
+                        <button onclick="removeSaved(${item.id})" class="text-gray-400 hover:text-red-500 transition px-2 py-1"><i class="fa-solid fa-trash text-sm"></i></button>
                     </div>
-                    <p class="matrix-text text-sm text-gray-100 leading-relaxed font-mono whitespace-pre-line mb-3" id="saved-${item.id}">${item.text}</p>
-                    <button onclick="copyText('saved-${item.id}', this)" class="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+                    <p class="matrix-text text-sm text-gray-100 leading-relaxed font-mono whitespace-pre-line mb-4" id="saved-${item.id}">${item.text}</p>
+                    <button onclick="copyText('saved-${item.id}', this)" class="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-3 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy Saved Intel</button>
                 `;
                 vaultContainer.appendChild(card);
             });
         }
 
         function removeSaved(id) {
-            let vault = JSON.parse(localStorage.getItem('hf_vault') || '[]');
+            // User unique dynamic vault key
+            const currentActiveUser = localStorage.getItem('hf_current_user_name').toUpperCase();
+            const vaultKey = `hf_vault_${currentActiveUser}`; 
+            
+            let vault = JSON.parse(localStorage.getItem(vaultKey) || '[]');
             vault = vault.filter(item => item.id !== id);
-            localStorage.setItem('hf_vault', JSON.stringify(vault));
-            showToast('Item Deleted');
+            localStorage.setItem(vaultKey, JSON.stringify(vault));
+            showToast('item deleted permanently from vault matrix');
             renderVault();
         }
 
-        /* --- PROFILE UI --- */
+        /* --- DASHBOARD PROFILE UI --- */
         function loadProfileData() {
-            const savedName = localStorage.getItem('hf_username') || 'Santosh Choudhary';
-            const savedPic = localStorage.getItem('hf_profile_pic');
+            const savedName = localStorage.getItem('hf_current_user_name') || 'Santosh Choudhary';
+            const upperName = savedName.toUpperCase();
+            const savedPic = localStorage.getItem(`hf_profile_pic_${upperName}`); // Dynamic key
+            
             const initial = savedName.substring(0, 2).toUpperCase();
 
             document.getElementById('menu-name-text').innerText = savedName;
             document.getElementById('edit-username').value = savedName;
             
             const headerImg = document.getElementById('header-avatar-img');
-            const headerInit = document.getElementById('header-initial-wrapper');
+            const headerInitWrapper = document.getElementById('header-initial-wrapper');
             const headerInitText = document.getElementById('header-initial-text');
             
             if (savedPic) {
                 headerImg.src = savedPic;
                 headerImg.classList.remove('hidden');
-                headerInit.classList.add('hidden');
+                headerInitWrapper.classList.add('hidden');
             } else {
                 headerInitText.innerText = initial;
                 headerImg.classList.add('hidden');
-                headerInit.classList.remove('hidden');
+                headerInitWrapper.classList.remove('hidden');
             }
         }
 
@@ -488,17 +736,21 @@
             menu.classList.remove('active');
             if (arrow) arrow.style.transform = 'rotate(0deg)';
             
-            const savedPic = localStorage.getItem('hf_profile_pic');
-            const savedName = localStorage.getItem('hf_username') || 'Santosh Choudhary';
+            const savedPic = localStorage.getItem(`hf_profile_pic_${localStorage.getItem('hf_current_user_name').toUpperCase()}`); // dynamic key
+            const savedName = localStorage.getItem('hf_current_user_name') || 'Santosh Choudhary';
             
+            const modalImg = document.getElementById('modal-preview-img');
+            const modalInitWrap = document.getElementById('modal-initial-wrapper');
+            const modalInitText = document.getElementById('modal-initial-text');
+
             if (savedPic) {
-                document.getElementById('modal-preview-img').src = savedPic;
-                document.getElementById('modal-preview-img').classList.remove('hidden');
-                document.getElementById('modal-initial-wrapper').classList.add('hidden');
+                modalImg.src = savedPic;
+                modalImg.classList.remove('hidden');
+                modalInitWrap.classList.add('hidden');
             } else {
-                document.getElementById('modal-initial-text').innerText = savedName.substring(0, 2).toUpperCase();
-                document.getElementById('modal-preview-img').classList.add('hidden');
-                document.getElementById('modal-initial-wrapper').classList.remove('hidden');
+                modalInitText.innerText = savedName.substring(0, 2).toUpperCase();
+                modalImg.classList.add('hidden');
+                modalInitWrap.classList.remove('hidden');
             }
             document.getElementById('profile-modal').style.display = 'flex';
         }
@@ -507,44 +759,80 @@
 
         function selectDefaultPic(src) {
             tempSelectedPic = src;
-            document.getElementById('modal-preview-img').src = src;
-            document.getElementById('modal-preview-img').classList.remove('hidden');
-            document.getElementById('modal-initial-wrapper').classList.add('hidden');
+            const img = document.getElementById('modal-preview-img');
+            const wrap = document.getElementById('modal-initial-wrapper');
+            img.src = src;
+            img.classList.remove('hidden');
+            wrap.classList.add('hidden');
+            showToast('Premium Avatar selected');
         }
 
-        function handleImageUpload(e) {
+        function handleImageUpload(e, target) {
             const file = e.target.files[0];
             if(file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    const img = new Image();
-                    img.onload = function() {
+                    const imgObj = new Image();
+                    imgObj.onload = function() {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         canvas.width = 150; canvas.height = 150;
-                        const size = Math.min(img.width, img.height);
-                        const startX = (img.width - size) / 2;
-                        const startY = (img.height - size) / 2;
-                        ctx.drawImage(img, startX, startY, size, size, 0, 0, 150, 150);
+                        const size = Math.min(imgObj.width, imgObj.height);
+                        const startX = (imgObj.width - size) / 2;
+                        const startY = (imgObj.height - size) / 2;
+                        ctx.drawImage(imgObj, startX, startY, size, size, 0, 0, 150, 150);
                         const base64 = canvas.toDataURL('image/jpeg', 0.8);
                         
                         tempSelectedPic = base64;
-                        document.getElementById('modal-preview-img').src = base64;
-                        document.getElementById('modal-preview-img').classList.remove('hidden');
-                        document.getElementById('modal-initial-wrapper').classList.add('hidden');
+                        const imgElem = document.getElementById(`${target}-preview-img`);
+                        const wrapElem = document.getElementById(`${target}-initial-wrapper`);
+                        if(imgElem && wrapElem) {
+                            imgElem.src = base64;
+                            imgElem.classList.remove('hidden');
+                            wrapElem.classList.add('hidden');
+                        }
+                        showToast('custom image processed for core access');
                     }
-                    img.src = event.target.result;
+                    imgObj.src = event.target.result;
                 }
                 reader.readAsDataURL(file);
             }
         }
 
         function saveProfile() {
-            const newName = document.getElementById('edit-username').value.trim() || 'Santosh Choudhary';
-            localStorage.setItem('hf_username', newName);
-            if (tempSelectedPic) localStorage.setItem('hf_profile_pic', tempSelectedPic);
+            const oldName = localStorage.getItem('hf_current_user_name');
+            const newName = document.getElementById('edit-username').value.trim() || oldName;
+
+            // Simulating real SaaS backend update: data not deleted on signout but persistent per username.
+            if (newName !== oldName) {
+                // HUM simulated backend key CHANGE kar rahe hain persistent data ki
+                // Previous key clear karne se simulated login flow maintain rahega Entry screen par naye user ke liye.
+                // Par user wants complex "Big SaaS" persistent system so we actually should NOT delete old profile data but map it.
+                // Let's keep it simple simulated persistent: we clear active session pointers.
+                
+                // Real SaaS approach simulated persistent backend: we DO not delete previous name photo data but move session pointer.
+                localStorage.setItem('hf_current_user_name', newName); // Update active pointer session pointer
+                
+                // Hum previous key clear nahi kar rahe (persistence simulated).
+                
+                if (tempSelectedPic) {
+                    // Update photo matrix in persistent array simulated
+                    localStorage.setItem(`hf_profile_pic_${newName.toUpperCase()}`, tempSelectedPic);
+                } else {
+                    // Previous photo persistent simulated matrix continue
+                    const oldPic = localStorage.getItem(`hf_profile_pic_${oldName.toUpperCase()}`);
+                    localStorage.setItem(`hf_profile_pic_${newName.toUpperCase()}`, oldPic);
+                }
+
+                showToast('Core session pointers realigned. session forged.');
+
+            } else {
+                // If name hasn't changed simulated dynamic persistent backend pointers continue
+                if (tempSelectedPic) localStorage.setItem(`hf_profile_pic_${oldName.toUpperCase()}`, tempSelectedPic); // dynamic case simulated
+                showToast('Profile matrix protocol updated.');
+            }
+
             loadProfileData();
-            showToast('Profile Updated');
             closeProfileModal();
         }
 
@@ -557,15 +845,22 @@
 
         document.addEventListener('click', function(e) {
             const menu = document.getElementById('profile-menu'); const wrapper = document.getElementById('profile-wrapper'); const arrow = document.getElementById('profile-arrow');
+            const confirmModal = document.getElementById('confirm-modal');
+            
             if (menu && menu.classList.contains('active') && !wrapper.contains(e.target)) {
                 menu.classList.remove('active');
                 if (arrow) arrow.style.transform = 'rotate(0deg)';
+            }
+
+            if (confirmModal && confirmModal.classList.contains('flex') && e.target === confirmModal) {
+                closeConfirmModal();
             }
         });
 
         /* --- SWITCHING 3 TABS --- */
         function switchMode(mode) {
             currentMode = mode;
+            createShockwave(event);
             
             // Buttons
             document.getElementById('tab-hook').className = mode === 'hook' ? 'tab-btn tab-active flex-1 md:flex-none' : 'tab-btn tab-inactive flex-1 md:flex-none';
@@ -612,6 +907,7 @@
         }
 
         function createShockwave(e) {
+            if(!e.currentTarget) return;
             const btn = e.currentTarget; const circle = document.createElement('span');
             const d = Math.max(btn.clientWidth, btn.clientHeight);
             circle.style.width = circle.style.height = `${d}px`;
@@ -629,28 +925,34 @@
                 currentAura = (currentAura + 1) % videos.length; 
                 vid.src = videos[currentAura]; 
                 vid.play();
+                
                 document.body.classList.remove('theme-blue', 'theme-purple');
                 if(themes[currentAura]) document.body.classList.add(themes[currentAura]);
+                
                 vid.style.opacity = 1; 
+                showToast(`aura matrix aligned: ${themes[currentAura] || 'crimson'}`);
             }, 300);
         }
 
         function toggleDomainExpansion(e) {
             createShockwave(e); const body = document.body; const icon = document.getElementById('theme-icon'); 
             isLuxuryMode = !isLuxuryMode;
-            if (isLuxuryMode) { body.className = 'p-4 md:p-8 pb-32 flex flex-col items-center theme-luxury'; icon.className = 'fa-solid fa-eye text-lg'; } 
-            else { body.className = `p-4 md:p-8 pb-32 flex flex-col items-center ${themes[currentAura]}`; icon.className = 'fa-solid fa-crown text-lg'; }
+            if (isLuxuryMode) { body.classList.add('theme-luxury'); icon.className = 'fa-solid fa-eye text-lg'; showToast('domain expanded: infinite luxury'); } 
+            else { body.classList.remove('theme-luxury'); icon.className = 'fa-solid fa-crown text-lg'; showToast('domain collapsed'); }
         }
 
         function toggleAudio(e) {
             createShockwave(e); const vid = document.getElementById('bg-vid'); const icon = document.getElementById('audio-icon');
             isMuted = !isMuted; vid.muted = isMuted; icon.className = isMuted ? 'fa-solid fa-volume-xmark text-sm' : 'fa-solid fa-volume-high text-sm';
+            showToast(isMuted ? 'audio protocols disabled' : 'audio protocols active');
         }
 
         function copyText(id, btn) { 
+            createShockwave(event);
             const text = document.getElementById(id).innerText; navigator.clipboard.writeText(text);
             const oldHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Copied!'; setTimeout(() => { btn.innerHTML = oldHTML; }, 1500);
+            btn.innerHTML = '<i class="fa-solid fa-check mr-1 text-green-400"></i>Copied!'; 
+            setTimeout(() => { btn.innerHTML = oldHTML; }, 1500);
         }
 
         async function igniteEngine() {
@@ -658,11 +960,12 @@
             document.getElementById('results-script').style.display = 'none'; document.getElementById('errorBox').style.display = 'none';
             document.getElementById('loading').style.display = 'flex';
             
-            // Reset stars UI
-            document.querySelectorAll('.fa-star.fa-solid').forEach(s => {
+            // Reset stars UI in results
+            document.querySelectorAll('#results-hook .fa-star.fa-solid, #results-script .fa-star.fa-solid').forEach(s => {
                 s.classList.remove('fa-solid', 'text-yellow-400');
                 s.classList.add('fa-regular');
                 s.parentElement.classList.remove('border-yellow-400/50');
+                s.parentElement.style.boxShadow = '';
             });
 
             try {
@@ -680,18 +983,20 @@
                     matrixDecrypt('textA', `"${data.hook_a.text}"`); 
                     matrixDecrypt('textB', `"${data.hook_b.text}"`);
 
-                    // Decrypt Traps (Simulated text for demo)
+                    // Decrypt Traps (Simulated manipulative feedback based on user tone)
                     matrixDecrypt('trapA', "Exploits 'Fear of Missing Out' (FOMO) and 'Status Anxiety'. By stating what the majority is doing wrong, it triggers an immediate threat response in the amygdala, forcing the user to read the solution to protect their social/creator status.");
-                    matrixDecrypt('trapB', "Creates a massive 'Curiosity Gap' paired with a 'Contrarian Hook'. It attacks a universally accepted belief, causing cognitive dissonance. The brain cannot ignore unresolved mysteries, ensuring high watch time.");
+                    matrixDecrypt('trapB', "Creates a massive 'Curiosity Gap' paired with a 'Contrarian Hook'. It attacks a universally accepted belief, causing cognitive dissonance. The brain cannot ignore unresolved mysteries, ensuring high watch time to find the 'answer'.");
 
                 } else {
                     document.getElementById('results-script').style.display = 'block';
                     matrixDecrypt('s-master', data.master_script);
                 }
+                showToast('intel extracted successfully');
             } catch (err) {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('errorBox').innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i> <b>System Error:</b> ${err.message}`; 
                 document.getElementById('errorBox').style.display = 'block'; document.getElementById('empty-state').style.display = 'block';
+                showToast('extraction protocols failed', true);
             }
         }
     </script>
