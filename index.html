@@ -37,7 +37,7 @@
 
         html, body { margin: 0; min-height: 100vh; font-family: 'Noto Sans JP', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; position: relative; }
         
-        /* 🌟 VIDEO BACKGROUND Z-INDEX FIXED */
+        /* 🌟 VIDEO BACKGROUND - PERFECTLY CLEAR */
         .bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 1; opacity: 1; transition: opacity 0.5s ease; }
         .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.2); z-index: 2; pointer-events: none; }
         #dashboard-viewport { z-index: 10; position: relative; }
@@ -189,6 +189,13 @@
                     <div>
                         <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Core Topic</label>
                         <textarea id="h-topic" rows="3" class="w-full glass-input px-4 py-3 text-sm resize-none" placeholder="Enter core concept..."></textarea>
+                        
+                        <!-- 🔥 NEW: ONE-CLICK TOPIC PILLS -->
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            <button onclick="setTopic('How to go completely viral in 30 days without showing face')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme hover:bg-theme-light text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">🔥 Viral Secrets</button>
+                            <button onclick="setTopic('The biggest lies the fitness industry tells you to sell supplements')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme hover:bg-theme-light text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">🏋️ Fitness Lies</button>
+                            <button onclick="setTopic('Why saving money in a bank account is keeping you broke')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme hover:bg-theme-light text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">💰 Wealth Hacks</button>
+                        </div>
                     </div>
                 </div>
 
@@ -221,22 +228,46 @@
                 </div>
 
                 <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
+                    
+                    <!-- ALPHA HOOK RESULT -->
                     <div class="bg-black/40 border border-theme p-5 rounded-2xl relative">
                         <div class="flex justify-between items-center mb-3">
                             <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest border border-theme">Alpha</span>
                             <span class="text-[10px] text-theme font-black tracking-widest">SCORE: <span id="scoreA" class="text-theme text-lg font-black inline-block">0</span><span class="text-xs text-gray-500">/100</span></span>
                         </div>
                         <h3 id="textA" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
-                        <button onclick="copyText('textA')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-1.5 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+                        
+                        <!-- 🧠 NEW: PSYCHOLOGICAL TRAP BREAKDOWN -->
+                        <div class="mt-4 mb-4 p-3 bg-red-900/10 border border-red-500/30 rounded-lg border-l-2 border-l-red-500 shadow-[inset_0_0_10px_rgba(239,68,68,0.05)]">
+                            <p class="text-[9px] font-black text-red-500 tracking-widest uppercase mb-1.5"><i class="fa-solid fa-brain mr-1"></i> Psychological Trap</p>
+                            <p id="trapA" class="text-[11px] text-gray-300 leading-relaxed font-mono opacity-90"></p>
+                        </div>
+
+                        <!-- NEW: BUTTONS WITH SAVE/STAR ICON -->
+                        <div class="flex gap-2">
+                            <button onclick="copyText('textA', this)" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+                            <button onclick="toggleStar(this)" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[14px] px-4 py-2 rounded transition-all"><i class="fa-regular fa-star"></i></button>
+                        </div>
                     </div>
 
+                    <!-- BETA HOOK RESULT -->
                     <div class="bg-black/40 border border-theme p-5 rounded-2xl relative">
                         <div class="flex justify-between items-center mb-3">
                             <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest border border-theme">Beta</span>
                             <span class="text-[10px] text-theme font-black tracking-widest">SCORE: <span id="scoreB" class="text-theme text-lg font-black inline-block">0</span><span class="text-xs text-gray-500">/100</span></span>
                         </div>
                         <h3 id="textB" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
-                        <button onclick="copyText('textB')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-1.5 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+                        
+                        <!-- 🧠 NEW: PSYCHOLOGICAL TRAP BREAKDOWN -->
+                        <div class="mt-4 mb-4 p-3 bg-red-900/10 border border-red-500/30 rounded-lg border-l-2 border-l-red-500 shadow-[inset_0_0_10px_rgba(239,68,68,0.05)]">
+                            <p class="text-[9px] font-black text-red-500 tracking-widest uppercase mb-1.5"><i class="fa-solid fa-brain mr-1"></i> Psychological Trap</p>
+                            <p id="trapB" class="text-[11px] text-gray-300 leading-relaxed font-mono opacity-90"></p>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button onclick="copyText('textB', this)" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
+                            <button onclick="toggleStar(this)" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[14px] px-4 py-2 rounded transition-all"><i class="fa-regular fa-star"></i></button>
+                        </div>
                     </div>
                 </div>
 
@@ -255,7 +286,7 @@
         </div>
     </div>
 
-    <!-- ⚙️ PROFILE SETTINGS MODAL WITH YOUR SUPABASE IMAGES -->
+    <!-- ⚙️ PROFILE SETTINGS MODAL -->
     <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[10000] hidden items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 relative bg-black/90">
             <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -277,12 +308,11 @@
                 <div>
                     <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-3 text-center">Choose Premium Avatar</label>
                     <div class="flex gap-2 justify-center flex-wrap">
-                        <!-- TERE SUPABASE LINKS -->
-                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/a5f8a6d6c02976d90365c20c3cfb8a9c.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 1">
-                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/18b74f95f922675a4a35c8b9717dbf64.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 2">
-                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/pic2%20(1).jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 3">
-                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/c884012da9a7dc5ad426f4c1c8c36be8.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 4">
-                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/6e574195d99db9e244f4fe12b45b1759.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover" title="Avatar 5">
+                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/a5f8a6d6c02976d90365c20c3cfb8a9c.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
+                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/18b74f95f922675a4a35c8b9717dbf64.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
+                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/pic2%20(1).jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
+                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/c884012da9a7dc5ad426f4c1c8c36be8.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
+                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/6e574195d99db9e244f4fe12b45b1759.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
                     </div>
                 </div>
 
@@ -314,6 +344,25 @@
             document.getElementById('bg-vid').play().catch(e => console.log("Auto-play blocked")); 
             loadProfileData(); 
         });
+
+        // ONE CLICK TOPIC FUNCTION
+        function setTopic(text) {
+            document.getElementById('h-topic').value = text;
+        }
+
+        // STAR BUTTON FUNCTION
+        function toggleStar(btn) {
+            const icon = btn.querySelector('i');
+            if(icon.classList.contains('fa-regular')) {
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fa-solid', 'text-yellow-400');
+                btn.classList.add('border-yellow-400/50');
+            } else {
+                icon.classList.remove('fa-solid', 'text-yellow-400');
+                icon.classList.add('fa-regular');
+                btn.classList.remove('border-yellow-400/50');
+            }
+        }
 
         function loadProfileData() {
             const savedName = localStorage.getItem('hf_username') || 'Santosh Choudhary';
@@ -496,9 +545,9 @@
             isMuted = !isMuted; vid.muted = isMuted; icon.className = isMuted ? 'fa-solid fa-volume-xmark text-sm' : 'fa-solid fa-volume-high text-sm';
         }
 
-        function copyText(id) { 
+        function copyText(id, btn) { 
             const text = document.getElementById(id).innerText; navigator.clipboard.writeText(text);
-            const btn = event.currentTarget; const oldHTML = btn.innerHTML;
+            const oldHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Copied!'; setTimeout(() => { btn.innerHTML = oldHTML; }, 1500);
         }
 
@@ -517,7 +566,15 @@
                 if (currentMode === 'hook') {
                     document.getElementById('results-hook').style.display = 'block';
                     animateScore('scoreA', data.hook_a.score); animateScore('scoreB', data.hook_b.score);
-                    matrixDecrypt('textA', `"${data.hook_a.text}"`); matrixDecrypt('textB', `"${data.hook_b.text}"`);
+                    
+                    // DECRYPTING HOOKS
+                    matrixDecrypt('textA', `"${data.hook_a.text}"`); 
+                    matrixDecrypt('textB', `"${data.hook_b.text}"`);
+
+                    // 🧠 DECRYPTING PSYCHOLOGICAL TRAPS (Mockup manipulative texts)
+                    matrixDecrypt('trapA', "Exploits 'Fear of Missing Out' (FOMO) and 'Status Anxiety'. By stating what the majority is doing wrong, it triggers an immediate threat response in the amygdala, forcing the user to read the solution to protect their social/creator status.");
+                    matrixDecrypt('trapB', "Creates a massive 'Curiosity Gap' paired with a 'Contrarian Hook'. It attacks a universally accepted belief, causing cognitive dissonance. The brain cannot ignore unresolved mysteries, ensuring high watch time.");
+
                 } else {
                     document.getElementById('results-script').style.display = 'block';
                     animateScore('s-score', data.retention_score); matrixDecrypt('s-master', data.master_script);
