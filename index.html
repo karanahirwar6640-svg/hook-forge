@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hook Forge | Premium Edition</title>
+    <title>Hook Forge | Secure Cloud Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@300;400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -37,7 +37,7 @@
 
         html, body { margin: 0; min-height: 100vh; font-family: 'Inter', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; position: relative; }
         
-        /* 🌟 MAIN VIDEO BACKGROUND - Dashboard & Core Entry share background video but are layered */
+        /* 🌟 MAIN VIDEO BACKGROUND */
         .bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 1; opacity: 1; transition: opacity 0.5s ease; filter: brightness(1.1); }
         .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.2); z-index: 2; pointer-events: none; }
         
@@ -53,14 +53,14 @@
             border-left: 1px solid rgba(255, 255, 255, 0.25) !important; 
             border-radius: 24px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7); 
-            transition: all 0.4s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .anime-title { font-family: 'Cinzel', serif; color: var(--c2); text-shadow: 0 0 15px var(--glow); transition: color 0.4s, text-shadow 0.4s;}
         .text-theme { color: var(--c2) !important; transition: color 0.4s; }
         
         /* CLEAR INPUTS */
-        .glass-input { background: rgba(0, 0, 0, 0.5) !important; backdrop-filter: none !important; border: 1px solid rgba(255,255,255,0.15) !important; color: #fff; transition: all 0.3s; border-radius: 8px; }
+        .glass-input { background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: none !important; border: 1px solid rgba(255,255,255,0.15) !important; color: #fff; transition: all 0.3s; border-radius: 8px; }
         .glass-input:focus { outline: none; border-color: var(--c2) !important; box-shadow: 0 0 10px var(--glow) !important; background: rgba(0,0,0,0.8) !important; }
         select.glass-input option { background: #111; color: #fff; }
         
@@ -116,9 +116,8 @@
 </head>
 <body>
 
-    <!-- VIDEO BACKGROUND IS GLOBAL -->
     <video id="bg-vid" autoplay muted loop playsinline class="bg-video">
-        <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4" type="video/mp4">
+        <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/Video-214.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
 
@@ -132,14 +131,12 @@
         <i id="audio-icon" class="fa-solid fa-volume-xmark text-sm"></i>
     </div>
 
-    <!-- TOAST ALERT -->
     <div id="toast"><i class="fa-solid fa-check mr-2"></i> Action Completed</div>
 
-    <!-- 🚪 CONFIRM SIGN OUT MODAL -->
     <div id="confirm-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[15000] hidden items-center justify-center p-4">
         <div id="confirm-box" class="w-full max-w-sm glass-panel p-8 bg-black/90 text-center relative border border-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.3)]">
             <i class="fa-solid fa-right-from-bracket text-6xl text-orange-500 mb-5 opacity-80 shadow-[0_0_15px_var(--glow)]"></i>
-            <h2 class="anime-title text-2xl mb-3 text-white">CORE DISCONNECT PROTOCOL</h2>
+            <h2 class="anime-title text-2xl mb-3 text-white">CORE DISCONNECT</h2>
             <p class="text-xs text-gray-300 font-mono tracking-wide leading-relaxed mb-8">Signing out will terminate current active session. User Matrix Data and Saved Vault (⭐) will remain safe. Disconnect Core Matrix?</p>
             <div class="flex gap-4">
                 <button onclick="closeConfirmModal()" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-3 rounded uppercase font-bold transition-all">Cancel</button>
@@ -148,62 +145,89 @@
         </div>
     </div>
 
-    <!-- ⚙️ NEW IMMERSIVE SAAS ENTRY CORE SCREEN (Simulates Login Screen) -->
     <div id="core-view-viewport" class="w-full h-full p-4 md:p-8 flex items-center justify-center">
-        <!-- Panel needs to be large like previous signup gate but as a dedicated view -->
-        <div class="glass-panel w-full max-w-lg p-10 flex flex-col items-center border border-theme shadow-[0_0_50px_var(--bg-glow)] relative">
-            <div class="text-left w-full border-b border-theme/30 pb-6 mb-10">
-                <h1 class="anime-title text-5xl font-black mb-3 tracking-wide">CORE ACCESS</h1>
-                <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em]"><i class="fa-solid fa-shield-halved mr-2 text-theme"></i> premium edition core matrix</p>
-            </div>
+        <div class="glass-panel w-full max-w-lg p-8 md:p-10 flex flex-col items-center border border-theme shadow-[0_0_50px_var(--bg-glow)] relative overflow-hidden">
             
-            <div id="entry-flow-data" class="w-full">
-                <!-- Data collection needs large preview -->
-                <div class="flex flex-col md:flex-row items-center gap-8 w-full mb-10">
-                    <div class="relative group">
-                        <img id="entry-avatar-preview" src="" class="w-32 h-32 rounded-full border-4 border-theme object-cover shadow-[0_0_30px_var(--glow)] hidden">
-                        <div id="entry-initial-wrapper" class="flex items-center justify-center bg-black/80 w-32 h-32 rounded-full border-4 border-theme shadow-[0_0_30px_var(--glow)]">
-                            <span id="entry-initial-text" class="text-5xl font-black text-white tracking-widest">SC</span>
-                        </div>
-                    </div>
-                    <div class="flex-grow space-y-5 w-full text-left">
-                        <h2 class="text-xl font-black text-white uppercase tracking-wider">Initialize Protocol</h2>
-                        <p id="entry-flow-p" class="text-xs text-gray-300 font-mono leading-relaxed h-[60px]">Entry parameters required. Provide User Identification Matrix and Profile Interface Array to forge core connection.</p>
-                    </div>
+            <div id="auth-step" class="w-full flex flex-col items-center transition-all duration-500">
+                <h1 class="anime-title text-4xl md:text-5xl font-black mb-2 tracking-wide text-center">HOOK FORGE</h1>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-10 text-center">Secure Cloud Portal</p>
+
+                <button onclick="simulateGitHubAuth(event)" class="w-full bg-black/60 hover:bg-black/80 border border-white/20 text-white py-4 rounded-xl font-bold tracking-widest uppercase text-xs mb-6 transition-all flex items-center justify-center gap-3 backdrop-blur-sm shadow-lg">
+                    <i class="fa-brands fa-github text-lg"></i> Continue with GitHub
+                </button>
+
+                <div class="flex items-center w-full mb-6 opacity-60">
+                    <div class="flex-1 h-px bg-white/20"></div>
+                    <span class="px-4 text-[9px] uppercase tracking-widest text-theme">Secure Routing</span>
+                    <div class="flex-1 h-px bg-white/20"></div>
                 </div>
 
-                <div id="input-container-gate" class="space-y-4 mb-10 text-left">
-                    <div>
-                        <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">User Identification Matrix (Username)</label>
-                        <input type="text" id="gate-username" class="w-full glass-input px-4 py-3 text-sm font-bold tracking-wide" placeholder="Enter username..." maxlength="20">
+                <div class="space-y-4 w-full mb-6">
+                    <div class="relative">
+                        <i class="fa-solid fa-shield-halved absolute left-4 top-1/2 -translate-y-1/2 text-theme opacity-80"></i>
+                        <input type="email" id="auth-email" class="w-full glass-input pl-12 pr-4 py-4 text-sm font-bold tracking-wide" placeholder="Enter security email">
                     </div>
-                    <!-- Hidden unless new user -->
-                    <div id="gate-pic-container" class="space-y-4">
-                        <div>
-                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">Profile Interface Array (Upload image)</label>
-                            <input type="file" id="gate-upload-pic" accept="image/*" class="w-full glass-input p-2 text-xs cursor-pointer" onchange="handleGateUpload(event)">
+                    <button onclick="simulateTokenAuth(event)" class="w-full premium-btn py-4 rounded-xl font-black tracking-widest uppercase text-xs shadow-lg">
+                        Request Entry Token
+                    </button>
+                </div>
+
+                <p class="text-[8px] font-mono text-white/30 uppercase tracking-[0.2em] cursor-pointer hover:text-white/70 transition" onclick="devOverride()">| Developer Override Access |</p>
+            </div>
+
+            <div id="profile-step" class="w-full flex flex-col items-center transition-all duration-500 hidden opacity-0">
+                
+                <div class="w-full flex justify-between items-center border-b border-theme/30 pb-4 mb-8">
+                    <button onclick="backToAuth()" class="text-gray-400 hover:text-white transition w-8 text-left"><i class="fa-solid fa-arrow-left"></i></button>
+                    <p class="text-[10px] font-black text-theme uppercase tracking-[0.3em] flex-grow text-center">Step 2: Profile Matrix</p>
+                    <div class="w-8"></div>
+                </div>
+                
+                <div id="entry-flow-data" class="w-full">
+                    <div class="flex flex-col md:flex-row items-center gap-6 w-full mb-8">
+                        <div class="relative group">
+                            <img id="entry-avatar-preview" src="" class="w-28 h-28 rounded-full border-4 border-theme object-cover shadow-[0_0_30px_var(--glow)] hidden">
+                            <div id="entry-initial-wrapper" class="flex items-center justify-center bg-black/80 w-28 h-28 rounded-full border-4 border-theme shadow-[0_0_30px_var(--glow)]">
+                                <span id="entry-initial-text" class="text-4xl font-black text-white tracking-widest">SC</span>
+                            </div>
                         </div>
+                        <div class="flex-grow space-y-3 w-full text-center md:text-left">
+                            <h2 class="text-lg font-black text-white uppercase tracking-wider">Authentication Success</h2>
+                            <p id="entry-flow-p" class="text-[11px] text-gray-300 font-mono leading-relaxed h-[50px]">Provide User Identification Matrix and Profile Interface Array to forge final core connection.</p>
+                        </div>
+                    </div>
+
+                    <div id="input-container-gate" class="space-y-4 mb-8 text-left w-full">
                         <div>
-                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-3 text-center">Or Use Premium Avatar</label>
-                            <div class="flex gap-3 justify-center flex-wrap">
-                                <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/a5f8a6d6c02976d90365c20c3cfb8a9c.jpg" onclick="selectGatePic(this.src)" class="w-14 h-14 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/18b74f95f922675a4a35c8b9717dbf64.jpg" onclick="selectGatePic(this.src)" class="w-14 h-14 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/pic2%20(1).jpg" onclick="selectGatePic(this.src)" class="w-14 h-14 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/c884012da9a7dc5ad426f4c1c8c36be8.jpg" onclick="selectGatePic(this.src)" class="w-14 h-14 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/6e574195d99db9e244f4fe12b45b1759.jpg" onclick="selectGatePic(this.src)" class="w-14 h-14 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
+                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">Username Matrix</label>
+                            <input type="text" id="gate-username" class="w-full glass-input px-4 py-3 text-sm font-bold tracking-wide" placeholder="Enter username..." maxlength="20">
+                        </div>
+                        <div id="gate-pic-container" class="space-y-4">
+                            <div>
+                                <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">Upload Custom Image</label>
+                                <input type="file" id="gate-upload-pic" accept="image/*" class="w-full glass-input p-2 text-xs cursor-pointer" onchange="handleGateUpload(event)">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-3 text-center">Or Use Premium Avatar</label>
+                                <div class="flex gap-2 justify-center flex-wrap">
+                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/a5f8a6d6c02976d90365c20c3cfb8a9c.jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
+                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/18b74f95f922675a4a35c8b9717dbf64.jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
+                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/pic2%20(1).jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
+                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/c884012da9a7dc5ad426f4c1c8c36be8.jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
+                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/6e574195d99db9e244f4fe12b45b1759.jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <button onclick="handleCoreLogin()" class="w-full premium-btn py-5 rounded-2xl font-black tracking-widest uppercase text-xs shadow-[0_0_30px_var(--glow)]">
-                    <span id="gate-btn-span">Initialize Core Matrix</span> <i class="fa-solid fa-right-to-bracket ml-2"></i>
-                </button>
+                    <button onclick="handleCoreLogin()" class="w-full premium-btn py-4 rounded-xl font-black tracking-widest uppercase text-xs shadow-[0_0_30px_var(--glow)]">
+                        <span id="gate-btn-span">Initialize Core Matrix</span> <i class="fa-solid fa-right-to-bracket ml-2"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD CONTENT (Hidden until login) -->
     <div id="dashboard-viewport" class="w-full h-full p-4 md:p-8 flex flex-col items-center justify-start hidden">
         <div id="dash-wrapper" class="w-full max-w-6xl mt-20 mb-10 px-2 opacity-0 transition-opacity duration-1000">
         
@@ -296,7 +320,6 @@
                             <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Core Topic</label>
                             <textarea id="h-topic" rows="3" class="w-full glass-input px-4 py-3 text-sm resize-none" placeholder="Enter core concept..."></textarea>
                             
-                            <!-- 🔥 5 ONE CLICK PILLS -->
                             <div class="flex flex-wrap gap-2 mt-3">
                                 <button onclick="setTopic('Why saving money in a bank account is keeping you broke')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">💰 Wealth Hacks</button>
                                 <button onclick="setTopic('The biggest lies the fitness industry tells you to sell supplements')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">🏋️ Fitness Lies</button>
@@ -388,17 +411,14 @@
                         </div>
                     </div>
 
-                    <!-- SAVED VAULT -->
                     <div id="results-vault" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar h-full">
-                        <!-- Loaded dynamically -->
-                    </div>
+                        </div>
 
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ⚙️ PROFILE SETTINGS MODAL -->
     <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[10000] hidden items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 relative bg-black/90">
             <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -443,24 +463,22 @@
     <script>
         let currentMode = 'hook'; let isMuted = true; let isLuxuryMode = false; let currentAura = 0;
         let tempSelectedPic = null;
-        let isExistingUserForGate = false; // Flag to track if gate username belongs to existing user
+        let isExistingUserForGate = false; 
 
         const videos = [
-            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4", 
             "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/Video-214.mp4", 
+            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4",
             "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(1).mp4"
         ];
         
         const themes = ['', 'theme-blue', 'theme-purple'];
 
         document.addEventListener("DOMContentLoaded", () => { 
-            // 🚪 INITIAL FLOW CHECK (SAAS ENTRY CORE ACCESS SCREEN)
             checkCoreAccess();
         });
 
-        /* --- 🚪 NEW: CORE ACCESS / SAAS FLOW LOGIC --- */
+        /* --- 🚪 CORE ACCESS & AUTHENTICATION FLOW LOGIC --- */
         function checkCoreAccess() {
-            // Hum current active session check kar rahe hain
             const currentActiveUserName = localStorage.getItem('hf_current_user_name');
             const coreViewport = document.getElementById('core-view-viewport');
             const dashboard = document.getElementById('dashboard-viewport');
@@ -468,62 +486,128 @@
             const bgVid = document.getElementById('bg-vid');
             
             if (!currentActiveUserName) {
-                // NO ACTIVE SESSION - Show cinematic Core Access Screen
+                // Show Entry Screen (Auth / Profile Init)
                 coreViewport.style.display = 'flex';
                 dashboard.classList.add('hidden');
-                
-                // Hide floating buttons initially
                 document.querySelectorAll('.floating-btn').forEach(b => b.classList.add('hidden'));
+                
+                // Reset auth states
+                document.getElementById('auth-step').classList.remove('hidden');
+                document.getElementById('profile-step').classList.add('hidden');
+                document.getElementById('profile-step').classList.add('opacity-0');
 
-                // Listen to username input to check for existing user simulation
-                const gateUsernameInput = document.getElementById('gate-username');
-                gateUsernameInput.addEventListener('input', checkExistingUserSimulation);
+                // Attach listener for username checking
+                document.getElementById('gate-username').addEventListener('input', checkExistingUserSimulation);
 
             } else {
-                // ACTIVE SESSION FOUND - Show Dashboard
+                // Show Dashboard
                 coreViewport.style.display = 'none';
                 dashboard.classList.remove('hidden');
                 setTimeout(() => { dashWrapper.classList.remove('opacity-0'); }, 10);
-                
-                // Show floating buttons
                 document.querySelectorAll('.floating-btn').forEach(b => b.classList.remove('hidden'));
                 
-                // Setup main app
                 loadProfileData(); 
                 bgVid.play().catch(e => console.log("Main video blocked"));
             }
         }
 
-        // Simulates SaaS "Recognizing User" feature
+        /* SIMULATED GITHUB OAUTH */
+        function simulateGitHubAuth(e) {
+            const btn = e.currentTarget;
+            const originalHtml = btn.innerHTML;
+            showToast('Initiating secure handshake with GitHub...');
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-lg"></i> Authenticating...';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalHtml;
+                showToast('OAuth verification successful. Routing matrix.');
+                proceedToProfileSetup();
+            }, 1800);
+        }
+
+        /* SIMULATED MAGIC LINK TOKEN */
+        function simulateTokenAuth(e) {
+            const email = document.getElementById('auth-email').value;
+            if(!email || !email.includes('@')) {
+                showToast('Error: Valid security email required', true);
+                return;
+            }
+            const btn = e.currentTarget;
+            const originalHtml = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-lg"></i> Verifying Network...';
+            setTimeout(() => {
+                btn.innerHTML = originalHtml;
+                showToast('Token dispatched. Channel secured.');
+                
+                setTimeout(() => {
+                    showToast('Token Verified. Routing matrix.');
+                    proceedToProfileSetup();
+                }, 1500);
+            }, 1500);
+        }
+
+        /* DEV OVERRIDE */
+        function devOverride() {
+            showToast('Developer override accepted. Bypassing auth.');
+            proceedToProfileSetup();
+        }
+
+        /* TRANSITION TO STEP 2 */
+        function proceedToProfileSetup() {
+            const authStep = document.getElementById('auth-step');
+            const profileStep = document.getElementById('profile-step');
+            
+            authStep.classList.add('opacity-0');
+            setTimeout(() => {
+                authStep.classList.add('hidden');
+                profileStep.classList.remove('hidden');
+                setTimeout(() => profileStep.classList.remove('opacity-0'), 50);
+            }, 300);
+        }
+
+        function backToAuth() {
+            const authStep = document.getElementById('auth-step');
+            const profileStep = document.getElementById('profile-step');
+            
+            profileStep.classList.add('opacity-0');
+            setTimeout(() => {
+                profileStep.classList.add('hidden');
+                authStep.classList.remove('hidden');
+                setTimeout(() => authStep.classList.remove('opacity-0'), 50);
+            }, 300);
+        }
+
+        /* CHECK FOR RETURNING USER IN STEP 2 */
         function checkExistingUserSimulation(e) {
-            const inputName = e.target.value.trim().toUpperCase(); // Case insensitive
+            const inputName = e.target.value.trim().toUpperCase(); 
             const picContainer = document.getElementById('gate-pic-container');
             const currentFlowP = document.getElementById('entry-flow-p');
             const gateBtnSpan = document.getElementById('gate-btn-span');
 
-            const savedPic = localStorage.getItem(`hf_profile_pic_${inputName}`); // Dynamic key
+            const savedPic = localStorage.getItem(`hf_profile_pic_${inputName}`);
             
             if(inputName.length >= 3 && savedPic) {
                 // USER EXISTS - Simplified Login Mode
                 isExistingUserForGate = true;
-                picContainer.style.display = 'none'; // Hide photo pick
+                picContainer.style.display = 'none'; 
                 currentFlowP.innerHTML = `<span class="text-white font-bold">Protocol Recognized: ${inputName}</span> Matrix detected. Provide identification to forge continuing protocol. Vault data safe.`;
                 currentFlowP.classList.add('text-green-300');
-                gateBtnSpan.innerText = "forge continuing protocol";
-                // Show existing pic preview
+                gateBtnSpan.innerText = "Forge Continuing Protocol";
+                
                 document.getElementById('entry-avatar-preview').src = savedPic;
                 document.getElementById('entry-avatar-preview').classList.remove('hidden');
                 document.getElementById('entry-initial-wrapper').classList.add('hidden');
 
             } else {
-                // NEW USER OR USERNAME EMPTY - Normal Mode
+                // NEW USER Mode
                 isExistingUserForGate = false;
-                picContainer.style.display = 'block'; // Show photo pick
-                currentFlowP.innerHTML = "Entry parameters required. Provide User Identification Matrix and Profile Interface Array to forge core connection.";
+                picContainer.style.display = 'block'; 
+                currentFlowP.innerHTML = "Provide User Identification Matrix and Profile Interface Array to forge final core connection.";
                 currentFlowP.classList.remove('text-green-300');
                 gateBtnSpan.innerText = "Initialize Core Matrix";
                 if(inputName.length >= 2) {
-                    document.getElementById('entry-initial-text').innerText = inputName.substring(0, 2);
+                    document.getElementById('entry-initial-text').innerText = inputName.substring(0, 2).toUpperCase();
                     document.getElementById('entry-initial-wrapper').classList.remove('hidden');
                     document.getElementById('entry-avatar-preview').classList.add('hidden');
                 } else {
@@ -544,11 +628,9 @@
             }
 
             if(isExistingUserForGate) {
-                // LOGGING IN AS EXISTING USER (Data remains safe)
+                // LOGGING IN AS EXISTING USER
                 localStorage.setItem('hf_current_user_name', usernameInput);
-                showToast('core protocols active. session forged.');
-                
-                // No need to reload for simulated login, just run access check
+                showToast('Core protocols active. Session forged.');
                 setTimeout(() => { checkCoreAccess(); }, 1200);
             } else {
                 // CREATING NEW USER FLOW
@@ -556,19 +638,14 @@
                     showToast('Error: Profile Interface Array Required!', true);
                     return;
                 }
-
-                // Save persistent data (Never deleted on sign out)
-                localStorage.setItem('hf_current_user_name', usernameInput); // Current Session pointer
-                localStorage.setItem(`hf_profile_pic_${upperName}`, tempSelectedPic); // Dynamic key for persistent data
-
-                showToast('Core Protocols Initialized. session forged.');
-                
-                // No need to reload, run access check
+                localStorage.setItem('hf_current_user_name', usernameInput); 
+                localStorage.setItem(`hf_profile_pic_${upperName}`, tempSelectedPic); 
+                showToast('Core Protocols Initialized. Session forged.');
                 setTimeout(() => { checkCoreAccess(); }, 1200);
             }
         }
 
-        /* --- Entry Screen Avatar Selection --- */
+        /* --- Gate Avatar Selection --- */
         function selectGatePic(src) {
             tempSelectedPic = src;
             document.getElementById('entry-avatar-preview').src = src;
@@ -577,9 +654,7 @@
             showToast('Premium Avatar selected for initialization');
         }
 
-        function handleGateUpload(e) {
-            handleImageUpload(e, 'entry');
-        }
+        function handleGateUpload(e) { handleImageUpload(e, 'entry'); }
 
         /* --- TOAST ALERTS --- */
         function showToast(msg, isError = false) {
@@ -591,12 +666,12 @@
         }
 
         /* --- ONE CLICK TOPIC --- */
-        function setTopic(text) { document.getElementById('h-topic').value = text; }
+        function setTopic(text) { document.getElementById('h-topic').value = text; showToast('Topic Matrix Loaded'); }
 
-        /* --- 🚪 NEW FUNCTIONAL SAAS SIGN OUT & LOGOUT (Does not delete vault data) --- */
+        /* --- 🚪 FUNCTIONAL SAAS SIGN OUT --- */
         function confirmSignOut() {
             createShockwave(event);
-            toggleProfileMenu(event); // Close menu first
+            toggleProfileMenu(event);
             document.getElementById('confirm-modal').classList.add('flex');
             document.getElementById('confirm-modal').classList.remove('hidden');
         }
@@ -607,32 +682,24 @@
         }
 
         function performSignOut() {
-            // 🔥 real saas signout: clear active pointers, hide dashboard, show login screen.
-            localStorage.removeItem('hf_current_user_name'); // Clear current active session pointer
-            // Hum vault data (hf_vault_${user}) ko delete nahi kar rahe! Data persistent hai.
-
+            localStorage.removeItem('hf_current_user_name'); 
             closeConfirmModal();
-            showToast('profile purged from session matrix. self-destruct sequence not required.');
-            
-            // Reload page to force Entry Screen flow (just like standard SaaS apps)
+            showToast('Profile purged from session matrix. Vault safe.');
             setTimeout(() => { window.location.reload(); }, 1500);
         }
 
-        /* --- WORKING SAVE TO VAULT (STAR) - Persistent per user data --- */
+        /* --- WORKING SAVE TO VAULT (STAR) --- */
         function toggleStar(btn, textId, typeName) {
             createShockwave(event);
             const icon = btn.querySelector('i');
             const textContent = document.getElementById(textId).innerText;
-            if(!textContent) return; // Empty nahi hona chahiye
+            if(!textContent) return; 
 
-            // User unique dynamic vault key
             const currentActiveUser = localStorage.getItem('hf_current_user_name').toUpperCase();
             const vaultKey = `hf_vault_${currentActiveUser}`; 
-
             let vault = JSON.parse(localStorage.getItem(vaultKey) || '[]');
 
             if(icon.classList.contains('fa-regular')) {
-                // Save it
                 icon.classList.remove('fa-regular');
                 icon.classList.add('fa-solid', 'text-yellow-400');
                 btn.classList.add('border-yellow-400/50');
@@ -640,9 +707,8 @@
                 
                 vault.push({ id: Date.now(), type: typeName, text: textContent });
                 localStorage.setItem(vaultKey, JSON.stringify(vault));
-                showToast('intel archived in persistent saved vault');
+                showToast('Intel archived in persistent saved vault');
             } else {
-                // Unsave it
                 icon.classList.remove('fa-solid', 'text-yellow-400');
                 icon.classList.add('fa-regular');
                 btn.classList.remove('border-yellow-400/50');
@@ -650,19 +716,16 @@
 
                 vault = vault.filter(item => item.text !== textContent);
                 localStorage.setItem(vaultKey, JSON.stringify(vault));
-                showToast('intel purged from vault');
+                showToast('Intel purged from vault');
             }
             if(currentMode === 'vault') renderVault();
         }
 
-        /* --- RENDER VAULT UI (Persistent User Data) --- */
+        /* --- RENDER VAULT UI --- */
         function renderVault() {
             const vaultContainer = document.getElementById('results-vault');
-            
-            // User unique dynamic vault key
             const currentActiveUser = localStorage.getItem('hf_current_user_name').toUpperCase();
             const vaultKey = `hf_vault_${currentActiveUser}`; 
-            
             const vaultData = JSON.parse(localStorage.getItem(vaultKey) || '[]');
             
             if(vaultData.length === 0) {
@@ -675,8 +738,7 @@
                 return;
             }
 
-            vaultContainer.innerHTML = ''; // Clear old
-            // We show the latest save first (reverse order)
+            vaultContainer.innerHTML = ''; 
             [...vaultData].reverse().forEach(item => {
                 const card = document.createElement('div');
                 card.className = "bg-black/40 border border-theme p-5 rounded-2xl relative mb-4 shadow-lg";
@@ -693,14 +755,13 @@
         }
 
         function removeSaved(id) {
-            // User unique dynamic vault key
             const currentActiveUser = localStorage.getItem('hf_current_user_name').toUpperCase();
             const vaultKey = `hf_vault_${currentActiveUser}`; 
             
             let vault = JSON.parse(localStorage.getItem(vaultKey) || '[]');
             vault = vault.filter(item => item.id !== id);
             localStorage.setItem(vaultKey, JSON.stringify(vault));
-            showToast('item deleted permanently from vault matrix');
+            showToast('Item deleted permanently from vault matrix');
             renderVault();
         }
 
@@ -708,7 +769,7 @@
         function loadProfileData() {
             const savedName = localStorage.getItem('hf_current_user_name') || 'Santosh Choudhary';
             const upperName = savedName.toUpperCase();
-            const savedPic = localStorage.getItem(`hf_profile_pic_${upperName}`); // Dynamic key
+            const savedPic = localStorage.getItem(`hf_profile_pic_${upperName}`); 
             
             const initial = savedName.substring(0, 2).toUpperCase();
 
@@ -736,7 +797,7 @@
             menu.classList.remove('active');
             if (arrow) arrow.style.transform = 'rotate(0deg)';
             
-            const savedPic = localStorage.getItem(`hf_profile_pic_${localStorage.getItem('hf_current_user_name').toUpperCase()}`); // dynamic key
+            const savedPic = localStorage.getItem(`hf_profile_pic_${localStorage.getItem('hf_current_user_name').toUpperCase()}`);
             const savedName = localStorage.getItem('hf_current_user_name') || 'Santosh Choudhary';
             
             const modalImg = document.getElementById('modal-preview-img');
@@ -791,7 +852,7 @@
                             imgElem.classList.remove('hidden');
                             wrapElem.classList.add('hidden');
                         }
-                        showToast('custom image processed for core access');
+                        showToast('Custom image processed securely');
                     }
                     imgObj.src = event.target.result;
                 }
@@ -803,32 +864,17 @@
             const oldName = localStorage.getItem('hf_current_user_name');
             const newName = document.getElementById('edit-username').value.trim() || oldName;
 
-            // Simulating real SaaS backend update: data not deleted on signout but persistent per username.
             if (newName !== oldName) {
-                // HUM simulated backend key CHANGE kar rahe hain persistent data ki
-                // Previous key clear karne se simulated login flow maintain rahega Entry screen par naye user ke liye.
-                // Par user wants complex "Big SaaS" persistent system so we actually should NOT delete old profile data but map it.
-                // Let's keep it simple simulated persistent: we clear active session pointers.
-                
-                // Real SaaS approach simulated persistent backend: we DO not delete previous name photo data but move session pointer.
-                localStorage.setItem('hf_current_user_name', newName); // Update active pointer session pointer
-                
-                // Hum previous key clear nahi kar rahe (persistence simulated).
-                
+                localStorage.setItem('hf_current_user_name', newName); 
                 if (tempSelectedPic) {
-                    // Update photo matrix in persistent array simulated
                     localStorage.setItem(`hf_profile_pic_${newName.toUpperCase()}`, tempSelectedPic);
                 } else {
-                    // Previous photo persistent simulated matrix continue
                     const oldPic = localStorage.getItem(`hf_profile_pic_${oldName.toUpperCase()}`);
                     localStorage.setItem(`hf_profile_pic_${newName.toUpperCase()}`, oldPic);
                 }
-
-                showToast('Core session pointers realigned. session forged.');
-
+                showToast('Core session pointers realigned. Session forged.');
             } else {
-                // If name hasn't changed simulated dynamic persistent backend pointers continue
-                if (tempSelectedPic) localStorage.setItem(`hf_profile_pic_${oldName.toUpperCase()}`, tempSelectedPic); // dynamic case simulated
+                if (tempSelectedPic) localStorage.setItem(`hf_profile_pic_${oldName.toUpperCase()}`, tempSelectedPic); 
                 showToast('Profile matrix protocol updated.');
             }
 
@@ -851,7 +897,6 @@
                 menu.classList.remove('active');
                 if (arrow) arrow.style.transform = 'rotate(0deg)';
             }
-
             if (confirmModal && confirmModal.classList.contains('flex') && e.target === confirmModal) {
                 closeConfirmModal();
             }
@@ -862,17 +907,14 @@
             currentMode = mode;
             createShockwave(event);
             
-            // Buttons
             document.getElementById('tab-hook').className = mode === 'hook' ? 'tab-btn tab-active flex-1 md:flex-none' : 'tab-btn tab-inactive flex-1 md:flex-none';
             document.getElementById('tab-script').className = mode === 'script' ? 'tab-btn tab-active flex-1 md:flex-none' : 'tab-btn tab-inactive flex-1 md:flex-none';
             document.getElementById('tab-vault').className = mode === 'vault' ? 'tab-btn tab-active flex-1 md:flex-none' : 'tab-btn tab-inactive flex-1 md:flex-none';
             
-            // Inputs Left Side
             document.getElementById('inputs-hook').style.display = mode === 'hook' ? 'block' : 'none';
             document.getElementById('inputs-script').style.display = mode === 'script' ? 'flex' : 'none';
             document.getElementById('inputs-vault').style.display = mode === 'vault' ? 'flex' : 'none';
             
-            // Action Button
             const btnIgnite = document.getElementById('btn-ignite');
             if(mode === 'vault') {
                 btnIgnite.style.display = 'none';
@@ -881,7 +923,6 @@
                 btnIgnite.innerHTML = mode === 'hook' ? '<i class="fa-solid fa-bolt mr-2"></i> Ignite Hook Engine' : '<i class="fa-solid fa-scroll mr-2"></i> Forge Master Script';
             }
 
-            // Results Right Side
             document.getElementById('empty-state').style.display = mode === 'vault' ? 'none' : 'block';
             document.getElementById('results-hook').style.display = 'none'; 
             document.getElementById('results-script').style.display = 'none';
@@ -925,26 +966,24 @@
                 currentAura = (currentAura + 1) % videos.length; 
                 vid.src = videos[currentAura]; 
                 vid.play();
-                
                 document.body.classList.remove('theme-blue', 'theme-purple');
                 if(themes[currentAura]) document.body.classList.add(themes[currentAura]);
-                
                 vid.style.opacity = 1; 
-                showToast(`aura matrix aligned: ${themes[currentAura] || 'crimson'}`);
+                showToast(`Aura matrix aligned: ${themes[currentAura] || 'crimson'}`);
             }, 300);
         }
 
         function toggleDomainExpansion(e) {
             createShockwave(e); const body = document.body; const icon = document.getElementById('theme-icon'); 
             isLuxuryMode = !isLuxuryMode;
-            if (isLuxuryMode) { body.classList.add('theme-luxury'); icon.className = 'fa-solid fa-eye text-lg'; showToast('domain expanded: infinite luxury'); } 
-            else { body.classList.remove('theme-luxury'); icon.className = 'fa-solid fa-crown text-lg'; showToast('domain collapsed'); }
+            if (isLuxuryMode) { body.classList.add('theme-luxury'); icon.className = 'fa-solid fa-eye text-lg'; showToast('Domain expanded: infinite luxury'); } 
+            else { body.classList.remove('theme-luxury'); icon.className = 'fa-solid fa-crown text-lg'; showToast('Domain collapsed'); }
         }
 
         function toggleAudio(e) {
             createShockwave(e); const vid = document.getElementById('bg-vid'); const icon = document.getElementById('audio-icon');
             isMuted = !isMuted; vid.muted = isMuted; icon.className = isMuted ? 'fa-solid fa-volume-xmark text-sm' : 'fa-solid fa-volume-high text-sm';
-            showToast(isMuted ? 'audio protocols disabled' : 'audio protocols active');
+            showToast(isMuted ? 'Audio protocols disabled' : 'Audio protocols active');
         }
 
         function copyText(id, btn) { 
@@ -960,7 +999,6 @@
             document.getElementById('results-script').style.display = 'none'; document.getElementById('errorBox').style.display = 'none';
             document.getElementById('loading').style.display = 'flex';
             
-            // Reset stars UI in results
             document.querySelectorAll('#results-hook .fa-star.fa-solid, #results-script .fa-star.fa-solid').forEach(s => {
                 s.classList.remove('fa-solid', 'text-yellow-400');
                 s.classList.add('fa-regular');
@@ -978,25 +1016,21 @@
 
                 if (currentMode === 'hook') {
                     document.getElementById('results-hook').style.display = 'block';
-                    
-                    // Decrypt Hooks
                     matrixDecrypt('textA', `"${data.hook_a.text}"`); 
                     matrixDecrypt('textB', `"${data.hook_b.text}"`);
-
-                    // Decrypt Traps (Simulated manipulative feedback based on user tone)
                     matrixDecrypt('trapA', "Exploits 'Fear of Missing Out' (FOMO) and 'Status Anxiety'. By stating what the majority is doing wrong, it triggers an immediate threat response in the amygdala, forcing the user to read the solution to protect their social/creator status.");
                     matrixDecrypt('trapB', "Creates a massive 'Curiosity Gap' paired with a 'Contrarian Hook'. It attacks a universally accepted belief, causing cognitive dissonance. The brain cannot ignore unresolved mysteries, ensuring high watch time to find the 'answer'.");
-
                 } else {
                     document.getElementById('results-script').style.display = 'block';
+                    document.getElementById('s-score').innerText = data.retention_score;
                     matrixDecrypt('s-master', data.master_script);
                 }
-                showToast('intel extracted successfully');
+                showToast('Intel extracted successfully');
             } catch (err) {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('errorBox').innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i> <b>System Error:</b> ${err.message}`; 
                 document.getElementById('errorBox').style.display = 'block'; document.getElementById('empty-state').style.display = 'block';
-                showToast('extraction protocols failed', true);
+                showToast('Extraction protocols failed', true);
             }
         }
     </script>
