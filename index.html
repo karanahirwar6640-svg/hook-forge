@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hook Forge | Secure Cloud Portal</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+JP:wght@300;400;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         /* 🎨 DYNAMIC THEMES */
         :root {
@@ -17,18 +21,12 @@
             --bg-glow: rgba(239, 68, 68, 0.15);
         }
         body.theme-blue {
-            --c1: #1d4ed8; 
-            --c2: #3b82f6; 
-            --border: rgba(59,130,246, 0.4);
-            --glow: rgba(59,130,246, 0.5); 
-            --bg-glow: rgba(59,130,246, 0.15);
+            --c1: #1d4ed8; --c2: #3b82f6; --border: rgba(59,130,246, 0.4);
+            --glow: rgba(59,130,246, 0.5); --bg-glow: rgba(59,130,246, 0.15);
         }
         body.theme-purple {
-            --c1: #7e22ce; 
-            --c2: #a855f7; 
-            --border: rgba(168,85,247, 0.4);
-            --glow: rgba(168,85,247, 0.5); 
-            --bg-glow: rgba(168,85,247, 0.15);
+            --c1: #7e22ce; --c2: #a855f7; --border: rgba(168,85,247, 0.4);
+            --glow: rgba(168,85,247, 0.5); --bg-glow: rgba(168,85,247, 0.15);
         }
         body.theme-luxury {
             --c1: #ffffff; --c2: #ffffff; --border: rgba(255,255,255,0.2); 
@@ -38,19 +36,17 @@
         html, body { margin: 0; min-height: 100vh; font-family: 'Inter', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; position: relative; }
         
         /* 🌟 MAIN VIDEO BACKGROUND */
-        .bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 1; opacity: 1; transition: opacity 0.5s ease; filter: brightness(1.1); }
+        .bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 1; transition: opacity 0.5s ease; filter: brightness(1.1); }
         .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.2); z-index: 2; pointer-events: none; }
         
         #core-view-viewport, #dashboard-viewport { z-index: 10; position: relative; width: 100vw; height: 100vh; top: 0; left: 0; display: flex; flex-direction: column; align-items: center; }
 
         /* 💎 ZERO BLUR CRYSTAL CLEAR PANEL */
         .glass-panel {
-            background: rgba(0, 0, 0, 0.5) !important; 
-            backdrop-filter: none !important; 
-            -webkit-backdrop-filter: none !important; 
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.4) !important; 
-            border-left: 1px solid rgba(255, 255, 255, 0.25) !important; 
+            background: rgba(0, 0, 0, 0.6) !important; 
+            backdrop-filter: blur(10px); 
+            border: 1px solid var(--border) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.3) !important; 
             border-radius: 24px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7); 
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -62,25 +58,22 @@
         /* CLEAR INPUTS */
         .glass-input { background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: none !important; border: 1px solid rgba(255,255,255,0.15) !important; color: #fff; transition: all 0.3s; border-radius: 8px; }
         .glass-input:focus { outline: none; border-color: var(--c2) !important; box-shadow: 0 0 10px var(--glow) !important; background: rgba(0,0,0,0.8) !important; }
-        select.glass-input option { background: #111; color: #fff; }
         
         .premium-btn { position: relative; overflow: hidden; cursor: pointer; background: linear-gradient(45deg, var(--c1), var(--c2)); border: 1px solid var(--border); box-shadow: 0 0 15px var(--glow); transition: all 0.4s ease; color: white; }
         .premium-btn:hover { transform: translateY(-2px); box-shadow: 0 0 25px var(--c2); filter: brightness(1.1); }
-        
-        .shockwave { position: absolute; background: transparent; border: 2px solid var(--c2); border-radius: 50%; box-shadow: 0 0 10px var(--glow); transform: scale(0); animation: electricRipple 0.6s ease-out; pointer-events: none; }
-        @keyframes electricRipple { 0% { transform: scale(0); opacity: 1; border-width: 3px; } 100% { transform: scale(4); opacity: 0; border-width: 0px; } }
 
         .tab-btn { padding: 10px 15px; font-size: 10px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 8px; transition: all 0.3s; cursor: pointer; border: 1px solid transparent; }
         .tab-active { background: rgba(0,0,0,0.6); border-color: var(--c2); color: var(--c2); box-shadow: 0 0 10px var(--glow); }
         .tab-inactive { background: rgba(0, 0, 0, 0.4); border-color: rgba(255,255,255,0.05); color: rgba(255, 255, 255, 0.5); }
+        .tab-inactive:hover { color: white; border-color: rgba(255,255,255,0.2); }
 
-        .floating-btn { cursor: pointer; z-index: 9000 !important; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 12px; border-radius: 50%; transition: all 0.3s; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border: 1px solid var(--border); color: var(--c2); position: fixed; }
+        .floating-btn { cursor: pointer; z-index: 9000 !important; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); padding: 12px; border-radius: 50%; transition: all 0.3s; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border: 1px solid var(--border); color: var(--c2); position: fixed; }
         .floating-btn:hover { transform: scale(1.1); background: var(--bg-glow); }
 
         /* 👑 SAAS PROFILE MENU */
         .profile-menu {
             position: absolute; top: 110%; right: 0; width: 220px;
-            background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(16px);
             border: 1px solid var(--border); border-radius: 16px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
             opacity: 0; visibility: hidden; transform: translateY(-10px);
@@ -91,63 +84,60 @@
         .profile-item:hover { background: rgba(255, 255, 255, 0.1); color: #fff; padding-left: 20px; }
         .profile-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 4px 0; }
 
-        @keyframes scoreLock { 0% { transform: scale(1); text-shadow: 0 0 5px var(--glow); } 50% { transform: scale(1.4); text-shadow: 0 0 20px var(--c2); color: #fff; } 100% { transform: scale(1); text-shadow: 0 0 10px var(--glow); } }
-        .score-animate { animation: scoreLock 0.5s ease-out; }
-
-        body.theme-luxury .glass-panel, body.theme-luxury .profile-menu { background: #0a0a0a !important; backdrop-filter: none !important; border: 1px solid rgba(255,255,255,0.1) !important;}
+        body.theme-luxury .glass-panel { background: #0a0a0a !important; border: 1px solid rgba(255,255,255,0.1) !important;}
         body.theme-luxury .anime-title { color: #fff !important; text-shadow: none !important;}
         body.theme-luxury .premium-btn { background: #fff !important; color: #000 !important; font-weight: 800 !important; box-shadow: none; border-color: #fff !important; }
-        body.theme-luxury .tab-active { background: #fff !important; color: #000 !important; border: none; box-shadow: none; }
         body.theme-luxury .bg-video, body.theme-luxury .video-overlay { opacity: 0 !important; visibility: hidden; }
-        body.theme-luxury .text-theme { color: #fff !important; }
         
-        .matrix-text { white-space: pre-line; word-break: break-word; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--glow); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--c2); border-radius: 4px; }
 
-        /* TOAST NOTIFICATION */
+        /* TOAST & MODAL */
         #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: #22c55e; color: white; padding: 10px 20px; border-radius: 30px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; box-shadow: 0 5px 15px rgba(0,0,0,0.5); opacity: 0; transition: all 0.4s ease; z-index: 20000; }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
-        /* CONFIRMATION POPUP */
-        #confirm-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 15000; display: none; align-items: center; justify-content: center; padding: 1rem; }
-        #confirm-box { width: 100%; max-width: 24rem; text-align: center; background: rgba(0,0,0,0.9); border: 1px solid #f97316; box-shadow: 0 0 20px rgba(249,115,22,0.3); }
+        #confirm-modal { z-index: 15000; }
     </style>
 </head>
 <body>
 
+    <!-- VIDEO BACKGROUND -->
     <video id="bg-vid" autoplay muted loop playsinline class="bg-video">
         <source src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/Video-214.mp4" type="video/mp4">
     </video>
     <div class="video-overlay"></div>
 
-    <div id="multiverse-btn" class="floating-btn hidden" style="top: 20px; left: 20px;" onclick="cycleAura(event)">
+    <!-- FLOATING CONTROLS (Your Engine) -->
+    <div id="multiverse-btn" class="floating-btn" style="top: 20px; left: 20px;" onclick="cycleAura(event)" title="Multiverse Engine">
         <i class="fa-solid fa-infinity text-xl"></i>
     </div>
-    <div id="theme-btn" class="floating-btn hidden" style="top: 20px; right: 20px;" onclick="toggleDomainExpansion(event)">
+    <div id="theme-btn" class="floating-btn" style="top: 20px; right: 20px;" onclick="toggleDomainExpansion(event)" title="Change Theme">
         <i id="theme-icon" class="fa-solid fa-crown text-lg"></i>
     </div>
-    <div id="audio-btn" class="floating-btn hidden" style="bottom: 20px; right: 20px;" onclick="toggleAudio(event)">
+    <div id="audio-btn" class="floating-btn" style="bottom: 20px; right: 20px;" onclick="toggleAudio(event)" title="Toggle Audio">
         <i id="audio-icon" class="fa-solid fa-volume-xmark text-sm"></i>
     </div>
 
-    <div id="toast"><i class="fa-solid fa-check mr-2"></i> Action Completed</div>
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast"><i class="fa-solid fa-check mr-2"></i> <span id="toast-msg">Action Completed</span></div>
 
-    <div id="confirm-modal" class="hidden items-center justify-center">
-        <div id="confirm-box" class="glass-panel p-8">
-            <i class="fa-solid fa-right-from-bracket text-6xl text-orange-500 mb-5 opacity-80 shadow-[0_0_15px_var(--glow)]"></i>
+    <!-- SIGNOUT CONFIRM MODAL -->
+    <div id="confirm-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 transition-all">
+        <div id="confirm-box" class="w-full max-w-sm glass-panel p-8 bg-black/90 text-center relative border border-theme">
+            <i class="fa-solid fa-right-from-bracket text-6xl text-theme mb-5 opacity-80 shadow-[0_0_15px_var(--glow)]"></i>
             <h2 class="anime-title text-2xl mb-3 text-white">CORE DISCONNECT</h2>
-            <p class="text-xs text-gray-300 font-mono tracking-wide leading-relaxed mb-8">Signing out will terminate current active session. User Matrix Data and Saved Vault (⭐) will remain safe. Disconnect Core Matrix?</p>
+            <p class="text-xs text-gray-300 font-mono tracking-wide leading-relaxed mb-8">Signing out will terminate current active session. Vault Data will remain safe. Disconnect Core?</p>
             <div class="flex gap-4">
-                <button onclick="document.getElementById('confirm-modal').style.display='none'" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-3 rounded uppercase font-bold transition-all">Cancel</button>
-                <button onclick="performSignOut()" class="flex-1 premium-btn py-3 rounded-xl font-black tracking-widest uppercase text-xs">Yes, Disconnect</button>
+                <button onclick="closeConfirmModal()" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-3 rounded uppercase font-bold transition-all">Cancel</button>
+                <button onclick="performSignOut()" class="flex-1 premium-btn py-3 rounded-xl font-black tracking-widest uppercase text-xs">Disconnect</button>
             </div>
         </div>
     </div>
 
-    <div id="core-view-viewport" class="w-full h-full p-4 md:p-8 flex items-center justify-center">
-        <div class="glass-panel w-full max-w-lg p-8 md:p-10 flex flex-col items-center border border-theme shadow-[0_0_50px_var(--bg-glow)] relative overflow-hidden">
+    <!-- 🟢 PART 1: CORE PORTAL (AUTH & PROFILE) -->
+    <div id="core-view-viewport" class="w-full h-full p-4 md:p-8 flex items-center justify-center transition-opacity duration-500">
+        <div class="glass-panel w-full max-w-lg p-8 md:p-10 flex flex-col items-center relative overflow-hidden">
             
+            <!-- AUTH STEP -->
             <div id="auth-step" class="w-full flex flex-col items-center transition-all duration-500">
                 <h1 class="anime-title text-4xl md:text-5xl font-black mb-2 tracking-wide text-center">HOOK FORGE</h1>
                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-10 text-center">Secure Cloud Portal</p>
@@ -175,94 +165,77 @@
                 <p class="text-[8px] font-mono text-white/30 uppercase tracking-[0.2em] cursor-pointer hover:text-white/70 transition" onclick="devOverride()">| Developer Override Access |</p>
             </div>
 
+            <!-- PROFILE STEP -->
             <div id="profile-step" class="w-full flex flex-col items-center transition-all duration-500 hidden opacity-0">
-                
-                <div class="w-full flex justify-between items-center border-b border-theme/30 pb-4 mb-8">
+                <div class="w-full flex justify-between items-center border-b border-white/10 pb-4 mb-8">
                     <button onclick="backToAuth()" class="text-gray-400 hover:text-white transition w-8 text-left"><i class="fa-solid fa-arrow-left"></i></button>
                     <p class="text-[10px] font-black text-theme uppercase tracking-[0.3em] flex-grow text-center">Step 2: Profile Matrix</p>
                     <div class="w-8"></div>
                 </div>
                 
-                <div id="entry-flow-data" class="w-full">
+                <div class="w-full">
                     <div class="flex flex-col md:flex-row items-center gap-6 w-full mb-8">
                         <div class="relative group">
-                            <img id="entry-avatar-preview" src="" class="w-28 h-28 rounded-full border-4 border-theme object-cover shadow-[0_0_30px_var(--glow)] hidden">
-                            <div id="entry-initial-wrapper" class="flex items-center justify-center bg-black/80 w-28 h-28 rounded-full border-4 border-theme shadow-[0_0_30px_var(--glow)]">
-                                <span id="entry-initial-text" class="text-4xl font-black text-white tracking-widest">SC</span>
-                            </div>
+                            <img id="entry-avatar-preview" src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/a5f8a6d6c02976d90365c20c3cfb8a9c.jpg" class="w-24 h-24 rounded-full border-2 border-theme object-cover shadow-[0_0_20px_var(--glow)]">
                         </div>
-                        <div class="flex-grow space-y-3 w-full text-center md:text-left">
-                            <h2 class="text-lg font-black text-white uppercase tracking-wider">Authentication Success</h2>
-                            <p id="entry-flow-p" class="text-[11px] text-gray-300 font-mono leading-relaxed h-[50px]">Provide User Identification Matrix and Profile Interface Array to forge final core connection.</p>
+                        <div class="flex-grow space-y-2 w-full text-center md:text-left">
+                            <h2 class="text-lg font-black text-white uppercase tracking-wider">Auth Success</h2>
+                            <p class="text-[10px] text-gray-400 font-mono leading-relaxed">Provide Matrix Array to forge connection.</p>
                         </div>
                     </div>
 
-                    <div id="input-container-gate" class="space-y-4 mb-8 text-left w-full">
+                    <div class="space-y-4 mb-8 text-left w-full">
                         <div>
                             <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">Username Matrix</label>
-                            <input type="text" id="gate-username" class="w-full glass-input px-4 py-3 text-sm font-bold tracking-wide" placeholder="Enter username..." maxlength="20">
-                        </div>
-                        <div id="gate-pic-container" class="space-y-4">
-                            <div>
-                                <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">Upload Custom Image</label>
-                                <input type="file" id="gate-upload-pic" accept="image/*" class="w-full glass-input p-2 text-xs cursor-pointer" onchange="handleGateUpload(event)">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-3 text-center">Or Use Premium Avatar</label>
-                                <div class="flex gap-2 justify-center flex-wrap">
-                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/a5f8a6d6c02976d90365c20c3cfb8a9c.jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/18b74f95f922675a4a35c8b9717dbf64.jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/pic2%20(1).jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/c884012da9a7dc5ad426f4c1c8c36be8.jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/6e574195d99db9e244f4fe12b45b1759.jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                </div>
-                            </div>
+                            <input type="text" id="gate-username" class="w-full glass-input px-4 py-3 text-sm font-bold tracking-wide" placeholder="Enter username..." value="Santosh">
                         </div>
                     </div>
 
-                    <button onclick="handleCoreLogin()" class="w-full premium-btn py-4 rounded-xl font-black tracking-widest uppercase text-xs shadow-[0_0_30px_var(--glow)]">
-                        <span id="gate-btn-span">Initialize Core Matrix</span> <i class="fa-solid fa-right-to-bracket ml-2"></i>
+                    <button onclick="handleCoreLogin()" class="w-full premium-btn py-4 rounded-xl font-black tracking-widest uppercase text-xs shadow-[0_0_30px_var(--glow)] flex justify-center items-center gap-2">
+                        Initialize Core Matrix <i class="fa-solid fa-right-to-bracket"></i>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="dashboard-viewport" class="w-full h-screen p-4 md:p-6 flex flex-col items-center justify-start overflow-y-auto custom-scrollbar">
-        <div id="dash-wrapper" class="w-full max-w-[1400px] mt-16 md:mt-20 mb-10 px-2 opacity-100 transition-opacity duration-1000 flex flex-col h-full">
+    <!-- 🟢 PART 2: THE DASHBOARD (YOUR NEW PREMIUM UI) -->
+    <div id="dashboard-viewport" class="w-full h-screen p-4 md:p-6 flex flex-col items-center justify-start hidden overflow-y-auto custom-scrollbar opacity-0 transition-opacity duration-1000">
+        <div class="w-full max-w-[1300px] mt-10 md:mt-16 mb-10 flex flex-col h-full">
         
+            <!-- TOP NAVBAR AREA -->
             <div class="w-full flex justify-between items-end mb-6 border-b border-white/10 pb-4">
                 <div class="text-left">
-                    <h1 class="anime-title text-3xl md:text-4xl font-black mb-1 tracking-wide" id="main-title">HOOK FORGE</h1>
+                    <h1 class="anime-title text-3xl md:text-4xl font-black mb-1 tracking-wide">HOOK FORGE</h1>
                     <p class="text-[9px] md:text-[10px] tracking-[0.3em] text-gray-400 font-bold uppercase"><i class="fa-solid fa-bolt mr-1 text-theme"></i> AI Content Multiplier</p>
                 </div>
                 
-                <div class="relative" id="profile-wrapper">
-                    <button onclick="document.getElementById('profile-menu').classList.toggle('active')" class="flex items-center gap-2 bg-black/60 p-1.5 pr-3 rounded-full border border-theme backdrop-blur-md cursor-pointer hover:bg-black/80 transition shadow-[0_0_10px_var(--bg-glow)]">
-                        <div id="header-initial-wrapper" class="flex items-center justify-center bg-black/80 w-8 h-8 rounded-full border border-white/20">
-                            <span id="header-initial-text" class="text-[10px] font-bold text-white tracking-wider">SC</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform duration-300" id="profile-arrow"></i>
+                <div class="relative">
+                    <button onclick="toggleProfileMenu()" class="flex items-center gap-2 bg-black/60 p-1.5 pr-3 rounded-full border border-theme backdrop-blur-md cursor-pointer hover:bg-black/80 transition shadow-[0_0_10px_var(--bg-glow)]">
+                        <img id="dash-avatar" src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/a5f8a6d6c02976d90365c20c3cfb8a9c.jpg" class="w-8 h-8 rounded-full border border-white/20 object-cover">
+                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-300"></i>
                     </button>
 
                     <div id="profile-menu" class="profile-menu">
                         <div class="px-4 py-4 border-b border-white/10 bg-black/60 rounded-t-[16px]">
-                            <p class="text-[13px] font-bold text-white tracking-wide truncate">Santosh Choudhary</p>
+                            <p id="menu-username" class="text-[13px] font-bold text-white tracking-wide truncate">Santosh</p>
                             <p class="text-[10px] text-theme uppercase tracking-widest mt-1">Pro Member</p>
                         </div>
                         <div class="p-2">
                             <div class="profile-item"><i class="fa-solid fa-gear w-4 text-theme"></i> Settings</div>
                             <div class="profile-item"><i class="fa-solid fa-file-invoice-dollar w-4 text-theme"></i> Billing</div>
                             <div class="profile-divider"></div>
-                            <div class="profile-item text-red-400 hover:text-red-500" onclick="document.getElementById('confirm-modal').style.display='flex'"><i class="fa-solid fa-power-off w-4"></i> Disconnect</div>
+                            <div class="profile-item text-red-400 hover:text-red-500" onclick="showConfirmModal()"><i class="fa-solid fa-power-off w-4"></i> Disconnect</div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- MAIN 3-COLUMN GRID -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full flex-grow">
                 
-                <div class="lg:col-span-3 glass-panel p-5 flex flex-col gap-5 h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
+                <!-- COLUMN 1: THE INPUT FORGE -->
+                <div class="lg:col-span-3 glass-panel p-5 flex flex-col gap-5 h-auto lg:h-[calc(100vh-180px)] overflow-y-auto custom-scrollbar">
                     <div class="flex items-center gap-2 border-b border-white/10 pb-3">
                         <i class="fa-solid fa-hammer text-theme"></i>
                         <h2 class="text-xs font-black text-white tracking-widest uppercase">The Forge</h2>
@@ -270,7 +243,7 @@
 
                     <div>
                         <label class="block text-[9px] font-bold tracking-widest uppercase text-gray-400 mb-2">Topic or Source Content</label>
-                        <textarea class="w-full glass-input p-4 text-sm resize-none h-32" placeholder="e.g., I just moved into my first solo apartment and I'm decorating from scratch..."></textarea>
+                        <textarea class="w-full glass-input p-4 text-sm resize-none h-32" placeholder="e.g., I just moved into my first solo apartment..."></textarea>
                     </div>
 
                     <div>
@@ -278,7 +251,6 @@
                         <div class="flex flex-wrap gap-2">
                             <button class="tab-btn tab-active"><i class="fa-brands fa-tiktok mr-1"></i> TikTok</button>
                             <button class="tab-btn tab-inactive"><i class="fa-brands fa-instagram mr-1"></i> Reels</button>
-                            <button class="tab-btn tab-inactive"><i class="fa-brands fa-youtube mr-1"></i> Shorts</button>
                         </div>
                     </div>
 
@@ -288,23 +260,23 @@
                             <button class="tab-btn tab-inactive">Curious</button>
                             <button class="tab-btn tab-active">Contrarian</button>
                             <button class="tab-btn tab-inactive">Relatable</button>
-                            <button class="tab-btn tab-inactive">Aggressive</button>
                         </div>
                     </div>
 
                     <div class="mt-auto pt-4">
                         <button class="w-full premium-btn py-4 rounded-xl font-black tracking-widest uppercase text-[11px] flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Hooks
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate
                         </button>
                     </div>
                 </div>
 
-                <div class="lg:col-span-6 flex flex-col gap-6 h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar pr-2">
+                <!-- COLUMN 2: THE OUTPUT MATRIX -->
+                <div class="lg:col-span-6 flex flex-col gap-6 h-auto lg:h-[calc(100vh-180px)] overflow-y-auto custom-scrollbar pr-2">
                     
                     <div class="glass-panel p-6 relative overflow-hidden group border-l-4" style="border-left-color: var(--c2);">
-                        <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button class="bg-black/50 hover:bg-white/10 text-white p-2 rounded border border-white/10 transition" title="Copy Text"><i class="fa-regular fa-copy"></i></button>
-                            <button class="bg-black/50 hover:bg-white/10 text-theme p-2 rounded border border-white/10 transition" title="Save to Vault"><i class="fa-solid fa-bookmark"></i></button>
+                        <div class="absolute top-4 right-4 flex gap-2">
+                            <button class="bg-black/50 text-white p-2 rounded border border-white/10 hover:text-theme transition"><i class="fa-regular fa-copy"></i></button>
+                            <button class="bg-black/50 text-theme p-2 rounded border border-white/10 transition"><i class="fa-solid fa-bookmark"></i></button>
                         </div>
                         
                         <div class="mb-5 pr-16">
@@ -315,68 +287,40 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-black/40 p-4 rounded-xl border border-white/5">
                             <div>
                                 <p class="text-[9px] uppercase tracking-widest text-theme font-bold mb-1"><i class="fa-solid fa-brain mr-1"></i> Why it works</p>
-                                <p class="text-xs text-gray-400 leading-relaxed">Drops viewer into the exact paralysis moment of starting from zero. Relatable stakes of limited budget meeting unlimited options.</p>
+                                <p class="text-xs text-gray-400 leading-relaxed">Drops viewer into exact paralysis moment of starting from zero. Relatable stakes.</p>
                             </div>
                             <div>
                                 <p class="text-[9px] uppercase tracking-widest text-theme font-bold mb-1"><i class="fa-solid fa-video mr-1"></i> How to shoot it</p>
-                                <p class="text-xs text-gray-400 leading-relaxed">Wide shot showing empty living room. Phone placed on the floor pointing up. You standing in the center looking confused.</p>
+                                <p class="text-xs text-gray-400 leading-relaxed">Wide shot showing empty room. Phone on the floor. You looking confused.</p>
                             </div>
                         </div>
                     </div>
-
-                    <div class="glass-panel p-6 relative overflow-hidden group border-l-4 border-white/10">
-                        <div class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button class="bg-black/50 hover:bg-white/10 text-white p-2 rounded border border-white/10 transition"><i class="fa-regular fa-copy"></i></button>
-                            <button class="bg-black/50 hover:bg-white/10 text-white p-2 rounded border border-white/10 transition"><i class="fa-regular fa-bookmark"></i></button>
-                        </div>
-                        
-                        <div class="mb-5 pr-16">
-                            <span class="bg-white/5 text-gray-400 text-[8px] uppercase tracking-widest px-2 py-1 rounded font-bold mb-3 inline-block">Idea 2</span>
-                            <h3 class="text-lg md:text-xl font-bold text-gray-200 leading-snug">"Do I need a couch or a bed more? A series."</h3>
-                        </div>
-
-                        <div class="grid grid-cols-1 gap-2 bg-black/40 p-4 rounded-xl border border-white/5">
-                            <p class="text-[9px] uppercase tracking-widest text-theme font-bold mb-0"><i class="fa-solid fa-crosshairs mr-1"></i> Angle</p>
-                            <p class="text-xs text-gray-400">Sitting in empty apartment deciding what to buy first.</p>
-                        </div>
-                    </div>
-
                 </div>
 
-                <div class="lg:col-span-3 glass-panel p-5 flex flex-col gap-4 h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
+                <!-- COLUMN 3: THE GAMIFIED VAULT -->
+                <div class="lg:col-span-3 glass-panel p-5 flex flex-col gap-4 h-auto lg:h-[calc(100vh-180px)] overflow-y-auto custom-scrollbar">
                     
                     <div class="flex items-center justify-between border-b border-white/10 pb-3">
                         <div class="flex items-center gap-2">
                             <i class="fa-solid fa-vault text-theme"></i>
                             <h2 class="text-xs font-black text-white tracking-widest uppercase">The Vault</h2>
                         </div>
-                        <div class="flex items-center gap-1.5 bg-orange-500/20 text-orange-500 px-2.5 py-1 rounded-md border border-orange-500/30 shadow-[0_0_10px_rgba(249,115,22,0.2)]">
+                        <div class="flex items-center gap-1.5 bg-orange-500/20 text-orange-500 px-2 py-1 rounded border border-orange-500/30">
                             <i class="fa-solid fa-fire text-[10px]"></i>
-                            <span class="text-[10px] font-black tracking-widest uppercase">1 Day Streak</span>
+                            <span class="text-[9px] font-black tracking-widest uppercase">1 Day Streak</span>
                         </div>
                     </div>
 
                     <div class="flex flex-col gap-3 flex-grow overflow-y-auto pr-1">
-                        <div class="bg-black/40 border border-white/10 rounded-lg p-3 hover:border-theme transition group cursor-pointer relative">
-                            <div class="absolute top-2 right-2 text-green-500 hidden group-hover:block" title="Mark as Posted">
-                                <i class="fa-solid fa-circle-check"></i>
-                            </div>
-                            <p class="text-[8px] text-gray-500 uppercase tracking-widest font-bold mb-1">May 9 • 100K Views</p>
-                            <p class="text-xs text-gray-300 font-medium line-clamp-2">"100K followers in 9 months, zero ads, and I still don't know..."</p>
-                        </div>
-
-                        <div class="bg-black/40 border border-white/10 rounded-lg p-3 hover:border-theme transition group cursor-pointer relative opacity-60">
-                            <div class="absolute top-2 right-2 text-green-500">
-                                <i class="fa-solid fa-circle-check"></i>
-                            </div>
-                            <p class="text-[8px] text-gray-500 uppercase tracking-widest font-bold mb-1 line-through">May 8 • Posted</p>
-                            <p class="text-xs text-gray-400 font-medium line-clamp-2 line-through">"So I asked locals what they think of the new construction..."</p>
+                        <div class="bg-black/40 border border-white/10 rounded-lg p-3 hover:border-theme transition cursor-pointer">
+                            <p class="text-[8px] text-gray-500 uppercase tracking-widest font-bold mb-1">May 9 • Saved</p>
+                            <p class="text-xs text-gray-300 font-medium line-clamp-2">"100K followers in 9 months, zero ads..."</p>
                         </div>
                     </div>
 
                     <div class="mt-auto pt-2 border-t border-white/10">
                         <button class="w-full bg-transparent hover:bg-white/5 border border-white/20 text-white py-3 rounded-lg font-bold tracking-widest uppercase text-[10px] transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-file-csv"></i> Export Data (CSV)
+                            <i class="fa-solid fa-file-csv"></i> Export Data
                         </button>
                     </div>
 
@@ -384,5 +328,115 @@
             </div>
         </div>
     </div>
-    </body>
+
+    <!-- 🟢 JAVASCRIPT ENGINE (REBUILT & RESTORED) -->
+    <script>
+        // 1. Toast System
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // 2. Multiverse Engine
+        function cycleAura(event) {
+            showToast("Multiverse Aura Engaged");
+            document.querySelector('.glass-panel').classList.add('scale-105');
+            setTimeout(() => document.querySelector('.glass-panel').classList.remove('scale-105'), 300);
+        }
+
+        // 3. Theme Engine
+        const themes = ['', 'theme-blue', 'theme-purple', 'theme-luxury'];
+        let currentThemeIndex = 0;
+        function toggleDomainExpansion(event) {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            document.body.className = themes[currentThemeIndex];
+            showToast("Theme Matrix Updated");
+        }
+
+        // 4. Audio Engine
+        function toggleAudio(event) {
+            const vid = document.getElementById('bg-vid');
+            const icon = document.getElementById('audio-icon');
+            if(vid.muted) { 
+                vid.muted = false; 
+                icon.className = 'fa-solid fa-volume-high text-sm'; 
+                showToast("Audio Enabled");
+            } else { 
+                vid.muted = true; 
+                icon.className = 'fa-solid fa-volume-xmark text-sm'; 
+                showToast("Audio Muted");
+            }
+        }
+
+        // 5. Auth Flow Transitions
+        function simulateGitHubAuth(event) { simulateTokenAuth(event); }
+        
+        function simulateTokenAuth(event) {
+            document.getElementById('auth-step').classList.add('hidden', 'opacity-0');
+            const profile = document.getElementById('profile-step');
+            profile.classList.remove('hidden');
+            setTimeout(() => profile.classList.remove('opacity-0'), 50);
+            showToast("Auth Verified. Matrix Open.");
+        }
+
+        function backToAuth() {
+            document.getElementById('profile-step').classList.add('hidden', 'opacity-0');
+            const auth = document.getElementById('auth-step');
+            auth.classList.remove('hidden');
+            setTimeout(() => auth.classList.remove('opacity-0'), 50);
+        }
+
+        // 6. Developer Override (Direct to Dashboard)
+        function devOverride() {
+            showToast("Override Accepted");
+            handleCoreLogin();
+        }
+
+        // 7. Initialize Core (To Dashboard)
+        function handleCoreLogin() {
+            const username = document.getElementById('gate-username').value || 'Founder';
+            document.getElementById('menu-username').innerText = username;
+            
+            document.getElementById('core-view-viewport').classList.add('opacity-0');
+            setTimeout(() => {
+                document.getElementById('core-view-viewport').classList.add('hidden');
+                const dash = document.getElementById('dashboard-viewport');
+                dash.classList.remove('hidden');
+                setTimeout(() => dash.classList.remove('opacity-0'), 50);
+                showToast("Welcome to HookForge");
+            }, 500);
+        }
+
+        // 8. Profile Menu & Modals
+        function toggleProfileMenu() {
+            document.getElementById('profile-menu').classList.toggle('active');
+        }
+
+        function showConfirmModal() {
+            document.getElementById('profile-menu').classList.remove('active');
+            document.getElementById('confirm-modal').classList.remove('hidden');
+            document.getElementById('confirm-modal').classList.add('flex');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+            document.getElementById('confirm-modal').classList.remove('flex');
+        }
+
+        function performSignOut() {
+            closeConfirmModal();
+            document.getElementById('dashboard-viewport').classList.add('opacity-0');
+            setTimeout(() => {
+                document.getElementById('dashboard-viewport').classList.add('hidden');
+                const core = document.getElementById('core-view-viewport');
+                core.classList.remove('hidden');
+                setTimeout(() => core.classList.remove('opacity-0'), 50);
+                backToAuth();
+                showToast("Core Disconnected");
+            }, 500);
+        }
+    </script>
+</body>
 </html>
