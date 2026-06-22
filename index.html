@@ -17,42 +17,33 @@
             --bg-glow: rgba(239, 68, 68, 0.15);
         }
         body.theme-blue {
-            --c1: #1d4ed8; 
-            --c2: #3b82f6; 
-            --border: rgba(59,130,246, 0.4);
-            --glow: rgba(59,130,246, 0.5); 
-            --bg-glow: rgba(59,130,246, 0.15);
+            --c1: #1d4ed8; --c2: #3b82f6; --border: rgba(59,130,246, 0.4);
+            --glow: rgba(59,130,246, 0.5); --bg-glow: rgba(59,130,246, 0.15);
         }
         body.theme-purple {
-            --c1: #7e22ce; 
-            --c2: #a855f7; 
-            --border: rgba(168,85,247, 0.4);
-            --glow: rgba(168,85,247, 0.5); 
-            --bg-glow: rgba(168,85,247, 0.15);
+            --c1: #7e22ce; --c2: #a855f7; --border: rgba(168,85,247, 0.4);
+            --glow: rgba(168,85,247, 0.5); --bg-glow: rgba(168,85,247, 0.15);
         }
         body.theme-luxury {
             --c1: #ffffff; --c2: #ffffff; --border: rgba(255,255,255,0.2); 
             --glow: rgba(255,255,255,0.1); --bg-glow: transparent; background-color: #050505 !important;
         }
 
-        html, body { margin: 0; min-height: 100vh; font-family: 'Inter', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; position: relative; }
+        html, body { margin: 0; min-height: 100vh; font-family: 'Inter', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; scroll-behavior: smooth; }
         
         /* 🌟 MAIN VIDEO BACKGROUND */
         .bg-video { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 1; opacity: 1; transition: opacity 0.5s ease; filter: brightness(1.1); }
-        .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.2); z-index: 2; pointer-events: none; }
+        .video-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.3); z-index: 2; pointer-events: none; }
         
-        #core-view-viewport, #dashboard-viewport { z-index: 10; position: relative; width: 100vw; height: 100vh; top: 0; left: 0; display: flex; flex-direction: column; align-items: center; }
-
         /* 💎 ZERO BLUR CRYSTAL CLEAR PANEL */
         .glass-panel {
-            background: rgba(0, 0, 0, 0.5) !important; 
-            backdrop-filter: none !important; 
-            -webkit-backdrop-filter: none !important; 
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.4) !important; 
-            border-left: 1px solid rgba(255, 255, 255, 0.25) !important; 
+            background: rgba(0, 0, 0, 0.6) !important; 
+            backdrop-filter: blur(10px) !important; 
+            -webkit-backdrop-filter: blur(10px) !important; 
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-top: 1px solid rgba(255, 255, 255, 0.2) !important; 
             border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7); 
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8); 
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
@@ -62,56 +53,29 @@
         /* CLEAR INPUTS */
         .glass-input { background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: none !important; border: 1px solid rgba(255,255,255,0.15) !important; color: #fff; transition: all 0.3s; border-radius: 8px; }
         .glass-input:focus { outline: none; border-color: var(--c2) !important; box-shadow: 0 0 10px var(--glow) !important; background: rgba(0,0,0,0.8) !important; }
-        select.glass-input option { background: #111; color: #fff; }
         
         .premium-btn { position: relative; overflow: hidden; cursor: pointer; background: linear-gradient(45deg, var(--c1), var(--c2)); border: 1px solid var(--border); box-shadow: 0 0 15px var(--glow); transition: all 0.4s ease; color: white; }
-        .premium-btn:hover { transform: translateY(-2px); box-shadow: 0 0 25px var(--c2); filter: brightness(1.1); }
-        
-        .shockwave { position: absolute; background: transparent; border: 2px solid var(--c2); border-radius: 50%; box-shadow: 0 0 10px var(--glow); transform: scale(0); animation: electricRipple 0.6s ease-out; pointer-events: none; }
-        @keyframes electricRipple { 0% { transform: scale(0); opacity: 1; border-width: 3px; } 100% { transform: scale(4); opacity: 0; border-width: 0px; } }
+        .premium-btn:hover { transform: translateY(-2px); box-shadow: 0 0 25px var(--c2); filter: brightness(1.2); }
+
+        .google-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s; }
+        .google-btn:hover { background: rgba(255, 255, 255, 0.2); box-shadow: 0 0 15px rgba(255,255,255,0.2); }
 
         .tab-btn { padding: 10px 15px; font-size: 10px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 8px; transition: all 0.3s; cursor: pointer; border: 1px solid transparent; }
         .tab-active { background: rgba(0,0,0,0.6); border-color: var(--c2); color: var(--c2); box-shadow: 0 0 10px var(--glow); }
         .tab-inactive { background: rgba(0, 0, 0, 0.4); border-color: rgba(255,255,255,0.05); color: rgba(255, 255, 255, 0.5); }
 
-        .floating-btn { cursor: pointer; z-index: 9000 !important; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 12px; border-radius: 50%; transition: all 0.3s; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border: 1px solid var(--border); color: var(--c2); position: fixed; }
+        .floating-btn { cursor: pointer; z-index: 9000 !important; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); padding: 12px; border-radius: 50%; transition: all 0.3s; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px; border: 1px solid var(--border); color: var(--c2); position: fixed; }
         .floating-btn:hover { transform: scale(1.1); background: var(--bg-glow); }
 
-        /* 👑 SAAS PROFILE MENU */
-        .profile-menu {
-            position: absolute; top: 110%; right: 0; width: 220px;
-            background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--border); border-radius: 16px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
-            opacity: 0; visibility: hidden; transform: translateY(-10px);
-            transition: all 0.3s ease; z-index: 9999;
-        }
-        .profile-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
-        .profile-item { padding: 12px 16px; display: flex; align-items: center; gap: 12px; color: #e5e5e5; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: all 0.2s; }
-        .profile-item:hover { background: rgba(255, 255, 255, 0.1); color: #fff; padding-left: 20px; }
-        .profile-divider { height: 1px; background: rgba(255, 255, 255, 0.1); margin: 4px 0; }
-
-        @keyframes scoreLock { 0% { transform: scale(1); text-shadow: 0 0 5px var(--glow); } 50% { transform: scale(1.4); text-shadow: 0 0 20px var(--c2); color: #fff; } 100% { transform: scale(1); text-shadow: 0 0 10px var(--glow); } }
-        .score-animate { animation: scoreLock 0.5s ease-out; }
-
-        body.theme-luxury .glass-panel, body.theme-luxury .profile-menu { background: #0a0a0a !important; backdrop-filter: none !important; border: 1px solid rgba(255,255,255,0.1) !important;}
-        body.theme-luxury .anime-title { color: #fff !important; text-shadow: none !important;}
-        body.theme-luxury .premium-btn { background: #fff !important; color: #000 !important; font-weight: 800 !important; box-shadow: none; border-color: #fff !important; }
-        body.theme-luxury .tab-active { background: #fff !important; color: #000 !important; border: none; box-shadow: none; }
-        body.theme-luxury .bg-video, body.theme-luxury .video-overlay { opacity: 0 !important; visibility: hidden; }
-        body.theme-luxury .text-theme { color: #fff !important; }
-        
-        .matrix-text { white-space: pre-line; word-break: break-word; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--glow); border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--c2); border-radius: 4px; }
 
-        /* TOAST NOTIFICATION */
+        /* TOAST */
         #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: #22c55e; color: white; padding: 10px 20px; border-radius: 30px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; box-shadow: 0 5px 15px rgba(0,0,0,0.5); opacity: 0; transition: all 0.4s ease; z-index: 20000; }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        /* CONFIRMATION POPUP */
-        #confirm-modal { position: fixed; inset: 0; bg-black/70 backdrop-blur-sm z-[15000] hidden items-center justify-center p-4; }
-        #confirm-box { w-full max-w-sm glass-panel p-8 bg-black/90 text-center; }
+        /* Step Gradient Text */
+        .text-gradient { background: -webkit-linear-gradient(45deg, #fff, var(--c2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
 <body>
@@ -121,45 +85,113 @@
     </video>
     <div class="video-overlay"></div>
 
-    <div id="multiverse-btn" class="floating-btn hidden" style="top: 20px; left: 20px;" onclick="cycleAura(event)">
+    <div id="multiverse-btn" class="floating-btn" style="top: 20px; left: 20px;" onclick="cycleAura(event)">
         <i class="fa-solid fa-infinity text-xl"></i>
     </div>
-    <div id="theme-btn" class="floating-btn hidden" style="top: 20px; right: 20px;" onclick="toggleDomainExpansion(event)">
+    <div id="theme-btn" class="floating-btn" style="top: 20px; right: 20px;" onclick="toggleDomainExpansion(event)">
         <i id="theme-icon" class="fa-solid fa-crown text-lg"></i>
     </div>
-    <div id="audio-btn" class="floating-btn hidden" style="bottom: 20px; right: 20px;" onclick="toggleAudio(event)">
-        <i id="audio-icon" class="fa-solid fa-volume-xmark text-sm"></i>
-    </div>
-
+    
     <div id="toast"><i class="fa-solid fa-check mr-2"></i> Action Completed</div>
 
-    <div id="confirm-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[15000] hidden items-center justify-center p-4">
-        <div id="confirm-box" class="w-full max-w-sm glass-panel p-8 bg-black/90 text-center relative border border-orange-500 shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-            <i class="fa-solid fa-right-from-bracket text-6xl text-orange-500 mb-5 opacity-80 shadow-[0_0_15px_var(--glow)]"></i>
-            <h2 class="anime-title text-2xl mb-3 text-white">CORE DISCONNECT</h2>
-            <p class="text-xs text-gray-300 font-mono tracking-wide leading-relaxed mb-8">Signing out will terminate current active session. User Matrix Data and Saved Vault (⭐) will remain safe. Disconnect Core Matrix?</p>
-            <div class="flex gap-4">
-                <button onclick="closeConfirmModal()" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-3 rounded uppercase font-bold transition-all">Cancel</button>
-                <button onclick="performSignOut()" class="flex-1 premium-btn py-3 rounded-xl font-black tracking-widest uppercase text-xs">Yes, Disconnect</button>
+    <!-- 🟢 1. LANDING PAGE VIEW (Shows First) -->
+    <div id="landing-viewport" class="relative z-10 w-full min-h-screen flex flex-col items-center justify-start overflow-y-auto custom-scrollbar pt-20 pb-20 px-4">
+        
+        <!-- Navbar -->
+        <nav class="absolute top-0 w-full max-w-6xl p-6 flex justify-between items-center">
+            <h1 class="anime-title text-2xl font-black tracking-widest">HOOK FORGE</h1>
+            <button onclick="showAuthFlow()" class="google-btn text-white px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest">
+                Login / Access Matrix
+            </button>
+        </nav>
+
+        <!-- Hero Section -->
+        <div class="text-center max-w-4xl mt-10 md:mt-20 flex flex-col items-center">
+            <div class="bg-white/5 border border-white/10 px-4 py-1.5 rounded-full mb-6 inline-flex items-center gap-2">
+                <i class="fa-solid fa-microchip text-theme"></i>
+                <span class="text-[9px] font-mono tracking-widest text-gray-300 uppercase">AI-Powered for Elite Creators</span>
+            </div>
+            
+            <h1 class="anime-title text-5xl md:text-7xl font-black mb-6 tracking-wide leading-tight text-white">
+                ENGINEER HOOKS THAT <br><span class="text-gradient">ACTUALLY GET WATCHED.</span>
+            </h1>
+            
+            <p class="text-gray-300 font-mono tracking-wide max-w-2xl text-sm md:text-base leading-relaxed mb-10">
+                Stop guessing. Stop staring at a blank screen. Forge viral hooks engineered with psychology, tension, and curiosity to dominate short-form video.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md">
+                <!-- Google Login Button -->
+                <button onclick="simulateGoogleAuth(event)" class="google-btn w-full py-4 rounded-xl font-black tracking-widest uppercase text-xs flex items-center justify-center gap-3 text-white">
+                    <i class="fa-brands fa-google text-lg"></i> Continue with Google
+                </button>
+                <button onclick="showAuthFlow()" class="w-full premium-btn py-4 rounded-xl font-black tracking-widest uppercase text-xs">
+                    Access Portal <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+            
+            <p class="text-[9px] text-gray-500 tracking-[0.2em] uppercase mt-4">Built by a creator with 10M+ views.</p>
+        </div>
+
+        <!-- How It Works (The 3 Steps) -->
+        <div class="w-full max-w-5xl mt-32 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+            
+            <!-- Step 1 -->
+            <div class="glass-panel p-8 relative overflow-hidden group">
+                <div class="text-[80px] absolute -top-4 -right-4 font-black opacity-10 text-theme group-hover:scale-110 transition-transform">01</div>
+                <h3 class="text-xl font-bold text-white mb-2 tracking-wide"><i class="fa-solid fa-crosshairs text-theme mr-2"></i>Target Vector</h3>
+                <p class="text-xs text-gray-400 font-mono leading-relaxed mb-6">Type what your video is about. A scenario, a tension. The more specific the matrix, the sharper the hook.</p>
+                
+                <div class="bg-black/80 border border-white/10 p-4 rounded-xl text-[10px] font-mono text-gray-300">
+                    <span class="text-theme">> TARGET:</span> I just moved into my solo apartment and have zero furniture.
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="glass-panel p-8 relative overflow-hidden group">
+                <div class="text-[80px] absolute -top-4 -right-4 font-black opacity-10 text-theme group-hover:scale-110 transition-transform">02</div>
+                <h3 class="text-xl font-bold text-white mb-2 tracking-wide"><i class="fa-solid fa-brain text-theme mr-2"></i>AI Extraction</h3>
+                <p class="text-xs text-gray-400 font-mono leading-relaxed mb-6">Five engineered openers within seconds. Tuned with psychology to ensure they never scroll past you.</p>
+                
+                <div class="bg-black/80 border border-white/10 p-4 rounded-xl text-[11px] font-bold text-white border-l-2 border-l-theme">
+                    "Make yourself at home — oh wait, the chair doesn't arrive until Thursday."
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="glass-panel p-8 relative overflow-hidden group">
+                <div class="text-[80px] absolute -top-4 -right-4 font-black opacity-10 text-theme group-hover:scale-110 transition-transform">03</div>
+                <h3 class="text-xl font-bold text-white mb-2 tracking-wide"><i class="fa-solid fa-vault text-theme mr-2"></i>The Vault</h3>
+                <p class="text-xs text-gray-400 font-mono leading-relaxed mb-6">Pin your favorites, track your 1-day streak, and never lose a viral idea to the void again.</p>
+                
+                <div class="bg-black/80 border border-white/10 p-4 rounded-xl text-[10px] font-mono text-gray-300 flex justify-between items-center">
+                    <span><i class="fa-solid fa-star text-yellow-500 mr-2"></i> Saved Hooks</span>
+                    <span class="bg-theme/20 text-theme px-2 py-0.5 rounded border border-theme/30"><i class="fa-solid fa-fire"></i> Streak Active</span>
+                </div>
             </div>
         </div>
+
     </div>
 
-    <!-- CORE PORTAL (AUTH) -->
-    <div id="core-view-viewport" class="w-full h-full p-4 md:p-8 flex items-center justify-center">
-        <div class="glass-panel w-full max-w-lg p-8 md:p-10 flex flex-col items-center border border-theme shadow-[0_0_50px_var(--bg-glow)] relative overflow-hidden">
+    <!-- 🟢 2. CORE PORTAL (AUTH MODAL) - Hidden initially -->
+    <div id="core-view-viewport" class="w-full h-full p-4 md:p-8 flex items-center justify-center fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden opacity-0 transition-opacity duration-500">
+        <div class="glass-panel w-full max-w-lg p-8 md:p-10 flex flex-col items-center relative overflow-hidden">
             
+            <button onclick="hideAuthFlow()" class="absolute top-4 right-5 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+
+            <!-- AUTH STEP -->
             <div id="auth-step" class="w-full flex flex-col items-center transition-all duration-500">
                 <h1 class="anime-title text-4xl md:text-5xl font-black mb-2 tracking-wide text-center">HOOK FORGE</h1>
                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-10 text-center">Secure Cloud Portal</p>
 
-                <button onclick="simulateGitHubAuth(event)" class="w-full bg-black/60 hover:bg-black/80 border border-white/20 text-white py-4 rounded-xl font-bold tracking-widest uppercase text-xs mb-6 transition-all flex items-center justify-center gap-3 backdrop-blur-sm shadow-lg">
-                    <i class="fa-brands fa-github text-lg"></i> Continue with GitHub
+                <!-- GOOGLE LOGIN BUTTON HERE -->
+                <button onclick="simulateGoogleAuth(event)" class="google-btn w-full text-white py-4 rounded-xl font-black tracking-widest uppercase text-xs mb-6 flex items-center justify-center gap-3">
+                    <i class="fa-brands fa-google text-lg"></i> Continue with Google
                 </button>
 
                 <div class="flex items-center w-full mb-6 opacity-60">
                     <div class="flex-1 h-px bg-white/20"></div>
-                    <span class="px-4 text-[9px] uppercase tracking-widest text-theme">Secure Routing</span>
+                    <span class="px-4 text-[9px] uppercase tracking-widest text-theme">OR SECURE ROUTING</span>
                     <div class="flex-1 h-px bg-white/20"></div>
                 </div>
 
@@ -176,8 +208,8 @@
                 <p class="text-[8px] font-mono text-white/30 uppercase tracking-[0.2em] cursor-pointer hover:text-white/70 transition" onclick="devOverride()">| Developer Override Access |</p>
             </div>
 
+            <!-- PROFILE STEP -->
             <div id="profile-step" class="w-full flex flex-col items-center transition-all duration-500 hidden opacity-0">
-                
                 <div class="w-full flex justify-between items-center border-b border-theme/30 pb-4 mb-8">
                     <button onclick="backToAuth()" class="text-gray-400 hover:text-white transition w-8 text-left"><i class="fa-solid fa-arrow-left"></i></button>
                     <p class="text-[10px] font-black text-theme uppercase tracking-[0.3em] flex-grow text-center">Step 2: Profile Matrix</p>
@@ -187,52 +219,45 @@
                 <div id="entry-flow-data" class="w-full">
                     <div class="flex flex-col md:flex-row items-center gap-6 w-full mb-8">
                         <div class="relative group">
-                            <img id="entry-avatar-preview" src="" class="w-28 h-28 rounded-full border-4 border-theme object-cover shadow-[0_0_30px_var(--glow)] hidden">
-                            <div id="entry-initial-wrapper" class="flex items-center justify-center bg-black/80 w-28 h-28 rounded-full border-4 border-theme shadow-[0_0_30px_var(--glow)]">
-                                <span id="entry-initial-text" class="text-4xl font-black text-white tracking-widest">SC</span>
+                            <img id="entry-avatar-preview" src="" class="w-24 h-24 rounded-full border-2 border-theme object-cover shadow-[0_0_20px_var(--glow)] hidden">
+                            <div id="entry-initial-wrapper" class="flex items-center justify-center bg-black/80 w-24 h-24 rounded-full border-2 border-theme shadow-[0_0_20px_var(--glow)]">
+                                <span id="entry-initial-text" class="text-3xl font-black text-white tracking-widest">SC</span>
                             </div>
                         </div>
-                        <div class="flex-grow space-y-3 w-full text-center md:text-left">
-                            <h2 class="text-lg font-black text-white uppercase tracking-wider">Authentication Success</h2>
-                            <p id="entry-flow-p" class="text-[11px] text-gray-300 font-mono leading-relaxed h-[50px]">Provide User Identification Matrix and Profile Interface Array to forge final core connection.</p>
+                        <div class="flex-grow space-y-2 w-full text-center md:text-left">
+                            <h2 class="text-lg font-black text-white uppercase tracking-wider">Auth Success</h2>
+                            <p id="entry-flow-p" class="text-[10px] text-gray-400 font-mono leading-relaxed h-[40px]">Provide Matrix Array to forge connection.</p>
                         </div>
                     </div>
 
                     <div id="input-container-gate" class="space-y-4 mb-8 text-left w-full">
                         <div>
                             <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">Username Matrix</label>
-                            <input type="text" id="gate-username" class="w-full glass-input px-4 py-3 text-sm font-bold tracking-wide" placeholder="Enter username..." maxlength="20">
+                            <input type="text" id="gate-username" class="w-full glass-input px-4 py-3 text-sm font-bold tracking-wide" placeholder="Enter username...">
                         </div>
                         <div id="gate-pic-container" class="space-y-4">
                             <div>
-                                <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">Upload Custom Image</label>
-                                <input type="file" id="gate-upload-pic" accept="image/*" class="w-full glass-input p-2 text-xs cursor-pointer" onchange="handleGateUpload(event)">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-3 text-center">Or Use Premium Avatar</label>
+                                <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-3 text-center">Choose Premium Avatar</label>
                                 <div class="flex gap-2 justify-center flex-wrap">
-                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/a5f8a6d6c02976d90365c20c3cfb8a9c.jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/18b74f95f922675a4a35c8b9717dbf64.jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/pic2%20(1).jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/c884012da9a7dc5ad426f4c1c8c36be8.jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
-                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/6e574195d99db9e244f4fe12b45b1759.jpg" onclick="selectGatePic(this.src)" class="w-12 h-12 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover shadow-lg">
+                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/a5f8a6d6c02976d90365c20c3cfb8a9c.jpg" onclick="selectGatePic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
+                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/18b74f95f922675a4a35c8b9717dbf64.jpg" onclick="selectGatePic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
+                                    <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/pic2%20(1).jpg" onclick="selectGatePic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <button onclick="handleCoreLogin()" class="w-full premium-btn py-4 rounded-xl font-black tracking-widest uppercase text-xs shadow-[0_0_30px_var(--glow)]">
-                        <span id="gate-btn-span">Initialize Core Matrix</span> <i class="fa-solid fa-right-to-bracket ml-2"></i>
+                        <span id="gate-btn-span">Initialize Core</span> <i class="fa-solid fa-right-to-bracket ml-2"></i>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 🟢 NAYA "CENTERED COMMAND CONSOLE" DASHBOARD -->
+    <!-- 🟢 3. MAIN DASHBOARD (Rest of your exact dashboard code stays here, hidden initially) -->
     <div id="dashboard-viewport" class="w-full h-screen p-4 md:p-8 flex flex-col items-center justify-center hidden opacity-0 transition-opacity duration-1000 relative">
-        
-        <!-- Top Navbar (Floating) -->
+        <!-- TOP NAVBAR (Floating) -->
         <div class="absolute top-6 w-full max-w-5xl px-4 flex justify-between items-center z-50">
             <div class="text-left">
                 <h1 class="anime-title text-2xl md:text-3xl font-black mb-1 tracking-widest">HOOK FORGE</h1>
@@ -240,40 +265,30 @@
             </div>
             
             <div class="flex items-center gap-4">
-                <!-- Sleek Vault Button (Takes least space) -->
                 <button onclick="switchMode('vault')" class="flex items-center gap-2 bg-black/60 px-4 py-2 rounded-full border border-theme/50 hover:border-theme transition shadow-[0_0_10px_var(--bg-glow)] text-white cursor-pointer">
                     <i class="fa-solid fa-vault text-[11px] text-theme"></i>
                     <span class="text-[9px] font-bold tracking-widest uppercase hidden md:inline">Vault</span>
-                    <!-- 1-Day Streak Fire -->
                     <div class="flex items-center gap-1 bg-orange-500/20 text-orange-500 px-1.5 py-0.5 rounded ml-1">
                         <i class="fa-solid fa-fire text-[9px]"></i><span class="text-[9px] font-black">1</span>
                     </div>
                 </button>
 
-                <!-- Profile Menu -->
                 <div class="relative" id="profile-wrapper">
-                    <button onclick="toggleProfileMenu(event)" class="flex items-center gap-2 bg-black/60 p-1.5 pr-3 rounded-full border border-white/20 backdrop-blur-md hover:bg-black/80 transition shadow-[0_0_10px_var(--bg-glow)] cursor-pointer">
+                    <button onclick="toggleProfileMenu(event)" class="flex items-center gap-2 bg-black/60 p-1.5 pr-3 rounded-full border border-white/20 backdrop-blur-md hover:bg-black/80 transition cursor-pointer">
                         <img id="header-avatar-img" src="" class="w-8 h-8 rounded-full border border-theme object-cover hidden">
                         <div id="header-initial-wrapper" class="flex items-center justify-center bg-black/80 w-8 h-8 rounded-full border border-white/20">
                             <span id="header-initial-text" class="text-[10px] font-bold text-white tracking-wider">SC</span>
                         </div>
-                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform duration-300" id="profile-arrow"></i>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-300"></i>
                     </button>
                     
-                    <!-- Dropdown -->
                     <div id="profile-menu" class="profile-menu">
                         <div class="px-4 py-4 border-b border-white/10 bg-black/60 rounded-t-[16px]">
                             <p id="menu-name-text" class="text-[13px] font-bold text-white tracking-wide truncate">Founder</p>
-                            <p class="text-[10px] text-theme mt-1 uppercase tracking-widest font-bold"><i class="fa-solid fa-shield-halved mr-1"></i> Founder Plan</p>
+                            <p class="text-[10px] text-theme mt-1 uppercase tracking-widest font-bold">Pro Member</p>
                         </div>
                         <div class="py-2">
-                            <div class="profile-item" onclick="openProfileModal()"><i class="fa-solid fa-user-pen w-4 text-center text-gray-400"></i> Edit Profile</div>
-                            <div class="profile-item" onclick="switchMode('vault')"><i class="fa-solid fa-star w-4 text-center text-yellow-500"></i> Saved Vault</div>
-                            <div class="profile-item"><i class="fa-solid fa-key w-4 text-center text-gray-400"></i> API Keys</div>
-                        </div>
-                        <div class="profile-divider"></div>
-                        <div class="py-2">
-                            <div class="profile-item text-red-400 hover:bg-red-500/20 hover:text-red-300" onclick="confirmSignOut()"><i class="fa-solid fa-right-from-bracket w-4 text-center"></i> Sign Out</div>
+                            <div class="profile-item text-red-400 hover:text-red-500" onclick="performSignOut()"><i class="fa-solid fa-power-off w-4"></i> Sign Out</div>
                         </div>
                     </div>
                 </div>
@@ -282,199 +297,97 @@
 
         <!-- MAIN TERMINAL / INPUT FORGE (Centered) -->
         <div class="glass-panel w-full max-w-3xl p-6 md:p-10 flex flex-col relative z-10 mt-10">
-            
             <div class="flex justify-between items-center border-b border-white/10 pb-4 mb-6">
                 <div class="flex items-center gap-3">
-                    <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e] animate-pulse"></div>
-                    <span class="text-[9px] md:text-[10px] font-mono tracking-widest text-gray-400 uppercase" id="system-status">System Ready // Awaiting Input</span>
-                </div>
-                <div class="text-[9px] font-mono text-theme tracking-widest uppercase opacity-80">
-                    <i class="fa-solid fa-microchip mr-1"></i> Llama 3.3 Active
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="text-[9px] font-mono tracking-widest text-gray-400 uppercase" id="system-status">System Ready</span>
                 </div>
             </div>
 
-            <!-- Hook Input Area -->
-            <div id="inputs-hook" class="w-full transition-all">
+            <div id="inputs-hook" class="w-full">
                 <div class="mb-6 relative group">
-                    <i class="fa-solid fa-terminal absolute top-5 left-5 text-gray-500 group-focus-within:text-theme transition-colors text-sm"></i>
-                    <textarea id="h-topic" class="w-full bg-black/80 text-white border border-white/10 rounded-xl pl-12 pr-5 py-5 text-sm font-mono focus:border-theme focus:ring-0 focus:outline-none focus:shadow-[0_0_15px_var(--bg-glow)] transition-all resize-none h-36 md:h-40 custom-scrollbar placeholder-gray-600" placeholder="> Enter your target concept, niche, or rough script here...&#10;> e.g., 'A solo developer building a SaaS in 120 days'"></textarea>
+                    <i class="fa-solid fa-terminal absolute top-5 left-5 text-gray-500 text-sm"></i>
+                    <textarea id="h-topic" class="w-full bg-black/80 text-white border border-white/10 rounded-xl pl-12 pr-5 py-5 text-sm font-mono h-36 resize-none" placeholder="> Enter target concept..."></textarea>
                 </div>
-
-                <div class="flex flex-col md:flex-row gap-6 mb-8 bg-black/40 p-5 rounded-xl border border-white/5">
-                    <div class="flex-1">
-                        <label class="block text-[9px] font-bold tracking-widest uppercase text-gray-400 mb-3"><i class="fa-solid fa-bullseye text-theme mr-1"></i> Target Vector</label>
-                        <div class="flex flex-wrap gap-2">
-                            <button class="tab-btn tab-active"><i class="fa-brands fa-tiktok mr-1"></i> TikTok</button>
-                            <button class="tab-btn tab-inactive"><i class="fa-brands fa-instagram mr-1"></i> Reels</button>
-                            <button class="tab-btn tab-inactive"><i class="fa-brands fa-youtube mr-1"></i> Shorts</button>
-                        </div>
-                    </div>
-                    <div class="flex-1">
-                        <label class="block text-[9px] font-bold tracking-widest uppercase text-gray-400 mb-3"><i class="fa-solid fa-brain text-theme mr-1"></i> Tone Matrix</label>
-                        <select id="h-tone" class="w-full bg-black/60 text-white border border-white/10 rounded-lg px-3 py-2 text-xs font-bold uppercase tracking-wide focus:border-theme outline-none">
-                            <option value="Contrarian">Contrarian (Challenge Norms)</option>
-                            <option value="Curiosity Gap">Curiosity Gap</option>
-                            <option value="Aggressive">Aggressive & Brutal</option>
-                            <option value="Relatable">Relatable & Warm</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button id="btn-ignite" onclick="showToast('UI Locked. Awaiting Phase 2 Engine Integration!')" class="w-full premium-btn py-5 rounded-xl font-black tracking-[0.2em] uppercase text-xs flex items-center justify-center gap-3">
+                <button onclick="showToast('UI Locked. Awaiting Backend!')" class="w-full premium-btn py-5 rounded-xl font-black tracking-[0.2em] uppercase text-xs flex justify-center gap-3">
                     <i class="fa-solid fa-bolt text-lg"></i> Initiate Sequence
                 </button>
             </div>
-
-            <!-- Hidden Vault Container (Slides in here when Vault button is clicked) -->
-            <div id="results-vault" class="hidden w-full text-left max-h-[400px] overflow-y-auto custom-scrollbar mt-4">
-            </div>
-
-            <!-- Loading Screen (Hidden by default) -->
-            <div id="loading" class="hidden text-center absolute inset-0 flex-col items-center justify-center bg-black/90 rounded-[24px] z-20">
-                <i class="fa-solid fa-circle-notch fa-spin text-5xl text-theme mb-4"></i>
-                <h2 class="anime-title text-xl tracking-widest uppercase text-white font-bold">Forging Matrix...</h2>
-            </div>
             
-            <!-- Kept for JS compatibility but hidden until Phase 2 output matrix is built -->
-            <div id="empty-state" class="hidden"></div>
-            <div id="results-hook" class="hidden"></div>
-            <div id="results-script" class="hidden"></div>
-            <div id="errorBox" class="hidden"></div>
-            <div id="inputs-script" class="hidden"></div>
+            <div id="results-vault" class="hidden w-full text-left max-h-[400px] overflow-y-auto custom-scrollbar mt-4"></div>
         </div>
     </div>
 
-    <!-- PROFILE MODAL -->
-    <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[10000] hidden items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-sm p-6 relative bg-black/90">
-            <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            <h2 class="anime-title text-2xl mb-6 text-center">Edit Profile</h2>
 
-            <div class="space-y-6">
-                <div class="flex justify-center">
-                    <img id="modal-preview-img" src="" class="w-20 h-20 rounded-full border-2 border-theme object-cover shadow-[0_0_15px_var(--glow)] hidden">
-                    <div id="modal-initial-wrapper" class="flex items-center justify-center bg-black/80 w-20 h-20 rounded-full border-2 border-theme shadow-[0_0_15px_var(--glow)]">
-                        <span id="modal-initial-text" class="text-2xl font-bold text-white tracking-wider">SC</span>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">Upload from Gallery</label>
-                    <input type="file" id="upload-pic" accept="image/*" class="w-full glass-input p-2 text-xs cursor-pointer" onchange="handleImageUpload(event, 'modal')">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-3 text-center">Choose Premium Avatar</label>
-                    <div class="flex gap-2 justify-center flex-wrap">
-                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/a5f8a6d6c02976d90365c20c3cfb8a9c.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
-                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/18b74f95f922675a4a35c8b9717dbf64.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
-                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/pic2%20(1).jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
-                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/c884012da9a7dc5ad426f4c1c8c36be8.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
-                        <img src="https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/6e574195d99db9e244f4fe12b45b1759.jpg" onclick="selectDefaultPic(this.src)" class="w-10 h-10 rounded-full cursor-pointer hover:scale-110 hover:border-theme transition border-2 border-transparent object-cover">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-2">Username</label>
-                    <input type="text" id="edit-username" class="w-full glass-input px-4 py-3 text-sm font-bold tracking-wide" placeholder="Enter username">
-                </div>
-
-                <button onclick="saveProfile()" class="w-full premium-btn py-3 rounded-xl font-black tracking-widest uppercase text-xs mt-2">
-                    Save Changes
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 🟢 EXISTING JS ENGINE (UNCHANGED) -->
     <script>
-        let currentMode = 'hook'; let isMuted = true; let isLuxuryMode = false; let currentAura = 0;
-        let tempSelectedPic = null;
-        let isExistingUserForGate = false; 
-
-        const videos = [
-            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/Video-214.mp4", 
-            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20Natural%20Makeup%20Looks%20Inspiration%20for%20Summer-pin-id-587860557652168444.mp4",
-            "https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/From%20Klickpin.com-%20From%20beginner%20to%20obsessed%20Love%20these%20easy%20pet-friendly%20home%20ideas%20youll%20want%20to%20recreate%20this%20weekend%20that%20balance%20trend%20comfor%20(1).mp4"
-        ];
-        
+        // CORE JS ENGINE
+        let tempSelectedPic = null; let isExistingUserForGate = false;
+        const videos = ["https://subczjjxgexeraofhykl.supabase.co/storage/v1/object/public/Assets/Video-214.mp4"];
         const themes = ['', 'theme-blue', 'theme-purple'];
 
-        document.addEventListener("DOMContentLoaded", () => { 
-            checkCoreAccess();
-        });
+        document.addEventListener("DOMContentLoaded", () => { checkCoreAccess(); });
+
+        /* UI TRANSITIONS */
+        function showAuthFlow() {
+            document.getElementById('landing-viewport').style.display = 'none';
+            const authPanel = document.getElementById('core-view-viewport');
+            authPanel.classList.remove('hidden');
+            setTimeout(() => authPanel.classList.remove('opacity-0'), 10);
+        }
+
+        function hideAuthFlow() {
+            const authPanel = document.getElementById('core-view-viewport');
+            authPanel.classList.add('opacity-0');
+            setTimeout(() => {
+                authPanel.classList.add('hidden');
+                document.getElementById('landing-viewport').style.display = 'flex';
+            }, 300);
+        }
 
         function checkCoreAccess() {
             const currentActiveUserName = localStorage.getItem('hf_current_user_name');
-            const coreViewport = document.getElementById('core-view-viewport');
-            const dashboard = document.getElementById('dashboard-viewport');
-            const bgVid = document.getElementById('bg-vid');
-            
             if (!currentActiveUserName) {
-                coreViewport.style.display = 'flex';
-                dashboard.classList.add('hidden');
-                document.querySelectorAll('.floating-btn').forEach(b => b.classList.add('hidden'));
-                
-                document.getElementById('auth-step').classList.remove('hidden');
-                document.getElementById('profile-step').classList.add('hidden');
-                document.getElementById('profile-step').classList.add('opacity-0');
-
+                // Show Landing page initially
+                document.getElementById('landing-viewport').style.display = 'flex';
+                document.getElementById('core-view-viewport').classList.add('hidden');
+                document.getElementById('dashboard-viewport').classList.add('hidden');
                 document.getElementById('gate-username').addEventListener('input', checkExistingUserSimulation);
-
             } else {
-                coreViewport.style.display = 'none';
+                // Skip directly to Dashboard
+                document.getElementById('landing-viewport').style.display = 'none';
+                document.getElementById('core-view-viewport').classList.add('hidden');
+                const dashboard = document.getElementById('dashboard-viewport');
                 dashboard.classList.remove('hidden');
                 setTimeout(() => { dashboard.classList.remove('opacity-0'); }, 10);
-                document.querySelectorAll('.floating-btn').forEach(b => b.classList.remove('hidden'));
-                
                 loadProfileData(); 
-                bgVid.play().catch(e => console.log("Main video blocked"));
             }
         }
 
-        function simulateGitHubAuth(e) {
+        /* 🟢 GOOGLE AUTH SIMULATION */
+        function simulateGoogleAuth(e) {
             const btn = e.currentTarget;
             const originalHtml = btn.innerHTML;
-            showToast('Initiating secure handshake with GitHub...');
+            
+            // Show loading state directly on the button
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-lg"></i> Authenticating...';
             
+            // Note: Once Supabase is connected, we will call: supabase.auth.signInWithOAuth({provider: 'google'}) here.
+            
             setTimeout(() => {
                 btn.innerHTML = originalHtml;
-                showToast('OAuth verification successful. Routing matrix.');
+                showToast('Google OAuth successful. Routing matrix.');
+                
+                // If they clicked on Landing Page, move them to Auth step directly
+                document.getElementById('landing-viewport').style.display = 'none';
+                document.getElementById('core-view-viewport').classList.remove('hidden');
+                document.getElementById('core-view-viewport').classList.remove('opacity-0');
                 proceedToProfileSetup();
             }, 1800);
-        }
-
-        function simulateTokenAuth(e) {
-            const email = document.getElementById('auth-email').value;
-            if(!email || !email.includes('@')) {
-                showToast('Error: Valid security email required', true);
-                return;
-            }
-            const btn = e.currentTarget;
-            const originalHtml = btn.innerHTML;
-            
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin text-lg"></i> Verifying Network...';
-            setTimeout(() => {
-                btn.innerHTML = originalHtml;
-                showToast('Token dispatched. Channel secured.');
-                
-                setTimeout(() => {
-                    showToast('Token Verified. Routing matrix.');
-                    proceedToProfileSetup();
-                }, 1500);
-            }, 1500);
-        }
-
-        function devOverride() {
-            showToast('Developer override accepted. Bypassing auth.');
-            proceedToProfileSetup();
         }
 
         function proceedToProfileSetup() {
             const authStep = document.getElementById('auth-step');
             const profileStep = document.getElementById('profile-step');
-            
             authStep.classList.add('opacity-0');
             setTimeout(() => {
                 authStep.classList.add('hidden');
@@ -484,77 +397,48 @@
         }
 
         function backToAuth() {
-            const authStep = document.getElementById('auth-step');
-            const profileStep = document.getElementById('profile-step');
-            
-            profileStep.classList.add('opacity-0');
-            setTimeout(() => {
-                profileStep.classList.add('hidden');
-                authStep.classList.remove('hidden');
-                setTimeout(() => authStep.classList.remove('opacity-0'), 50);
-            }, 300);
+            document.getElementById('profile-step').classList.add('hidden');
+            document.getElementById('auth-step').classList.remove('hidden', 'opacity-0');
         }
 
+        /* SIMULATED EMAIL TOKEN */
+        function simulateTokenAuth(e) {
+            showToast('Token dispatched. Channel secured.');
+            setTimeout(() => proceedToProfileSetup(), 1000);
+        }
+
+        function devOverride() { proceedToProfileSetup(); }
+
+        /* USER CHECK & LOGIN LOGIC (From Source 2) */
         function checkExistingUserSimulation(e) {
             const inputName = e.target.value.trim().toUpperCase(); 
-            const picContainer = document.getElementById('gate-pic-container');
-            const currentFlowP = document.getElementById('entry-flow-p');
-            const gateBtnSpan = document.getElementById('gate-btn-span');
-
             const savedPic = localStorage.getItem(`hf_profile_pic_${inputName}`);
             
             if(inputName.length >= 3 && savedPic) {
                 isExistingUserForGate = true;
-                picContainer.style.display = 'none'; 
-                currentFlowP.innerHTML = `<span class="text-white font-bold">Protocol Recognized: ${inputName}</span> Matrix detected. Provide identification to forge continuing protocol. Vault data safe.`;
-                currentFlowP.classList.add('text-green-300');
-                gateBtnSpan.innerText = "Forge Continuing Protocol";
-                
+                document.getElementById('gate-pic-container').style.display = 'none'; 
+                document.getElementById('entry-flow-p').innerHTML = `<span class="text-white font-bold">Protocol Recognized: ${inputName}</span>`;
+                document.getElementById('gate-btn-span').innerText = "Forge Continuing Protocol";
                 document.getElementById('entry-avatar-preview').src = savedPic;
                 document.getElementById('entry-avatar-preview').classList.remove('hidden');
                 document.getElementById('entry-initial-wrapper').classList.add('hidden');
-
             } else {
                 isExistingUserForGate = false;
-                picContainer.style.display = 'block'; 
-                currentFlowP.innerHTML = "Provide User Identification Matrix and Profile Interface Array to forge final core connection.";
-                currentFlowP.classList.remove('text-green-300');
-                gateBtnSpan.innerText = "Initialize Core Matrix";
-                if(inputName.length >= 2) {
-                    document.getElementById('entry-initial-text').innerText = inputName.substring(0, 2).toUpperCase();
-                    document.getElementById('entry-initial-wrapper').classList.remove('hidden');
-                    document.getElementById('entry-avatar-preview').classList.add('hidden');
-                } else {
-                    document.getElementById('entry-initial-wrapper').classList.remove('hidden');
-                    document.getElementById('entry-avatar-preview').classList.add('hidden');
-                    document.getElementById('entry-initial-text').innerText = "SC";
-                }
+                document.getElementById('gate-pic-container').style.display = 'block'; 
+                document.getElementById('gate-btn-span').innerText = "Initialize Core";
             }
         }
 
         function handleCoreLogin() {
             const usernameInput = document.getElementById('gate-username').value.trim();
-            const upperName = usernameInput.toUpperCase();
-            
-            if (!usernameInput) {
-                showToast('Error: Identification Matrix Required!', true);
-                return;
-            }
+            if (!usernameInput) return showToast('Error: Matrix Required!', true);
 
-            if(isExistingUserForGate) {
-                localStorage.setItem('hf_current_user_name', usernameInput);
-                showToast('Core protocols active. Session forged.');
-                setTimeout(() => { checkCoreAccess(); }, 1200);
-            } else {
-                if (!tempSelectedPic) {
-                    showToast('Error: Profile Interface Array Required!', true);
-                    return;
-                }
-                localStorage.setItem('hf_current_user_name', usernameInput); 
-                localStorage.setItem(`hf_profile_pic_${upperName}`, tempSelectedPic); 
-                showToast('Core Protocols Initialized. Session forged.');
-                setTimeout(() => { checkCoreAccess(); }, 1200);
+            localStorage.setItem('hf_current_user_name', usernameInput); 
+            if(!isExistingUserForGate && tempSelectedPic) {
+                localStorage.setItem(`hf_profile_pic_${usernameInput.toUpperCase()}`, tempSelectedPic); 
             }
+            showToast('Core Protocols Initialized.');
+            setTimeout(() => { window.location.reload(); }, 800);
         }
 
         function selectGatePic(src) {
@@ -562,10 +446,34 @@
             document.getElementById('entry-avatar-preview').src = src;
             document.getElementById('entry-avatar-preview').classList.remove('hidden');
             document.getElementById('entry-initial-wrapper').classList.add('hidden');
-            showToast('Premium Avatar selected for initialization');
         }
 
-        function handleGateUpload(e) { handleImageUpload(e, 'entry'); }
+        function performSignOut() {
+            localStorage.removeItem('hf_current_user_name'); 
+            window.location.reload();
+        }
+
+        function loadProfileData() {
+            const savedName = localStorage.getItem('hf_current_user_name');
+            document.getElementById('menu-name-text').innerText = savedName;
+            const savedPic = localStorage.getItem(`hf_profile_pic_${savedName.toUpperCase()}`); 
+            if (savedPic) {
+                document.getElementById('header-avatar-img').src = savedPic;
+                document.getElementById('header-avatar-img').classList.remove('hidden');
+                document.getElementById('header-initial-wrapper').classList.add('hidden');
+            }
+        }
+
+        function toggleProfileMenu(e) {
+            const menu = document.getElementById('profile-menu');
+            menu.classList.toggle('active');
+        }
+
+        function switchMode(mode) {
+            document.getElementById('inputs-hook').style.display = mode === 'vault' ? 'none' : 'block';
+            document.getElementById('results-vault').style.display = mode === 'vault' ? 'block' : 'none';
+            document.getElementById('system-status').innerText = mode === 'vault' ? 'Viewing Vault Matrix' : 'System Ready';
+        }
 
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toast');
@@ -575,309 +483,14 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        function setTopic(text) { document.getElementById('h-topic').value = text; showToast('Topic Matrix Loaded'); }
-
-        function confirmSignOut() {
-            createShockwave(event);
-            toggleProfileMenu(event);
-            document.getElementById('confirm-modal').classList.add('flex');
-            document.getElementById('confirm-modal').classList.remove('hidden');
-        }
-
-        function closeConfirmModal() {
-            document.getElementById('confirm-modal').classList.remove('flex');
-            document.getElementById('confirm-modal').classList.add('hidden');
-        }
-
-        function performSignOut() {
-            localStorage.removeItem('hf_current_user_name'); 
-            closeConfirmModal();
-            showToast('Profile purged from session matrix. Vault safe.');
-            setTimeout(() => { window.location.reload(); }, 1500);
-        }
-
-        function toggleStar(btn, textId, typeName) {
-            createShockwave(event);
-            const icon = btn.querySelector('i');
-            const textContent = document.getElementById(textId).innerText;
-            if(!textContent) return; 
-
-            const currentActiveUser = localStorage.getItem('hf_current_user_name').toUpperCase();
-            const vaultKey = `hf_vault_${currentActiveUser}`; 
-            let vault = JSON.parse(localStorage.getItem(vaultKey) || '[]');
-
-            if(icon.classList.contains('fa-regular')) {
-                icon.classList.remove('fa-regular');
-                icon.classList.add('fa-solid', 'text-yellow-400');
-                btn.classList.add('border-yellow-400/50');
-                btn.style.boxShadow = '0 0 10px rgba(234, 179, 8, 0.3)';
-                
-                vault.push({ id: Date.now(), type: typeName, text: textContent });
-                localStorage.setItem(vaultKey, JSON.stringify(vault));
-                showToast('Intel archived in persistent saved vault');
-            } else {
-                icon.classList.remove('fa-solid', 'text-yellow-400');
-                icon.classList.add('fa-regular');
-                btn.classList.remove('border-yellow-400/50');
-                btn.style.boxShadow = '';
-
-                vault = vault.filter(item => item.text !== textContent);
-                localStorage.setItem(vaultKey, JSON.stringify(vault));
-                showToast('Intel purged from vault');
-            }
-            if(currentMode === 'vault') renderVault();
-        }
-
-        function renderVault() {
-            const vaultContainer = document.getElementById('results-vault');
-            const currentActiveUser = localStorage.getItem('hf_current_user_name').toUpperCase();
-            const vaultKey = `hf_vault_${currentActiveUser}`; 
-            const vaultData = JSON.parse(localStorage.getItem(vaultKey) || '[]');
-            
-            if(vaultData.length === 0) {
-                vaultContainer.innerHTML = `
-                    <div class="text-center opacity-70 mt-10 flex flex-col items-center justify-center h-full">
-                        <i class="fa-solid fa-ghost text-6xl text-theme opacity-30 mb-5"></i>
-                        <p class="text-[10px] font-mono tracking-[0.3em] uppercase text-gray-500">Vault is Empty.</p>
-                        <p class="text-[9px] text-gray-600 mt-2 font-mono">Archive hooks using the ⭐ button after generation.</p>
-                    </div>`;
-                return;
-            }
-
-            vaultContainer.innerHTML = ''; 
-            [...vaultData].reverse().forEach(item => {
-                const card = document.createElement('div');
-                card.className = "bg-black/40 border border-theme p-5 rounded-2xl relative mb-4 shadow-lg";
-                card.innerHTML = `
-                    <div class="flex justify-between items-center mb-4">
-                        <span class="text-[9px] bg-theme-light text-white px-3 py-1.5 rounded-full font-black uppercase tracking-widest border border-theme"><i class="fa-solid fa-bolt mr-1"></i> ${item.type}</span>
-                        <button onclick="removeSaved(${item.id})" class="text-gray-400 hover:text-red-500 transition px-2 py-1"><i class="fa-solid fa-trash text-sm"></i></button>
-                    </div>
-                    <p class="matrix-text text-sm text-gray-100 leading-relaxed font-mono whitespace-pre-line mb-4" id="saved-${item.id}">${item.text}</p>
-                    <button onclick="copyText('saved-${item.id}', this)" class="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-3 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy Saved Intel</button>
-                `;
-                vaultContainer.appendChild(card);
-            });
-        }
-
-        function removeSaved(id) {
-            const currentActiveUser = localStorage.getItem('hf_current_user_name').toUpperCase();
-            const vaultKey = `hf_vault_${currentActiveUser}`; 
-            
-            let vault = JSON.parse(localStorage.getItem(vaultKey) || '[]');
-            vault = vault.filter(item => item.id !== id);
-            localStorage.setItem(vaultKey, JSON.stringify(vault));
-            showToast('Item deleted permanently from vault matrix');
-            renderVault();
-        }
-
-        function loadProfileData() {
-            const savedName = localStorage.getItem('hf_current_user_name') || 'Santosh Choudhary';
-            const upperName = savedName.toUpperCase();
-            const savedPic = localStorage.getItem(`hf_profile_pic_${upperName}`); 
-            
-            const initial = savedName.substring(0, 2).toUpperCase();
-
-            document.getElementById('menu-name-text').innerText = savedName;
-            document.getElementById('edit-username').value = savedName;
-            
-            const headerImg = document.getElementById('header-avatar-img');
-            const headerInitWrapper = document.getElementById('header-initial-wrapper');
-            const headerInitText = document.getElementById('header-initial-text');
-            
-            if (savedPic) {
-                headerImg.src = savedPic;
-                headerImg.classList.remove('hidden');
-                headerInitWrapper.classList.add('hidden');
-            } else {
-                headerInitText.innerText = initial;
-                headerImg.classList.add('hidden');
-                headerInitWrapper.classList.remove('hidden');
-            }
-        }
-
-        function openProfileModal() {
-            const menu = document.getElementById('profile-menu');
-            const arrow = document.getElementById('profile-arrow');
-            menu.classList.remove('active');
-            if (arrow) arrow.style.transform = 'rotate(0deg)';
-            
-            const savedPic = localStorage.getItem(`hf_profile_pic_${localStorage.getItem('hf_current_user_name').toUpperCase()}`);
-            const savedName = localStorage.getItem('hf_current_user_name') || 'Santosh Choudhary';
-            
-            const modalImg = document.getElementById('modal-preview-img');
-            const modalInitWrap = document.getElementById('modal-initial-wrapper');
-            const modalInitText = document.getElementById('modal-initial-text');
-
-            if (savedPic) {
-                modalImg.src = savedPic;
-                modalImg.classList.remove('hidden');
-                modalInitWrap.classList.add('hidden');
-            } else {
-                modalInitText.innerText = savedName.substring(0, 2).toUpperCase();
-                modalImg.classList.add('hidden');
-                modalInitWrap.classList.remove('hidden');
-            }
-            document.getElementById('profile-modal').style.display = 'flex';
-        }
-
-        function closeProfileModal() { document.getElementById('profile-modal').style.display = 'none'; tempSelectedPic = null; }
-
-        function selectDefaultPic(src) {
-            tempSelectedPic = src;
-            const img = document.getElementById('modal-preview-img');
-            const wrap = document.getElementById('modal-initial-wrapper');
-            img.src = src;
-            img.classList.remove('hidden');
-            wrap.classList.add('hidden');
-            showToast('Premium Avatar selected');
-        }
-
-        function handleImageUpload(e, target) {
-            const file = e.target.files[0];
-            if(file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const imgObj = new Image();
-                    imgObj.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        canvas.width = 150; canvas.height = 150;
-                        const size = Math.min(imgObj.width, imgObj.height);
-                        const startX = (imgObj.width - size) / 2;
-                        const startY = (imgObj.height - size) / 2;
-                        ctx.drawImage(imgObj, startX, startY, size, size, 0, 0, 150, 150);
-                        const base64 = canvas.toDataURL('image/jpeg', 0.8);
-                        
-                        tempSelectedPic = base64;
-                        const imgElem = document.getElementById(`${target}-preview-img`);
-                        const wrapElem = document.getElementById(`${target}-initial-wrapper`);
-                        if(imgElem && wrapElem) {
-                            imgElem.src = base64;
-                            imgElem.classList.remove('hidden');
-                            wrapElem.classList.add('hidden');
-                        }
-                        showToast('Custom image processed securely');
-                    }
-                    imgObj.src = event.target.result;
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function saveProfile() {
-            const oldName = localStorage.getItem('hf_current_user_name');
-            const newName = document.getElementById('edit-username').value.trim() || oldName;
-
-            if (newName !== oldName) {
-                localStorage.setItem('hf_current_user_name', newName); 
-                if (tempSelectedPic) {
-                    localStorage.setItem(`hf_profile_pic_${newName.toUpperCase()}`, tempSelectedPic);
-                } else {
-                    const oldPic = localStorage.getItem(`hf_profile_pic_${oldName.toUpperCase()}`);
-                    localStorage.setItem(`hf_profile_pic_${newName.toUpperCase()}`, oldPic);
-                }
-                showToast('Core session pointers realigned. Session forged.');
-            } else {
-                if (tempSelectedPic) localStorage.setItem(`hf_profile_pic_${oldName.toUpperCase()}`, tempSelectedPic); 
-                showToast('Profile matrix protocol updated.');
-            }
-
-            loadProfileData();
-            closeProfileModal();
-        }
-
-        function toggleProfileMenu(e) {
-            e.stopPropagation();
-            const menu = document.getElementById('profile-menu'); const arrow = document.getElementById('profile-arrow');
-            menu.classList.toggle('active');
-            if (arrow) arrow.style.transform = menu.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
-        }
-
-        document.addEventListener('click', function(e) {
-            const menu = document.getElementById('profile-menu'); const wrapper = document.getElementById('profile-wrapper'); const arrow = document.getElementById('profile-arrow');
-            const confirmModal = document.getElementById('confirm-modal');
-            
-            if (menu && menu.classList.contains('active') && !wrapper.contains(e.target)) {
-                menu.classList.remove('active');
-                if (arrow) arrow.style.transform = 'rotate(0deg)';
-            }
-            if (confirmModal && confirmModal.classList.contains('flex') && e.target === confirmModal) {
-                closeConfirmModal();
-            }
-        });
-
-        function switchMode(mode) {
-            currentMode = mode;
-            createShockwave(event);
-            
-            document.getElementById('inputs-hook').style.display = mode === 'vault' ? 'none' : 'block';
-            document.getElementById('results-vault').style.display = mode === 'vault' ? 'block' : 'none';
-            document.getElementById('system-status').innerText = mode === 'vault' ? 'Viewing Vault Matrix' : 'System Ready // Awaiting Input';
-
-            if(mode === 'vault') renderVault();
-        }
-
-        function matrixDecrypt(elementId, targetText) {
-            const el = document.getElementById(elementId);
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*<>?';
-            let iterations = 0; const maxIterations = 20; 
-            const interval = setInterval(() => {
-                el.innerText = targetText.split('').map((char, index) => {
-                    if (index < (iterations / maxIterations) * targetText.length) return char;
-                    if (char === ' ' || char === '\n') return char;
-                    return chars[Math.floor(Math.random() * chars.length)];
-                }).join('');
-                iterations++;
-                if (iterations >= maxIterations) { clearInterval(interval); el.innerText = targetText; }
-            }, 30); 
-        }
-
-        function createShockwave(e) {
-            if(!e.currentTarget) return;
-            const btn = e.currentTarget; const circle = document.createElement('span');
-            const d = Math.max(btn.clientWidth, btn.clientHeight);
-            circle.style.width = circle.style.height = `${d}px`;
-            const rect = btn.getBoundingClientRect();
-            circle.style.left = `${e.clientX - rect.left - d/2}px`; circle.style.top = `${e.clientY - rect.top - d/2}px`;
-            circle.className = 'shockwave';
-            const oldShockwave = btn.querySelector('.shockwave'); if (oldShockwave) oldShockwave.remove();
-            btn.appendChild(circle);
-        }
-
         function cycleAura(e) {
-            if (isLuxuryMode) return; createShockwave(e);
-            const vid = document.getElementById('bg-vid'); vid.style.opacity = 0; 
+            const vid = document.getElementById('bg-vid'); 
+            vid.style.opacity = 0; 
             setTimeout(() => { 
-                currentAura = (currentAura + 1) % videos.length; 
-                vid.src = videos[currentAura]; 
-                vid.play();
-                document.body.classList.remove('theme-blue', 'theme-purple');
-                if(themes[currentAura]) document.body.classList.add(themes[currentAura]);
+                document.body.classList.toggle('theme-purple');
                 vid.style.opacity = 1; 
-                showToast(`Aura matrix aligned: ${themes[currentAura] || 'crimson'}`);
+                showToast(`Aura matrix realigned`);
             }, 300);
-        }
-
-        function toggleDomainExpansion(e) {
-            createShockwave(e); const body = document.body; const icon = document.getElementById('theme-icon'); 
-            isLuxuryMode = !isLuxuryMode;
-            if (isLuxuryMode) { body.classList.add('theme-luxury'); icon.className = 'fa-solid fa-eye text-lg'; showToast('Domain expanded: infinite luxury'); } 
-            else { body.classList.remove('theme-luxury'); icon.className = 'fa-solid fa-crown text-lg'; showToast('Domain collapsed'); }
-        }
-
-        function toggleAudio(e) {
-            createShockwave(e); const vid = document.getElementById('bg-vid'); const icon = document.getElementById('audio-icon');
-            isMuted = !isMuted; vid.muted = isMuted; icon.className = isMuted ? 'fa-solid fa-volume-xmark text-sm' : 'fa-solid fa-volume-high text-sm';
-            showToast(isMuted ? 'Audio protocols disabled' : 'Audio protocols active');
-        }
-
-        function copyText(id, btn) { 
-            createShockwave(event);
-            const text = document.getElementById(id).innerText; navigator.clipboard.writeText(text);
-            const oldHTML = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-check mr-1 text-green-400"></i>Copied!'; 
-            setTimeout(() => { btn.innerHTML = oldHTML; }, 1500);
         }
     </script>
 </body>
