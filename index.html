@@ -145,6 +145,7 @@
         </div>
     </div>
 
+    <!-- CORE PORTAL (AUTH) -->
     <div id="core-view-viewport" class="w-full h-full p-4 md:p-8 flex items-center justify-center">
         <div class="glass-panel w-full max-w-lg p-8 md:p-10 flex flex-col items-center border border-theme shadow-[0_0_50px_var(--bg-glow)] relative overflow-hidden">
             
@@ -228,27 +229,41 @@
         </div>
     </div>
 
-    <div id="dashboard-viewport" class="w-full h-full p-4 md:p-8 flex flex-col items-center justify-start hidden">
-        <div id="dash-wrapper" class="w-full max-w-6xl mt-20 mb-10 px-2 opacity-0 transition-opacity duration-1000">
+    <!-- 🟢 NAYA "CENTERED COMMAND CONSOLE" DASHBOARD -->
+    <div id="dashboard-viewport" class="w-full h-screen p-4 md:p-8 flex flex-col items-center justify-center hidden opacity-0 transition-opacity duration-1000 relative">
         
-            <div class="w-full flex justify-between items-center mb-6">
-                <div class="text-left">
-                    <h1 class="anime-title text-3xl md:text-4xl font-black mb-1 tracking-wide" id="main-title">HOOK FORGE</h1>
-                    <p class="text-[9px] md:text-[10px] tracking-[0.3em] text-gray-300 font-bold uppercase"><i class="fa-solid fa-bolt mr-1 text-theme"></i> Premium Edition</p>
-                </div>
-                
+        <!-- Top Navbar (Floating) -->
+        <div class="absolute top-6 w-full max-w-5xl px-4 flex justify-between items-center z-50">
+            <div class="text-left">
+                <h1 class="anime-title text-2xl md:text-3xl font-black mb-1 tracking-widest">HOOK FORGE</h1>
+                <p class="text-[9px] tracking-[0.3em] text-theme font-bold uppercase"><i class="fa-solid fa-terminal mr-1"></i> Command Matrix</p>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <!-- Sleek Vault Button (Takes least space) -->
+                <button onclick="switchMode('vault')" class="flex items-center gap-2 bg-black/60 px-4 py-2 rounded-full border border-theme/50 hover:border-theme transition shadow-[0_0_10px_var(--bg-glow)] text-white cursor-pointer">
+                    <i class="fa-solid fa-vault text-[11px] text-theme"></i>
+                    <span class="text-[9px] font-bold tracking-widest uppercase hidden md:inline">Vault</span>
+                    <!-- 1-Day Streak Fire -->
+                    <div class="flex items-center gap-1 bg-orange-500/20 text-orange-500 px-1.5 py-0.5 rounded ml-1">
+                        <i class="fa-solid fa-fire text-[9px]"></i><span class="text-[9px] font-black">1</span>
+                    </div>
+                </button>
+
+                <!-- Profile Menu -->
                 <div class="relative" id="profile-wrapper">
-                    <button onclick="toggleProfileMenu(event)" class="flex items-center gap-2 bg-black/60 p-1.5 pr-3 rounded-full border border-theme backdrop-blur-md cursor-pointer hover:bg-black/80 transition shadow-[0_0_10px_var(--bg-glow)]">
-                        <img src="" id="header-avatar-img" class="w-8 h-8 rounded-full border border-white/20 object-cover hidden">
+                    <button onclick="toggleProfileMenu(event)" class="flex items-center gap-2 bg-black/60 p-1.5 pr-3 rounded-full border border-white/20 backdrop-blur-md hover:bg-black/80 transition shadow-[0_0_10px_var(--bg-glow)] cursor-pointer">
+                        <img id="header-avatar-img" src="" class="w-8 h-8 rounded-full border border-theme object-cover hidden">
                         <div id="header-initial-wrapper" class="flex items-center justify-center bg-black/80 w-8 h-8 rounded-full border border-white/20">
                             <span id="header-initial-text" class="text-[10px] font-bold text-white tracking-wider">SC</span>
                         </div>
                         <i class="fa-solid fa-chevron-down text-[10px] text-gray-300 transition-transform duration-300" id="profile-arrow"></i>
                     </button>
-
+                    
+                    <!-- Dropdown -->
                     <div id="profile-menu" class="profile-menu">
                         <div class="px-4 py-4 border-b border-white/10 bg-black/60 rounded-t-[16px]">
-                            <p id="menu-name-text" class="text-[13px] font-bold text-white tracking-wide truncate">Santosh Choudhary</p>
+                            <p id="menu-name-text" class="text-[13px] font-bold text-white tracking-wide truncate">Founder</p>
                             <p class="text-[10px] text-theme mt-1 uppercase tracking-widest font-bold"><i class="fa-solid fa-shield-halved mr-1"></i> Founder Plan</p>
                         </div>
                         <div class="py-2">
@@ -263,162 +278,73 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="flex space-x-1 bg-black/40 p-1.5 rounded-xl border border-white/10 backdrop-blur-md mb-6 w-full md:w-max justify-center md:justify-start">
-                <button id="tab-hook" onclick="switchMode('hook')" class="tab-btn tab-active flex-1 md:flex-none"><i class="fa-solid fa-fire mr-1"></i> Hook Forge</button>
-                <button id="tab-script" onclick="switchMode('script')" class="tab-btn tab-inactive flex-1 md:flex-none"><i class="fa-solid fa-scroll mr-1"></i> Script Forge</button>
-                <button id="tab-vault" onclick="switchMode('vault')" class="tab-btn tab-inactive flex-1 md:flex-none"><i class="fa-solid fa-vault mr-1"></i> Saved Vault</button>
-            </div>
-
-            <div id="errorBox" class="hidden bg-red-900/90 border border-red-500 text-white p-4 rounded-lg mb-4 text-sm font-mono w-full shadow-lg"></div>
-
-            <div class="flex flex-col lg:flex-row gap-6 w-full items-stretch relative">
-                
-                <div class="glass-panel w-full lg:w-1/3 p-6 flex flex-col justify-between" id="left-panel-content">
-                    
-                    <div id="inputs-hook" class="space-y-4">
-                        <div>
-                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Target Niche</label>
-                            <input type="text" id="h-niche" value="Anime & Tech" class="w-full glass-input px-4 py-3 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Target Audience</label>
-                            <input type="text" id="h-audience" value="Content Creators" class="w-full glass-input px-4 py-3 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Tone Matrix</label>
-                            <select id="h-tone" class="w-full glass-input px-4 py-3 text-sm custom-scrollbar">
-                                <optgroup label="Psychological & Viral" class="text-theme font-black bg-black">
-                                    <option value="Aggressive & Brutally Honest">Aggressive & Brutally Honest</option>
-                                    <option value="Curiosity Gap (The Silent Kill)">Curiosity Gap (The Silent Kill)</option>
-                                    <option value="Contrarian (Challenge the Norm)">Contrarian (Challenge the Norm)</option>
-                                    <option value="Fear-Mongering (High Stakes)">Fear-Mongering (High Stakes)</option>
-                                    <option value="Shocking & Offensive (Virality Check)">Shocking & Offensive (Virality Check)</option>
-                                    <option value="FOMO (Fear Of Missing Out)">FOMO (Fear Of Missing Out)</option>
-                                    <option value="Secret Society (Exclusive Info)">Secret Society (Exclusive Info)</option>
-                                </optgroup>
-                                <optgroup label="Emotional & Real" class="text-gray-300 font-black bg-black">
-                                    <option value="Storytelling & Vulnerable (Crying on Camera)">Storytelling & Vulnerable (Crying on Camera)</option>
-                                    <option value="Empathetic & Warm">Empathetic & Warm</option>
-                                    <option value="Sarcastic & Witty Dialect">Sarcastic & Witty Dialect</option>
-                                    <option value="Motivational & Fire Up">Motivational & Fire Up</option>
-                                    <option value="Inspiring & Hopeful">Inspiring & Hopeful</option>
-                                    <option value="Fearless & Confident">Fearless & Confident</option>
-                                </optgroup>
-                                <optgroup label="Professional & Authoritative" class="text-gray-400 font-black bg-black">
-                                    <option value="Educational & Direct">Educational & Direct</option>
-                                    <option value="Authoritative & Commanding">Authoritative & Commanding</option>
-                                    <option value="Urgent (Call to Action)">Urgent (Call to Action)</option>
-                                    <option value="Friendly & Engaging">Friendly & Engaging</option>
-                                    <option value="Mysterious & Cryptic">Mysterious & Cryptic</option>
-                                    <option value="Professional & Analytical">Professional & Analytical</option>
-                                    <option value="Logical & Data-Driven">Logical & Data-Driven</option>
-                                </optgroup>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1">Core Topic</label>
-                            <textarea id="h-topic" rows="3" class="w-full glass-input px-4 py-3 text-sm resize-none" placeholder="Enter core concept..."></textarea>
-                            
-                            <div class="flex flex-wrap gap-2 mt-3">
-                                <button onclick="setTopic('Why saving money in a bank account is keeping you broke')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">💰 Wealth Hacks</button>
-                                <button onclick="setTopic('The biggest lies the fitness industry tells you to sell supplements')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">🏋️ Fitness Lies</button>
-                                <button onclick="setTopic('How to go completely viral in 30 days without showing face')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">🔥 Viral Secrets</button>
-                                <button onclick="setTopic('The devastating truth about Jujutsu Kaisen ending that Gege Akutami hid')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">🏯 JJK Finale</button>
-                                <button onclick="setTopic('Apple Vision Pro: A futuristic breakthrough or a useless $3500 gimmick?')" class="text-[9px] border border-white/20 bg-black/40 hover:border-theme text-gray-300 hover:text-white px-3 py-1.5 rounded-full transition duration-300">👓 Vision Pro Myth</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="inputs-script" class="hidden space-y-4 flex-grow flex flex-col">
-                        <div>
-                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1"><i class="fa-solid fa-crosshairs mr-1"></i> Target URL</label>
-                            <input type="url" id="s-url" class="w-full glass-input px-4 py-3 text-sm" placeholder="Paste link to crush...">
-                        </div>
-                        <div class="flex-grow flex flex-col">
-                            <label class="block text-[10px] font-bold tracking-widest uppercase text-theme mb-1 mt-2"><i class="fa-solid fa-code mr-1"></i> Raw Script Input</label>
-                            <textarea id="s-raw" class="w-full flex-grow min-h-[180px] glass-input px-4 py-3 text-sm resize-none" placeholder="Paste script or notes..."></textarea>
-                        </div>
-                    </div>
-
-                    <div id="inputs-vault" class="hidden flex-col items-center justify-center h-full opacity-70 py-10">
-                        <i class="fa-solid fa-vault text-6xl text-theme opacity-50 mb-4"></i>
-                        <p class="text-xs font-mono tracking-[0.2em] uppercase text-gray-300 text-center">Your Saved<br>Arsenal</p>
-                    </div>
-
-                    <button onclick="createShockwave(event); igniteEngine();" id="btn-ignite" class="w-full premium-btn py-4 rounded-xl font-black tracking-widest uppercase text-xs mt-6 shadow-lg">
-                        <i class="fa-solid fa-bolt mr-2"></i> Ignite Engine
-                    </button>
+        <!-- MAIN TERMINAL / INPUT FORGE (Centered) -->
+        <div class="glass-panel w-full max-w-3xl p-6 md:p-10 flex flex-col relative z-10 mt-10">
+            
+            <div class="flex justify-between items-center border-b border-white/10 pb-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_#22c55e] animate-pulse"></div>
+                    <span class="text-[9px] md:text-[10px] font-mono tracking-widest text-gray-400 uppercase" id="system-status">System Ready // Awaiting Input</span>
                 </div>
-
-                <div class="glass-panel flex-grow p-6 flex flex-col justify-center min-h-[500px] relative">
-                    
-                    <div id="loading" class="hidden text-center absolute inset-0 flex flex-col items-center justify-center bg-black/60 rounded-[24px] z-20">
-                        <i class="fa-solid fa-circle-notch fa-spin text-5xl text-theme mb-4"></i>
-                        <h2 class="anime-title text-xl tracking-widest uppercase text-white font-bold">Extracting Matrix...</h2>
-                    </div>
-
-                    <div id="empty-state" class="text-center opacity-70">
-                        <i class="fa-solid fa-crosshairs text-6xl text-theme opacity-50 mb-4" id="empty-icon"></i>
-                        <p class="text-xs font-mono tracking-[0.2em] uppercase text-gray-400">Awaiting Target</p>
-                    </div>
-
-                    <div id="results-hook" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
-                        <div class="bg-black/40 border border-theme p-5 rounded-2xl relative">
-                            <div class="flex justify-between items-center mb-3">
-                                <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest border border-theme">Alpha</span>
-                            </div>
-                            <h3 id="textA" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
-                            
-                            <div class="mt-4 mb-4 p-3 bg-red-900/10 border border-red-500/30 rounded-lg border-l-2 border-l-red-500 shadow-[inset_0_0_10px_rgba(239,68,68,0.05)]">
-                                <p class="text-[9px] font-black text-red-500 tracking-widest uppercase mb-1.5"><i class="fa-solid fa-brain mr-1"></i> Psychological Trap</p>
-                                <p id="trapA" class="text-[11px] text-gray-300 leading-relaxed font-mono opacity-90"></p>
-                            </div>
-
-                            <div class="flex gap-2">
-                                <button onclick="copyText('textA', this)" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
-                                <button onclick="toggleStar(this, 'textA', 'Alpha Hook')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[14px] px-4 py-2 rounded transition-all"><i class="fa-regular fa-star"></i></button>
-                            </div>
-                        </div>
-
-                        <div class="bg-black/40 border border-theme p-5 rounded-2xl relative">
-                            <div class="flex justify-between items-center mb-3">
-                                <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest border border-theme">Beta</span>
-                            </div>
-                            <h3 id="textB" class="matrix-text text-base font-bold text-white mb-3 leading-relaxed tracking-wide"></h3>
-                            
-                            <div class="mt-4 mb-4 p-3 bg-red-900/10 border border-red-500/30 rounded-lg border-l-2 border-l-red-500 shadow-[inset_0_0_10px_rgba(239,68,68,0.05)]">
-                                <p class="text-[9px] font-black text-red-500 tracking-widest uppercase mb-1.5"><i class="fa-solid fa-brain mr-1"></i> Psychological Trap</p>
-                                <p id="trapB" class="text-[11px] text-gray-300 leading-relaxed font-mono opacity-90"></p>
-                            </div>
-
-                            <div class="flex gap-2">
-                                <button onclick="copyText('textB', this)" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy</button>
-                                <button onclick="toggleStar(this, 'textB', 'Beta Hook')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[14px] px-4 py-2 rounded transition-all"><i class="fa-regular fa-star"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="results-script" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar">
-                        <div class="bg-black/40 border border-theme p-5 rounded-2xl">
-                            <span class="text-[10px] bg-theme-light text-white px-2 py-1 rounded font-black uppercase tracking-widest mb-3 inline-block border border-theme">Master Script</span>
-                            <p id="s-master" class="matrix-text text-sm text-gray-100 leading-relaxed font-mono whitespace-pre-line"></p>
-                            
-                            <div class="flex gap-2 mt-4">
-                                <button onclick="copyText('s-master', this)" class="flex-1 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] px-3 py-2 rounded uppercase font-bold transition-all"><i class="fa-solid fa-copy mr-1"></i>Copy Script</button>
-                                <button onclick="toggleStar(this, 's-master', 'Master Script')" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[14px] px-4 py-2 rounded transition-all"><i class="fa-regular fa-star"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="results-vault" class="hidden space-y-5 overflow-y-auto max-h-[550px] pr-2 custom-scrollbar h-full">
-                        </div>
-
+                <div class="text-[9px] font-mono text-theme tracking-widest uppercase opacity-80">
+                    <i class="fa-solid fa-microchip mr-1"></i> Llama 3.3 Active
                 </div>
             </div>
+
+            <!-- Hook Input Area -->
+            <div id="inputs-hook" class="w-full transition-all">
+                <div class="mb-6 relative group">
+                    <i class="fa-solid fa-terminal absolute top-5 left-5 text-gray-500 group-focus-within:text-theme transition-colors text-sm"></i>
+                    <textarea id="h-topic" class="w-full bg-black/80 text-white border border-white/10 rounded-xl pl-12 pr-5 py-5 text-sm font-mono focus:border-theme focus:ring-0 focus:outline-none focus:shadow-[0_0_15px_var(--bg-glow)] transition-all resize-none h-36 md:h-40 custom-scrollbar placeholder-gray-600" placeholder="> Enter your target concept, niche, or rough script here...&#10;> e.g., 'A solo developer building a SaaS in 120 days'"></textarea>
+                </div>
+
+                <div class="flex flex-col md:flex-row gap-6 mb-8 bg-black/40 p-5 rounded-xl border border-white/5">
+                    <div class="flex-1">
+                        <label class="block text-[9px] font-bold tracking-widest uppercase text-gray-400 mb-3"><i class="fa-solid fa-bullseye text-theme mr-1"></i> Target Vector</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="tab-btn tab-active"><i class="fa-brands fa-tiktok mr-1"></i> TikTok</button>
+                            <button class="tab-btn tab-inactive"><i class="fa-brands fa-instagram mr-1"></i> Reels</button>
+                            <button class="tab-btn tab-inactive"><i class="fa-brands fa-youtube mr-1"></i> Shorts</button>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-[9px] font-bold tracking-widest uppercase text-gray-400 mb-3"><i class="fa-solid fa-brain text-theme mr-1"></i> Tone Matrix</label>
+                        <select id="h-tone" class="w-full bg-black/60 text-white border border-white/10 rounded-lg px-3 py-2 text-xs font-bold uppercase tracking-wide focus:border-theme outline-none">
+                            <option value="Contrarian">Contrarian (Challenge Norms)</option>
+                            <option value="Curiosity Gap">Curiosity Gap</option>
+                            <option value="Aggressive">Aggressive & Brutal</option>
+                            <option value="Relatable">Relatable & Warm</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="btn-ignite" onclick="showToast('UI Locked. Awaiting Phase 2 Engine Integration!')" class="w-full premium-btn py-5 rounded-xl font-black tracking-[0.2em] uppercase text-xs flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-bolt text-lg"></i> Initiate Sequence
+                </button>
+            </div>
+
+            <!-- Hidden Vault Container (Slides in here when Vault button is clicked) -->
+            <div id="results-vault" class="hidden w-full text-left max-h-[400px] overflow-y-auto custom-scrollbar mt-4">
+            </div>
+
+            <!-- Loading Screen (Hidden by default) -->
+            <div id="loading" class="hidden text-center absolute inset-0 flex-col items-center justify-center bg-black/90 rounded-[24px] z-20">
+                <i class="fa-solid fa-circle-notch fa-spin text-5xl text-theme mb-4"></i>
+                <h2 class="anime-title text-xl tracking-widest uppercase text-white font-bold">Forging Matrix...</h2>
+            </div>
+            
+            <!-- Kept for JS compatibility but hidden until Phase 2 output matrix is built -->
+            <div id="empty-state" class="hidden"></div>
+            <div id="results-hook" class="hidden"></div>
+            <div id="results-script" class="hidden"></div>
+            <div id="errorBox" class="hidden"></div>
+            <div id="inputs-script" class="hidden"></div>
         </div>
     </div>
 
+    <!-- PROFILE MODAL -->
     <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[10000] hidden items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm p-6 relative bg-black/90">
             <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
@@ -460,6 +386,7 @@
         </div>
     </div>
 
+    <!-- 🟢 EXISTING JS ENGINE (UNCHANGED) -->
     <script>
         let currentMode = 'hook'; let isMuted = true; let isLuxuryMode = false; let currentAura = 0;
         let tempSelectedPic = null;
@@ -477,33 +404,27 @@
             checkCoreAccess();
         });
 
-        /* --- 🚪 CORE ACCESS & AUTHENTICATION FLOW LOGIC --- */
         function checkCoreAccess() {
             const currentActiveUserName = localStorage.getItem('hf_current_user_name');
             const coreViewport = document.getElementById('core-view-viewport');
             const dashboard = document.getElementById('dashboard-viewport');
-            const dashWrapper = document.getElementById('dash-wrapper');
             const bgVid = document.getElementById('bg-vid');
             
             if (!currentActiveUserName) {
-                // Show Entry Screen (Auth / Profile Init)
                 coreViewport.style.display = 'flex';
                 dashboard.classList.add('hidden');
                 document.querySelectorAll('.floating-btn').forEach(b => b.classList.add('hidden'));
                 
-                // Reset auth states
                 document.getElementById('auth-step').classList.remove('hidden');
                 document.getElementById('profile-step').classList.add('hidden');
                 document.getElementById('profile-step').classList.add('opacity-0');
 
-                // Attach listener for username checking
                 document.getElementById('gate-username').addEventListener('input', checkExistingUserSimulation);
 
             } else {
-                // Show Dashboard
                 coreViewport.style.display = 'none';
                 dashboard.classList.remove('hidden');
-                setTimeout(() => { dashWrapper.classList.remove('opacity-0'); }, 10);
+                setTimeout(() => { dashboard.classList.remove('opacity-0'); }, 10);
                 document.querySelectorAll('.floating-btn').forEach(b => b.classList.remove('hidden'));
                 
                 loadProfileData(); 
@@ -511,7 +432,6 @@
             }
         }
 
-        /* SIMULATED GITHUB OAUTH */
         function simulateGitHubAuth(e) {
             const btn = e.currentTarget;
             const originalHtml = btn.innerHTML;
@@ -525,7 +445,6 @@
             }, 1800);
         }
 
-        /* SIMULATED MAGIC LINK TOKEN */
         function simulateTokenAuth(e) {
             const email = document.getElementById('auth-email').value;
             if(!email || !email.includes('@')) {
@@ -547,13 +466,11 @@
             }, 1500);
         }
 
-        /* DEV OVERRIDE */
         function devOverride() {
             showToast('Developer override accepted. Bypassing auth.');
             proceedToProfileSetup();
         }
 
-        /* TRANSITION TO STEP 2 */
         function proceedToProfileSetup() {
             const authStep = document.getElementById('auth-step');
             const profileStep = document.getElementById('profile-step');
@@ -578,7 +495,6 @@
             }, 300);
         }
 
-        /* CHECK FOR RETURNING USER IN STEP 2 */
         function checkExistingUserSimulation(e) {
             const inputName = e.target.value.trim().toUpperCase(); 
             const picContainer = document.getElementById('gate-pic-container');
@@ -588,7 +504,6 @@
             const savedPic = localStorage.getItem(`hf_profile_pic_${inputName}`);
             
             if(inputName.length >= 3 && savedPic) {
-                // USER EXISTS - Simplified Login Mode
                 isExistingUserForGate = true;
                 picContainer.style.display = 'none'; 
                 currentFlowP.innerHTML = `<span class="text-white font-bold">Protocol Recognized: ${inputName}</span> Matrix detected. Provide identification to forge continuing protocol. Vault data safe.`;
@@ -600,7 +515,6 @@
                 document.getElementById('entry-initial-wrapper').classList.add('hidden');
 
             } else {
-                // NEW USER Mode
                 isExistingUserForGate = false;
                 picContainer.style.display = 'block'; 
                 currentFlowP.innerHTML = "Provide User Identification Matrix and Profile Interface Array to forge final core connection.";
@@ -628,12 +542,10 @@
             }
 
             if(isExistingUserForGate) {
-                // LOGGING IN AS EXISTING USER
                 localStorage.setItem('hf_current_user_name', usernameInput);
                 showToast('Core protocols active. Session forged.');
                 setTimeout(() => { checkCoreAccess(); }, 1200);
             } else {
-                // CREATING NEW USER FLOW
                 if (!tempSelectedPic) {
                     showToast('Error: Profile Interface Array Required!', true);
                     return;
@@ -645,7 +557,6 @@
             }
         }
 
-        /* --- Gate Avatar Selection --- */
         function selectGatePic(src) {
             tempSelectedPic = src;
             document.getElementById('entry-avatar-preview').src = src;
@@ -656,7 +567,6 @@
 
         function handleGateUpload(e) { handleImageUpload(e, 'entry'); }
 
-        /* --- TOAST ALERTS --- */
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toast');
             toast.innerHTML = `<i class="fa-solid ${isError ? 'fa-triangle-exclamation' : 'fa-check'} mr-2"></i> ${msg}`;
@@ -665,10 +575,8 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        /* --- ONE CLICK TOPIC --- */
         function setTopic(text) { document.getElementById('h-topic').value = text; showToast('Topic Matrix Loaded'); }
 
-        /* --- 🚪 FUNCTIONAL SAAS SIGN OUT --- */
         function confirmSignOut() {
             createShockwave(event);
             toggleProfileMenu(event);
@@ -688,7 +596,6 @@
             setTimeout(() => { window.location.reload(); }, 1500);
         }
 
-        /* --- WORKING SAVE TO VAULT (STAR) --- */
         function toggleStar(btn, textId, typeName) {
             createShockwave(event);
             const icon = btn.querySelector('i');
@@ -721,7 +628,6 @@
             if(currentMode === 'vault') renderVault();
         }
 
-        /* --- RENDER VAULT UI --- */
         function renderVault() {
             const vaultContainer = document.getElementById('results-vault');
             const currentActiveUser = localStorage.getItem('hf_current_user_name').toUpperCase();
@@ -730,10 +636,10 @@
             
             if(vaultData.length === 0) {
                 vaultContainer.innerHTML = `
-                    <div class="text-center opacity-70 mt-20 flex flex-col items-center justify-center h-full">
+                    <div class="text-center opacity-70 mt-10 flex flex-col items-center justify-center h-full">
                         <i class="fa-solid fa-ghost text-6xl text-theme opacity-30 mb-5"></i>
                         <p class="text-[10px] font-mono tracking-[0.3em] uppercase text-gray-500">Vault is Empty.</p>
-                        <p class="text-[9px] text-gray-600 mt-2 font-mono">Archive hooks using the ⭐ button.</p>
+                        <p class="text-[9px] text-gray-600 mt-2 font-mono">Archive hooks using the ⭐ button after generation.</p>
                     </div>`;
                 return;
             }
@@ -765,7 +671,6 @@
             renderVault();
         }
 
-        /* --- DASHBOARD PROFILE UI --- */
         function loadProfileData() {
             const savedName = localStorage.getItem('hf_current_user_name') || 'Santosh Choudhary';
             const upperName = savedName.toUpperCase();
@@ -902,32 +807,13 @@
             }
         });
 
-        /* --- SWITCHING 3 TABS --- */
         function switchMode(mode) {
             currentMode = mode;
             createShockwave(event);
             
-            document.getElementById('tab-hook').className = mode === 'hook' ? 'tab-btn tab-active flex-1 md:flex-none' : 'tab-btn tab-inactive flex-1 md:flex-none';
-            document.getElementById('tab-script').className = mode === 'script' ? 'tab-btn tab-active flex-1 md:flex-none' : 'tab-btn tab-inactive flex-1 md:flex-none';
-            document.getElementById('tab-vault').className = mode === 'vault' ? 'tab-btn tab-active flex-1 md:flex-none' : 'tab-btn tab-inactive flex-1 md:flex-none';
-            
-            document.getElementById('inputs-hook').style.display = mode === 'hook' ? 'block' : 'none';
-            document.getElementById('inputs-script').style.display = mode === 'script' ? 'flex' : 'none';
-            document.getElementById('inputs-vault').style.display = mode === 'vault' ? 'flex' : 'none';
-            
-            const btnIgnite = document.getElementById('btn-ignite');
-            if(mode === 'vault') {
-                btnIgnite.style.display = 'none';
-            } else {
-                btnIgnite.style.display = 'block';
-                btnIgnite.innerHTML = mode === 'hook' ? '<i class="fa-solid fa-bolt mr-2"></i> Ignite Hook Engine' : '<i class="fa-solid fa-scroll mr-2"></i> Forge Master Script';
-            }
-
-            document.getElementById('empty-state').style.display = mode === 'vault' ? 'none' : 'block';
-            document.getElementById('results-hook').style.display = 'none'; 
-            document.getElementById('results-script').style.display = 'none';
+            document.getElementById('inputs-hook').style.display = mode === 'vault' ? 'none' : 'block';
             document.getElementById('results-vault').style.display = mode === 'vault' ? 'block' : 'none';
-            document.getElementById('errorBox').style.display = 'none';
+            document.getElementById('system-status').innerText = mode === 'vault' ? 'Viewing Vault Matrix' : 'System Ready // Awaiting Input';
 
             if(mode === 'vault') renderVault();
         }
@@ -992,46 +878,6 @@
             const oldHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-check mr-1 text-green-400"></i>Copied!'; 
             setTimeout(() => { btn.innerHTML = oldHTML; }, 1500);
-        }
-
-        async function igniteEngine() {
-            document.getElementById('empty-state').style.display = 'none'; document.getElementById('results-hook').style.display = 'none';
-            document.getElementById('results-script').style.display = 'none'; document.getElementById('errorBox').style.display = 'none';
-            document.getElementById('loading').style.display = 'flex';
-            
-            document.querySelectorAll('#results-hook .fa-star.fa-solid, #results-script .fa-star.fa-solid').forEach(s => {
-                s.classList.remove('fa-solid', 'text-yellow-400');
-                s.classList.add('fa-regular');
-                s.parentElement.classList.remove('border-yellow-400/50');
-                s.parentElement.style.boxShadow = '';
-            });
-
-            try {
-                let endpoint = currentMode === 'hook' ? '/forge_hook' : '/forge_script';
-                let payloadData = currentMode === 'hook' ? { niche: document.getElementById('h-niche').value, audience: document.getElementById('h-audience').value, tone: document.getElementById('h-tone').value, topic: document.getElementById('h-topic').value } : { script: document.getElementById('s-raw').value, url: document.getElementById('s-url').value };
-                const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payloadData) });
-                const data = await res.json();
-                document.getElementById('loading').style.display = 'none';
-                if (data.error) throw new Error(data.error);
-
-                if (currentMode === 'hook') {
-                    document.getElementById('results-hook').style.display = 'block';
-                    matrixDecrypt('textA', `"${data.hook_a.text}"`); 
-                    matrixDecrypt('textB', `"${data.hook_b.text}"`);
-                    matrixDecrypt('trapA', "Exploits 'Fear of Missing Out' (FOMO) and 'Status Anxiety'. By stating what the majority is doing wrong, it triggers an immediate threat response in the amygdala, forcing the user to read the solution to protect their social/creator status.");
-                    matrixDecrypt('trapB', "Creates a massive 'Curiosity Gap' paired with a 'Contrarian Hook'. It attacks a universally accepted belief, causing cognitive dissonance. The brain cannot ignore unresolved mysteries, ensuring high watch time to find the 'answer'.");
-                } else {
-                    document.getElementById('results-script').style.display = 'block';
-                    document.getElementById('s-score').innerText = data.retention_score;
-                    matrixDecrypt('s-master', data.master_script);
-                }
-                showToast('Intel extracted successfully');
-            } catch (err) {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('errorBox').innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i> <b>System Error:</b> ${err.message}`; 
-                document.getElementById('errorBox').style.display = 'block'; document.getElementById('empty-state').style.display = 'block';
-                showToast('Extraction protocols failed', true);
-            }
         }
     </script>
 </body>
